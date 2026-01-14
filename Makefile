@@ -8,6 +8,9 @@ NAME       = minirt
 RM         = rm -f
 MKDIR      = mkdir -p
 
+FT_PATH		= libft
+MLX_PATH	= minilibx
+
 CFLAGS     = -Wall -Wextra -Werror
 IFLAGS  = -I$(MLX_PATH) -I$(FT_PATH)/headers -Iincludes
 LFLAGS	= -L$(MLX_PATH)	-lmlx 	\
@@ -15,10 +18,6 @@ LFLAGS	= -L$(MLX_PATH)	-lmlx 	\
 		  -lm 	\
 		  -lX11 \
 		  -lXext
-
-
-FT_PATH		= libft
-MLX_PATH	= minilibx-linux
 
 MLX_LIB		= $(MLX_PATH)/libmlx.a
 LIBRARIES	= $(FT_PATH)/libft.a
