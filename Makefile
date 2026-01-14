@@ -4,7 +4,7 @@ include libft/mk.var.export/Makefile
 #      PROJECT CONFIG      #
 # ──────────────────────── #
 NAME       = minirt
-# CC         = gcc
+CC         = gcc
 RM         = rm -f
 MKDIR      = mkdir -p
 
@@ -12,27 +12,40 @@ FT_PATH		= libft
 MLX_PATH	= minilibx
 
 CFLAGS     = -Wall -Wextra -Werror
-IFLAGS  = -I$(MLX_PATH) -I$(FT_PATH)/headers -Iincludes
-LFLAGS	= -L$(MLX_PATH)	-lmlx 	\
-    	  -L$(FT_PATH) 	-lft	\
+IFLAGS  = -I$(MLX_ROOT) -I$(LIBFT_ROOT)/headers -Iincludes
+LFLAGS	= -L$(MLX_ROOT)	-lmlx 	\
+    	  -L$(LIBFT_ROOT) 	-lft	\
 		  -lm 	\
 		  -lX11 \
 		  -lXext
 
-MLX_LIB		= $(MLX_PATH)/libmlx.a
-LIBRARIES	= $(FT_PATH)/libft.a
+# ────────────────────── #
+#   EXTERNAL LIBRARIES   #
+# ────────────────────── #
+
+MLX_ROOT	= minilibx
+MLX_NAME 	= libmlx.a
+
+# LIBEZ_ROOT	= ezalloc
+# LIBEZ_NAME	= libezalloc.a
+
+MLX			= $(MLX_ROOT)/$(MLX_NAME)
+# LIBEZ		= $(LIBEZ_ROOT)/$(LIBEZ_NAME)
+LIBFT 		= $(LIBFT_ROOT)/$(LIBFT_NAME)
+
+LIBRARIES 	= $(LIBFT) $(MLX) 
 
 # ──────────────────────── #
 #      FILES & FOLDERS     #
 # ──────────────────────── #
 
-FILES		= main.c 	
+FILES		= main
 
 O_DIR		= objs
-S_DIR		= sources
+S_DIR		= srcs
 
-OBJS		= $(addprefix $(O_DIR)/, $(FILES:%.c=%.o))
-SRCS 		= $(addprefix $(S_DIR)/, $(FILES))
+OBJS		= $(addsuffix .o, $(addprefix $(O_DIR)/, $(FILES)))
+SRCS 		= $(addsuffix .c, $(FILES))
 
 vpath %.c $(S_DIR)
 
@@ -49,72 +62,65 @@ RESET      := \033[0m
 # ──────────────────────── #
 all: $(NAME)
 
-$(O_DIR)/%.o: $(S_DIR)/%.c | $(O_DIR)
+$(O_DIR)/%.o: %.c | $(O_DIR)
 	@$(CC) $(CFLAGS) $(IFLAGS) -c $< -o $@
 	@printf "$(GREEN)Compiling $(BLUE)$<$(RESET)\n"
 
-$(NAME): $(OBJS) $(LIBRARIES) | $(BIN_DIR)
-	@if [ ! -f "$(MLX_LIB)" ]; then \
-		echo "$(RED)\nNOTE: The minilibx-linux library is not compiled, and is necessary in order to link $(NAME).\n$(RESET)"; \
-		echo "$(BLUE)Please compile it manually by running $(GREEN)'make -C minilibx-linux'$(BLUE),"; \
-		echo "or running $(GREEN)'make'$(BLUE) in the $(GREEN)minilibx$(BLUE) directory.$(RESET)\n"; \
-		exit 1; \
-	else \
-		printf "$(GREEN)\n- Minilibx-linux library is compiled yet. -\n\n$(RESET)"; \
-	fi
-	@$(CC) $(OBJS) $(LFLAGS) $(LIB_NAMES) -no-pie -o $(NAME)
+$(NAME): $(OBJS) $(LIBRARIES)
+	# @if [ ! -f "$(MLX_LIB)" ]; then \
+	# 	echo "$(RED)\nNOTE: The minilibx-linux library is not compiled, and is necessary in order to link $(NAME).\n$(RESET)"; \
+	# 	echo "$(BLUE)Please compile it manually by running $(GREEN)'make -C minilibx-linux'$(BLUE),"; \
+	# 	echo "or running $(GREEN)'make'$(BLUE) in the $(GREEN)minilibx$(BLUE) directory.$(RESET)\n"; \
+	# 	exit 1; \
+	# else \
+	# 	printf "$(GREEN)\n- Minilibx-linux library is compiled yet. -\n\n$(RESET)"; \
+	# fi
+	@$(CC) $(OBJS) $(LFLAGS) $(LIB_NAMES) -o $(NAME)
 	@printf "$(GREEN)Linking $(BLUE)$(NAME)$(RESET)\n"	
 
-$(BIN_DIR) $(O_DIR):
+$(O_DIR):
 	$(MKDIR) $@
 
-# ──────────────────────── #
-#    LIBRARY COMPILATION   #
-# ──────────────────────── #
+# ─────────── #
+#  LIBRARIES  #
+# ─────────── #
 
-# MLX Data Library
-$(MLXD_NAME): $(MLXD_OBJS)
+# $(LIBFT):
+# 	$(MAKE) -C $(LIBFT_ROOT)
+#
+# $(MLX):
+# 	$(MAKE) -C $(MLX_ROOT)
 
-$(MLXD_OBJS): $(MLXD_SRCS)
-	$(MAKE) -C $(MLXD_PATH)
-
-# Libft Library
-$(FT_PATH)/libft.a: $(LIBFT_OBJS)
-
-$(LIBFT_OBJS): $(LIBFT_SRCS)
-	$(MAKE) -C $(FT_PATH)
+$(LIBRARIES):
+	$(MAKE) -C $(dir $@)
 
 # ──────────────────────── #
 #      CLEANING RULES      #
 # ──────────────────────── #
+
 # Project Only
 clean:
 	$(RM) $(OBJS)
+	@echo "\nNote: to propagate the command to the libraries use deep[target] instead\n"
 
 fclean: clean
 	$(RM) $(NAME)
+	@echo "\nNote: to propagate the command to the libraries use deep[target] instead\n"
 
 re: fclean all
 
 # Project and External Libraries
 deepclean: clean
-	$(MAKE) clean -C $(MLXD_PATH)
-	$(MAKE) clean -C $(COLORS_PATH)
-	$(MAKE) clean -C $(FT_PATH)
+	$(MAKE) clean -C $(LIBFT_ROOT)
+	$(MAKE) clean -C $(MLX_ROOT)
 	@echo "\n$(GREEN)Deep clean completed.\n$(RESET)"
-	@echo "$(RED)Note: This will not remove the minilibx-linux library files.$(RESET)"
-	@echo "$(BLUE)You can do that by running $(GREEN)'make clean -C minilibx-linux'$(BLUE) from here, "
-	@echo "or by running $(GREEN)'make clean'$(BLUE) in the minilibx-linux directory.\n$(RESET)"
 
 deepfclean: fclean
-	$(MAKE) fclean -C $(MLXD_PATH)
-	$(MAKE) fclean -C $(FT_PATH)
+	$(MAKE) fclean -C $(LIBFT_ROOT)
+	$(MAKE) clean -C $(MLX_ROOT) #mlx doesn't have fclean target
 	@echo "\n$(GREEN)Deep fclean completed.\n$(RESET)"
-	@echo "$(RED)Note: This will not remove the minilibx-linux library files.$(RESET)"
-	@echo "$(BLUE)You can do that by running $(GREEN)'make clean -C minilibx-linux'$(BLUE) from here, "
-	@echo "or by running $(GREEN)'make clean'$(BLUE) in the minilibx-linux directory.\n$(RESET)"
 
 deepre: deepfclean all
 
 # ──────────────────────── #
-.PHONY: all re clean fclean deepre deepclean deepfclean
+.PHONY: all re clean fclean deepre deepclean deepfclean $(LIBRARIES)
