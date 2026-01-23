@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   debug_print_entities_b.c                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ceskelito <ceskelito@student.42.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -11,41 +11,25 @@
 /* ************************************************************************** */
 
 #include "minirt.h"
+#include <stdio.h>
 
-/* Print CLI usage information to stderr. */
-static void	print_usage(const char *prog)
+/* Print a labeled vector with fixed precision. */
+extern void	debug_print_vec3(const char *label, t_vec3 v);
+
+/* Print a labeled RGB color. */
+extern void	debug_print_color(const char *label, t_color c);
+
+/* Print cylinder data for one list entry. */
+void	debug_print_cylinder(void *content)
 {
-	ft_putstr_fd("Usage: ", 2);
-	ft_putstr_fd((char *)prog, 2);
-	ft_putendl_fd(" <scene.rt>", 2);
-}
+	t_cylinder	*cyl;
 
-/* Debug helper to print parsed scene data. */
-static void	debug_print(const t_scene *scene)
-{
-	debug_print_scene(scene);
-}
-
-/* Entry point: parse .rt file and print its content. */
-int	main(int argc, char **argv)
-{
-	t_scene		scene;
-	t_parse_error	err;
-
-	if (argc != 2)
-	{
-		print_usage(argv[0]);
-		return (1);
-	}
-	scene_init(&scene);
-	err = parse_scene(argv[1], &scene);
-	if (err != PARSE_OK)
-	{
-		ft_putendl_fd("Error: parsing failed", 2);
-		scene_clear(&scene);
-		return (1);
-	}
-	debug_print(&scene);
-	scene_clear(&scene);
-	return (0);
+	cyl = (t_cylinder *)content;
+	if (cyl == NULL)
+		return ;
+	debug_print_vec3("    position", cyl->pos);
+	debug_print_vec3("    axis", cyl->axis);
+	printf("    diameter: %.3f\n", cyl->diameter);
+	printf("    height: %.3f\n", cyl->height);
+	debug_print_color("    color", cyl->color);
 }

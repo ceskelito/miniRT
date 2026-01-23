@@ -39,7 +39,20 @@ LIBRARIES 	= $(LIBFT) $(MLX)
 #      FILES & FOLDERS     #
 # ──────────────────────── #
 
-FILES		= main
+FILES		= main \
+			scene \
+			parse_scene \
+			parse_line \
+			parse_utils \
+			parse_elements_a \
+			parse_elements_light \
+			parse_elements_b \
+			parse_elements_plane \
+			parse_elements_c \
+			debug_print \
+			debug_print_entities_a \
+			debug_print_entities_b \
+			debug_print_utils
 
 O_DIR		= objs
 S_DIR		= srcs

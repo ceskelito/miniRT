@@ -6,18 +6,16 @@
 /*   By: rceschel <rceschel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/23 00:00:00 by rceschel          #+#    #+#             */
-/*   Updated: 2026/01/23 14:11:58 by rceschel         ###   ########.fr       */
+/*   Updated: 2026/01/23 14:47:38 by rceschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINIRT_H
 # define MINIRT_H
 
+# include <stdbool.h>
+# include <stddef.h>
 # include "libft.h"
-
-/*
-** Basic math / geometry types
-*/
 
 typedef struct s_vec3
 {
@@ -33,14 +31,11 @@ typedef struct s_color
 	int	b;
 }	t_color;
 
-/*
-** Scene elements directly matching .rt entries
-*/
-
 typedef struct s_ambient
 {
-	double	ratio;
+	double	intensity;
 	t_color	color;
+	bool	present;
 }	t_ambient;
 
 typedef struct s_camera
@@ -53,78 +48,95 @@ typedef struct s_camera
 typedef struct s_light
 {
 	t_vec3	pos;
-	double	ratio;
+	double	intensity;
 	t_color	color;
 }	t_light;
-
-/*
-** Object types from the subject
-*/
-
-typedef enum e_obj_type
-{
-	OBJ_SPHERE,
-	OBJ_PLANE,
-	OBJ_CYLINDER
-}	t_obj_type;
 
 typedef struct s_sphere
 {
 	t_vec3	center;
-	double	radius;
+	double	diameter;
+	t_color	color;
 }	t_sphere;
 
 typedef struct s_plane
 {
 	t_vec3	point;
 	t_vec3	normal;
+	t_color	color;
 }	t_plane;
 
 typedef struct s_cylinder
 {
-	t_vec3	center;
+	t_vec3	pos;
 	t_vec3	axis;
-	double	radius;
+	double	diameter;
 	double	height;
+	t_color	color;
 }	t_cylinder;
 
-/*
-** Generic object container (linked list for easy parsing)
-*/
-
-typedef struct s_object
+typedef enum e_token
 {
-	t_obj_type		type;
-	t_color			color;
-	union
-	{
-		t_sphere	sphere;
-		t_plane		plane;
-		t_cylinder	cylinder;
-	}				u;
-	struct s_object	*next;
-}	t_object;
+	TOK_EMPTY,
+	TOK_AMBIENT,
+	TOK_CAMERA,
+	TOK_LIGHT,
+	TOK_SPHERE,
+	TOK_PLANE,
+	TOK_CYLINDER,
+	TOK_UNKNOWN
+}	t_token;
 
-/*
-** Top‑level scene structure used by the parser
-*/
+typedef enum e_parse_error
+{
+	PARSE_OK = 0,
+	PARSE_ERR_IO,
+	PARSE_ERR_SYNTAX,
+	PARSE_ERR_RANGE,
+	PARSE_ERR_DUPLICATE,
+	PARSE_ERR_MEM,
+	PARSE_ERR_UNSUPPORTED
+}	t_parse_error;
 
 typedef struct s_scene
 {
-	int			has_ambient;
-	int			has_camera;
-	int			has_light;
 	t_ambient	ambient;
-	t_camera	camera;
-	t_light		light;
-	t_object	*objects;
+	t_list		*cameras;
+	t_list		*lights;
+	t_list		*spheres;
+	t_list		*planes;
+	t_list		*cylinders;
 }	t_scene;
 
-/*
-** Parsing entry point(s) — declarations only, implementation in .c files
-*/
+typedef struct s_parse_state
+{
+	const char	*path;
+	size_t		line;
+	t_scene		*scene;
+}	t_parse_state;
 
-int		parse_scene_file(t_scene *scene, const char *path);
-void	free_scene(t_scene *scene);
+/* Initialize a scene container before parsing. */
+void			scene_init(t_scene *scene);
+
+/* Release all heap data stored inside a scene. */
+void			scene_clear(t_scene *scene);
+
+/* Parse a .rt file and fill the given scene. */
+t_parse_error	parse_scene(const char *path, t_scene *scene);
+
+/* Parse a floating point number with full validation. */
+int				parse_double(const char *str, double *out);
+
+/* Parse a vector in the form "x,y,z". */
+int				parse_vec3(const char *token, t_vec3 *out);
+
+/* Parse a color in the form "r,g,b". */
+int				parse_color(const char *token, t_color *out);
+
+/* Release a NULL-terminated split array. */
+void			free_split(char **parts);
+
+/* Print parsed scene data to stdout for debugging. */
+void			debug_print_scene(const t_scene *scene);
 
 #endif
