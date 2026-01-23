@@ -1,4 +1,6 @@
 ---
+name: 'The Norm'
+
 description: 'Code writing rules and standards'
 
 applyTo: "**.c,**.h"
