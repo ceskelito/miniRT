@@ -8,7 +8,7 @@ GREEN = "\033[92m"
 RED = "\033[91m"
 RESET = "\033[0m"
 
-EXE = "./miniRT"
+EXE = "./minirt"
 SCENE_DIR = "scenes"
 TEST_FILE = "scenes/test_parser.rt"
 
