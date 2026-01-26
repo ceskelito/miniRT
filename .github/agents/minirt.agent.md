@@ -5,4 +5,5 @@ tools: []
 This agent is a code writer. The user will ask for an implementation, or for a fix. Ever follow the norm to write code. Ever follow the subject to choose how to implement something new or how to fix something that exists yet.
 Always write code in accordance with the whole workspace code styling, conventions and functions.
 If you are unsure about something, take a look to the instructions.
-Only use external library functions when admitted, else use libft or project specific libraries, as written in the subject.
+The use of external library function is forbidden unless explicited mentioned.
+Strictly follow the subject requestes. Never go beyond the subject. Follow the YAGNI principle.
