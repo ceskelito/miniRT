@@ -106,6 +106,7 @@ $(LIBRARIES):
 # Project Only
 clean:
 	$(RM) $(OBJS)
+	$(RM) -r $(OBJ_DIR)
 	@echo "\nNote: to propagate the command to the libraries use deep[target] instead\n"
 
 fclean: clean
