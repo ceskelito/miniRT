@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   cleanup.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: antigravity <antigravity@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,24 +12,26 @@
 
 #include "parser.h"
 
-int main(int argc, char **argv) {
-	t_minirt rt;
+void free_scene(t_minirt *rt) {
+	t_object *curr;
+	t_object *temp;
 
-	if (argc != 2) {
-		ft_putstr_fd("Usage: ./miniRT <filename.rt>\n", 2);
-		return (1);
+	if (!rt)
+		return;
+	curr = rt->scene.objects;
+	while (curr) {
+		temp = curr;
+		curr = curr->next;
+		free(temp);
 	}
-	// Zero-init the structs
-	rt.scene.objects = NULL;
-	rt.mlx = NULL;
-	rt.win = NULL;
+	rt->scene.objects = NULL;
+}
 
-	printf("Parsing scene: %s\n", argv[1]);
-	parse_scene(argv[1], &rt);
-
-	printf("Parsing complete. Verifying data:\n");
-	print_scene(&rt);
-
-	free_scene(&rt);
-	return (0);
+void exit_error(char *msg, t_minirt *rt) {
+	ft_putstr_fd("Error\n", 2);
+	ft_putstr_fd(msg, 2);
+	ft_putstr_fd("\n", 2);
+	if (rt)
+		free_scene(rt);
+	exit(1);
 }

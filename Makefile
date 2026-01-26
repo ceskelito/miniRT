@@ -40,13 +40,17 @@ LIBRARIES 	= $(LIBFT) $(MLX)
 # ──────────────────────── #
 
 
-# PARSER 	= 
+PARSER 	=	parser			\
+			parse_elements	\
+			parse_shapes	\
+			parse_utils
 
-# DEBUG	= 
+UTILS 	=	debug		\
+			cleanup
 
 FILES	= main \
-		  $(PARSER) 	\
-		  $(DEBUG)
+		  $(UTILS) \
+		  $(PARSER)
 
 OBJ_DIR		= objs
 SRC_DIR		= srcs
@@ -56,7 +60,7 @@ SRCS 		= $(addsuffix .c, $(FILES))
 
 vpath %.c 	$(SRC_DIR) 			\
 			:$(SRC_DIR)/parser	\
-			:$(SRC_DIR)/debug
+			:$(SRC_DIR)/utils
 
 # ──────────────────────── #
 #        ANSI COLORS       #
@@ -76,7 +80,7 @@ $(OBJ_DIR)/%.o: %.c | $(OBJ_DIR)
 	@printf "$(GREEN)Compiling $(BLUE)$<$(RESET)\n"
 
 $(NAME): $(OBJS) $(LIBRARIES)
-	@$(CC) $(OBJS) $(LFLAGS) $(LIB_NAMES) -o $(NAME)
+	@$(CC) $(OBJS) $(LFLAGS) $(LIBRARIES) -o $(NAME)
 	@printf "$(GREEN)Linking $(BLUE)$(NAME)$(RESET)\n"	
 
 $(OBJ_DIR):
@@ -85,6 +89,12 @@ $(OBJ_DIR):
 # ─────────── #
 #  LIBRARIES  #
 # ─────────── #
+
+# $(LIBFT):
+# 	$(MAKE) -C $(LIBFT_ROOT)
+#
+# $(MLX):
+# 	$(MAKE) -C $(MLX_ROOT)
 
 $(LIBRARIES):
 	$(MAKE) -C $(dir $@)
@@ -112,7 +122,8 @@ deepclean: clean
 
 deepfclean: fclean
 	$(MAKE) fclean -C $(LIBFT_ROOT)
-	$(MAKE) clean -C $(MLX_ROOT) #mlx doesn't have fclean target
+#	mlx doesn't have fclean target
+	$(MAKE) clean -C $(MLX_ROOT)
 	@echo "\n$(GREEN)Deep fclean completed.\n$(RESET)"
 
 deepre: deepfclean all
