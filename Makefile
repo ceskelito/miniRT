@@ -39,15 +39,24 @@ LIBRARIES 	= $(LIBFT) $(MLX)
 #      FILES & FOLDERS     #
 # ──────────────────────── #
 
-FILES		= main
 
-O_DIR		= objs
-S_DIR		= srcs
+# PARSER 	= 
 
-OBJS		= $(addsuffix .o, $(addprefix $(O_DIR)/, $(FILES)))
+# DEBUG	= 
+
+FILES	= main \
+		  $(PARSER) 	\
+		  $(DEBUG)
+
+OBJ_DIR		= objs
+SRC_DIR		= srcs
+
+OBJS		= $(addsuffix .o, $(addprefix $(OBJ_DIR)/, $(FILES)))
 SRCS 		= $(addsuffix .c, $(FILES))
 
-vpath %.c $(S_DIR)
+vpath %.c 	$(SRC_DIR) 			\
+			:$(SRC_DIR)/parser	\
+			:$(SRC_DIR)/debug
 
 # ──────────────────────── #
 #        ANSI COLORS       #
@@ -62,34 +71,20 @@ RESET      := \033[0m
 # ──────────────────────── #
 all: $(NAME)
 
-$(O_DIR)/%.o: %.c | $(O_DIR)
+$(OBJ_DIR)/%.o: %.c | $(OBJ_DIR)
 	@$(CC) $(CFLAGS) $(IFLAGS) -c $< -o $@
 	@printf "$(GREEN)Compiling $(BLUE)$<$(RESET)\n"
 
 $(NAME): $(OBJS) $(LIBRARIES)
-	# @if [ ! -f "$(MLX_LIB)" ]; then \
-	# 	echo "$(RED)\nNOTE: The minilibx-linux library is not compiled, and is necessary in order to link $(NAME).\n$(RESET)"; \
-	# 	echo "$(BLUE)Please compile it manually by running $(GREEN)'make -C minilibx-linux'$(BLUE),"; \
-	# 	echo "or running $(GREEN)'make'$(BLUE) in the $(GREEN)minilibx$(BLUE) directory.$(RESET)\n"; \
-	# 	exit 1; \
-	# else \
-	# 	printf "$(GREEN)\n- Minilibx-linux library is compiled yet. -\n\n$(RESET)"; \
-	# fi
 	@$(CC) $(OBJS) $(LFLAGS) $(LIB_NAMES) -o $(NAME)
 	@printf "$(GREEN)Linking $(BLUE)$(NAME)$(RESET)\n"	
 
-$(O_DIR):
+$(OBJ_DIR):
 	$(MKDIR) $@
 
 # ─────────── #
 #  LIBRARIES  #
 # ─────────── #
-
-# $(LIBFT):
-# 	$(MAKE) -C $(LIBFT_ROOT)
-#
-# $(MLX):
-# 	$(MAKE) -C $(MLX_ROOT)
 
 $(LIBRARIES):
 	$(MAKE) -C $(dir $@)
