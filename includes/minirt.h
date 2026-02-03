@@ -49,6 +49,25 @@ typedef struct s_color
 	int	b;
 }	t_color;
 
+typedef struct s_colors
+{
+	t_color	ambient;
+	t_color	diffuse;
+	t_color	specular;
+	t_color	reflect;
+	t_color	refract;
+	bool	is_shadow;
+}	t_colors;
+
+typedef struct s_hit
+{
+	t_vec3	nhit;
+	t_vec3	phit;
+	float	t;
+	t_color	color;
+}	t_hit;
+
+
 /*
 ** --------------------------------------------------------------------------
 ** Ray Structure
@@ -79,69 +98,13 @@ typedef struct s_camera
 	t_vec3	orientation;
 	double	fov;
 }	t_camera;
-
+	
 typedef struct s_light
 {
 	t_vec3	light_point;
 	double	brightness_ratio;
 	t_color	color;
 }	t_light;
-
-/*
-** --------------------------------------------------------------------------
-** Shapes
-** --------------------------------------------------------------------------
-*/
-
-typedef struct s_sphere
-{
-	double	diameter;
-	t_vec3	center;
-	t_color	color;
-}	t_sphere;
-
-typedef struct s_plane
-{
-	t_vec3	point;
-	t_vec3	normal;
-	t_color	color;
-}	t_plane;
-
-typedef struct s_cylinder
-{
-	double	diameter;
-	double	height;
-	t_vec3	center;
-	t_vec3	axis;
-	t_color	color;
-}	t_cylinder;
-
-/*
-** --------------------------------------------------------------------------
-** Object Wrapper (Tagged Union)
-** --------------------------------------------------------------------------
-*/
-
-typedef enum e_object_type
-{
-	SPHERE,
-	PLANE,
-	CYLINDER
-}	t_object_type;
-
-typedef union u_object_data
-{
-	t_sphere	sp;
-	t_plane		pl;
-	t_cylinder	cy;
-}	t_object_data;
-
-typedef struct s_object
-{
-	t_object_type	type;
-	t_object_data	data;
-	struct s_object	*next;
-}	t_object;
 
 /*
 ** --------------------------------------------------------------------------
