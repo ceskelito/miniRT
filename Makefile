@@ -48,9 +48,9 @@ PARSER 	=	parser			\
 UTILS 	=	debug		\
 			cleanup
 
-FILES	= main \
-		  $(UTILS) \
-		  $(PARSER)
+FILES	=	main		\
+			$(UTILS)	\
+			$(PARSER)
 
 OBJ_DIR		= objs
 SRC_DIR		= srcs
