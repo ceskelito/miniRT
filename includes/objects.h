@@ -1,24 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minirt.h                                           :+:      :+:    :+:   */
+/*   objects.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: antigravity <antigravity@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/26 11:42:00 by antigravit        #+#    #+#             */
-/*   Updated: 2026/01/26 11:42:00 by antigravit       ###   ########.fr       */
+/*   Updated: 2026/02/06 10:59:38 by rceschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef OBJECTS_H
 # define OBJECTS_H
 
-# include <math.h>
 # include "minirt.h"
-# include <stdlib.h>
-# include <unistd.h>
-# include <fcntl.h>
-# include <stdio.h>
 
 /*
 ** --------------------------------------------------------------------------
@@ -51,7 +46,11 @@ typedef struct s_cylinder
 
 typedef struct s_triangle
 {
-	t_object_type	id;
+	// Ric -> Rob !!
+	// Commentanto per evitare dipendenze incrociate tra le definizioni
+	// Non credo sia necessario come dato
+	
+	// t_object_type	id;
 	t_vec3		c[3];
 	t_vec3		edge[3];
 	t_vec3		n;
@@ -59,23 +58,25 @@ typedef struct s_triangle
 	float		area2;
 }	t_triangle;
 
-typedef struct s_cylinder
-{
-	t_object_type	id;
-	t_vec3		coords;
-	t_vec3		orient;
-	float		diameter;
-	float		height;
-	float		r2;
-	t_vec3		p1;
-	t_vec3		p2;
-	t_vec3		delta_p;
-	t_color		color;
-}	t_cylinder;
+// Redefinition of t_cylinder //
+
+// typedef struct s_cylinder
+// {
+// 	// t_object_type	id;
+// 	t_vec3		coords;
+// 	t_vec3		orient;
+// 	float		diameter;
+// 	float		height;
+// 	float		r2;
+// 	t_vec3		p1;
+// 	t_vec3		p2;
+// 	t_vec3		delta_p;
+// 	t_color		color;
+// }	t_cylinder;
 
 typedef	struct s_torus
 {
-	t_object_type	id;
+	// t_object_type	id;
 	t_vec3		coords;
 	t_vec3		orient;
 	float		sml_r;
@@ -114,3 +115,5 @@ typedef struct s_object
 	t_object_data	data;
 	struct s_object	*next;
 }	t_object;
+
+#endif

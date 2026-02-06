@@ -6,7 +6,7 @@
 /*   By: antigravity <antigravity@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/26 11:42:00 by antigravit        #+#    #+#             */
-/*   Updated: 2026/01/26 11:42:00 by antigravit       ###   ########.fr       */
+/*   Updated: 2026/02/06 10:54:00 by rceschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,8 @@ typedef struct s_color
 	int	b;
 }	t_color;
 
+// Ric -> Rob ??
+// Come mai abbiamo la struct colors, se poi ogni elemento mantiene il suo colore nella propria?
 typedef struct s_colors
 {
 	t_color	ambient;
@@ -66,7 +68,6 @@ typedef struct s_hit
 	float	t;
 	t_color	color;
 }	t_hit;
-
 
 /*
 ** --------------------------------------------------------------------------
@@ -111,6 +112,9 @@ typedef struct s_light
 ** Main Scene & Context
 ** --------------------------------------------------------------------------
 */
+
+// Mandatory to avoid recursive inclusion
+typedef struct s_object t_object;
 
 typedef struct s_scene
 {
