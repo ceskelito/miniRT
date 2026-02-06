@@ -6,7 +6,7 @@
 /*   By: antigravity <antigravity@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/26 11:42:00 by antigravit        #+#    #+#             */
-/*   Updated: 2026/02/06 15:59:55 by rceschel         ###   ########.fr       */
+/*   Updated: 2026/02/06 17:44:09 by rceschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,9 @@
 ** --------------------------------------------------------------------------
 */
 
-# define WIDTH 1920
-# define HEIGHT 1080
+# define WIN_WIDTH 1920
+# define WIN_HEIGHT 1080
+# define WIN_NAME "MiniRT"
 # define EPSILON 0.00001
 
 /*

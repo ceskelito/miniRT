@@ -11,7 +11,7 @@ MKDIR      = mkdir -p
 FT_PATH		= libft
 MLX_PATH	= minilibx
 
-CFLAGS     = -Wall -Wextra -Werror
+CFLAGS     = -Wall -Wextra -Werror -g
 IFLAGS  = -I$(MLX_ROOT) -I$(LIBFT_ROOT)/headers -Iincludes
 LFLAGS	= -L$(MLX_ROOT)	-lmlx 	\
     	  -L$(LIBFT_ROOT) 	-lft	\
