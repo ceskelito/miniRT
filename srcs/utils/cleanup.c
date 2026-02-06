@@ -14,14 +14,16 @@
 #include "objects.h"
 #include "parser.h"
 
-void free_scene(t_minirt *rt) {
-	t_object *curr;
-	t_object *temp;
+void	free_scene(t_minirt *rt)
+{
+	t_object	*curr;
+	t_object	*temp;
 
 	if (!rt)
-		return;
+		return ;
 	curr = rt->scene.objects;
-	while (curr) {
+	while (curr)
+	{
 		temp = curr;
 		curr = curr->next;
 		free(temp);
@@ -29,7 +31,8 @@ void free_scene(t_minirt *rt) {
 	rt->scene.objects = NULL;
 }
 
-void exit_error(char *msg, t_minirt *rt) {
+void	exit_error(char *msg, t_minirt *rt)
+{
 	ft_putstr_fd("Error\n", 2);
 	ft_putstr_fd(msg, 2);
 	ft_putstr_fd("\n", 2);
