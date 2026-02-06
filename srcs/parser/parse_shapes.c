@@ -6,10 +6,12 @@
 /*   By: antigravity <antigravity@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/26 12:00:00 by antigravit        #+#    #+#             */
-/*   Updated: 2026/01/26 12:00:00 by antigravit       ###   ########.fr       */
+/*   Updated: 2026/02/06 11:10:09 by rceschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "minirt.h"
+#include "objects.h"
 #include "parser.h"
 
 static void add_object_to_scene(t_minirt *rt, t_object *new_obj) {

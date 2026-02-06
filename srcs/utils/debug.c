@@ -6,10 +6,12 @@
 /*   By: antigravity <antigravity@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/26 12:00:00 by antigravit        #+#    #+#             */
-/*   Updated: 2026/01/26 12:00:00 by antigravit       ###   ########.fr       */
+/*   Updated: 2026/02/06 11:05:17 by rceschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "minirt.h"
+#include "objects.h"
 #include "parser.h"
 
 static void print_vec3(char *name, t_vec3 v) {
