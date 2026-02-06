@@ -6,13 +6,14 @@
 /*   By: antigravity <antigravity@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/26 11:42:00 by antigravit        #+#    #+#             */
-/*   Updated: 2026/02/06 10:54:00 by rceschel         ###   ########.fr       */
+/*   Updated: 2026/02/06 11:05:55 by rceschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINIRT_H
 # define MINIRT_H
 
+# include <stdbool.h>
 # include <math.h>
 # include <stdlib.h>
 # include <unistd.h>
