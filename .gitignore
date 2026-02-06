@@ -1,4 +1,5 @@
 minirt
+*.json
 
 # Prerequisites
 *.d
