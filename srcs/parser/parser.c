@@ -6,7 +6,7 @@
 /*   By: antigravity <antigravity@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/26 12:00:00 by antigravit        #+#    #+#             */
-/*   Updated: 2026/02/06 11:10:20 by rceschel         ###   ########.fr       */
+/*   Updated: 2026/02/06 15:57:51 by rceschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,22 +14,25 @@
 #include "objects.h"
 #include "parser.h"
 
-void free_tokens(char **tokens) {
-	int i;
+void	free_tokens(char **tokens)
+{
+	int	i;
 
 	if (!tokens)
-		return;
+		return ;
 	i = 0;
-	while (tokens[i]) {
+	while (tokens[i])
+	{
 		free(tokens[i]);
 		i++;
 	}
 	free(tokens);
 }
 
-static void dispatch_line(char **tokens, t_minirt *rt) {
+static void	dispatch_line(char **tokens, t_minirt *rt)
+{
 	if (!tokens || !tokens[0])
-		return;
+		return ;
 	if (ft_strncmp(tokens[0], "A", 2) == 0)
 		parse_ambient(tokens, rt);
 	else if (ft_strncmp(tokens[0], "C", 2) == 0)
@@ -43,23 +46,25 @@ static void dispatch_line(char **tokens, t_minirt *rt) {
 	else if (ft_strncmp(tokens[0], "cy", 3) == 0)
 		parse_cylinder(tokens, rt);
 	else if (tokens[0][0] == '#')
-		return;
+		return ;
 	else
 		exit_error("Unknown identifier", rt);
 }
 
-static void process_line(char *line, t_minirt *rt) {
-	char **tokens;
-	char *trimmed;
+static void	process_line(char *line, t_minirt *rt)
+{
+	char	**tokens;
+	char	*trimmed;
 
 	if (!line)
-		return;
+		return ;
 	trimmed = ft_strtrim(line, "\n");
 	if (!trimmed)
-		return; // Empty line or alloc fail handled naturally
-	if (ft_strlen(trimmed) == 0) {
+		return ;
+	if (ft_strlen(trimmed) == 0)
+	{
 		free(trimmed);
-		return;
+		return ;
 	}
 	tokens = ft_split(trimmed, ' ');
 	free(trimmed);
@@ -70,19 +75,21 @@ static void process_line(char *line, t_minirt *rt) {
 	free_tokens(tokens);
 }
 
-void parse_scene(char *filename, t_minirt *rt) {
-	int fd;
-	char *line;
+void	parse_scene(char *filename, t_minirt *rt)
+{
+	int		fd;
+	char	*line;
 
 	if (ft_strncmp(filename + ft_strlen(filename) - 3, ".rt", 3) != 0)
 		exit_error("File must have .rt extension", rt);
 	fd = open(filename, O_RDONLY);
 	if (fd < 0)
 		exit_error("Cannot open file", rt);
-	while (1) {
+	while (1)
+	{
 		line = get_next_line(fd);
 		if (!line)
-			break;
+			break ;
 		process_line(line, rt);
 		free(line);
 	}

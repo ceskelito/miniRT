@@ -14,14 +14,18 @@
 #include "objects.h"
 #include "parser.h"
 
-static void add_object_to_scene(t_minirt *rt, t_object *new_obj) {
-	t_object *curr;
+static void	add_object_to_scene(t_minirt *rt, t_object *new_obj)
+{
+	t_object	*curr;
 
 	if (!new_obj)
 		exit_error("Memory allocation failed for object", rt);
-	if (!rt->scene.objects) {
+	if (!rt->scene.objects)
+	{
 		rt->scene.objects = new_obj;
-	} else {
+	}
+	else
+	{
 		curr = rt->scene.objects;
 		while (curr->next)
 			curr = curr->next;
@@ -29,8 +33,9 @@ static void add_object_to_scene(t_minirt *rt, t_object *new_obj) {
 	}
 }
 
-void parse_sphere(char **tokens, t_minirt *rt) {
-	t_object *obj;
+void	parse_sphere(char **tokens, t_minirt *rt)
+{
+	t_object	*obj;
 
 	if (!tokens[1] || !tokens[2] || !tokens[3] || tokens[4])
 		exit_error("Invalid Sphere format", rt);
@@ -47,8 +52,9 @@ void parse_sphere(char **tokens, t_minirt *rt) {
 	add_object_to_scene(rt, obj);
 }
 
-void parse_plane(char **tokens, t_minirt *rt) {
-	t_object *obj;
+void	parse_plane(char **tokens, t_minirt *rt)
+{
+	t_object	*obj;
 
 	if (!tokens[1] || !tokens[2] || !tokens[3] || tokens[4])
 		exit_error("Invalid Plane format", rt);
@@ -66,11 +72,12 @@ void parse_plane(char **tokens, t_minirt *rt) {
 	add_object_to_scene(rt, obj);
 }
 
-void parse_cylinder(char **tokens, t_minirt *rt) {
-	t_object *obj;
+void	parse_cylinder(char **tokens, t_minirt *rt)
+{
+	t_object	*obj;
 
-	if (!tokens[1] || !tokens[2] || !tokens[3] || !tokens[4] || !tokens[5] ||
-		tokens[6])
+	if (!tokens[1] || !tokens[2] || !tokens[3] || !tokens[4] || !tokens[5]
+		|| tokens[6])
 		exit_error("Invalid Cylinder format", rt);
 	obj = malloc(sizeof(t_object));
 	if (!obj)

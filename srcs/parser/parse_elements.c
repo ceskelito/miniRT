@@ -14,8 +14,9 @@
 #include "objects.h"
 #include "parser.h"
 
-void parse_ambient(char **tokens, t_minirt *rt) {
-	static int count = 0;
+void	parse_ambient(char **tokens, t_minirt *rt)
+{
+	static int	count = 0;
 
 	if (count++ > 0)
 		exit_error("Multiple Ambient (A) defined", rt);
@@ -28,8 +29,9 @@ void parse_ambient(char **tokens, t_minirt *rt) {
 		exit_error("Invalid Ambient color", rt);
 }
 
-void parse_camera(char **tokens, t_minirt *rt) {
-	static int count = 0;
+void	parse_camera(char **tokens, t_minirt *rt)
+{
+	static int	count = 0;
 
 	if (count++ > 0)
 		exit_error("Multiple Cameras (C) defined", rt);
@@ -44,8 +46,9 @@ void parse_camera(char **tokens, t_minirt *rt) {
 		exit_error("Camera FOV must be [0, 180]", rt);
 }
 
-void parse_light(char **tokens, t_minirt *rt) {
-	static int count = 0;
+void	parse_light(char **tokens, t_minirt *rt)
+{
+	static int	count = 0;
 
 	if (count++ > 0)
 		exit_error("Multiple Lights (L) defined", rt);
@@ -54,13 +57,16 @@ void parse_light(char **tokens, t_minirt *rt) {
 	if (!parse_vec3(tokens[1], &rt->scene.light.light_point))
 		exit_error("Invalid Light point", rt);
 	rt->scene.light.brightness_ratio = ft_atof(tokens[2]);
-	if (rt->scene.light.brightness_ratio < 0.0 ||
-		rt->scene.light.brightness_ratio > 1.0)
+	if (rt->scene.light.brightness_ratio < 0.0
+		|| rt->scene.light.brightness_ratio > 1.0)
 		exit_error("Light brightness must be [0.0, 1.0]", rt);
-	if (tokens[3]) {
+	if (tokens[3])
+	{
 		if (!parse_color(tokens[3], &rt->scene.light.color))
 			exit_error("Invalid Light color", rt);
-	} else {
+	}
+	else
+	{
 		rt->scene.light.color.r = 255;
 		rt->scene.light.color.g = 255;
 		rt->scene.light.color.b = 255;
