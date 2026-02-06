@@ -6,13 +6,18 @@
 /*   By: antigravity <antigravity@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/26 12:00:00 by antigravit        #+#    #+#             */
-/*   Updated: 2026/02/06 11:09:59 by rceschel         ###   ########.fr       */
+/*   Updated: 2026/02/06 16:56:40 by rceschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
-#include "objects.h"
 #include "parser.h"
+
+static inline bool	is_normalized(t_vec3 *v) {
+	return ((v->x >= -1 && v->x <= 1) &&
+			(v->y >= -1 && v->y <= 1) &&
+			(v->z >= -1 && v->z <= 1));
+}
 
 void	parse_ambient(char **tokens, t_minirt *rt)
 {
@@ -39,7 +44,8 @@ void	parse_camera(char **tokens, t_minirt *rt)
 		exit_error("Invalid Camera format", rt);
 	if (!parse_vec3(tokens[1], &rt->scene.camera.view_point))
 		exit_error("Invalid Camera view point", rt);
-	if (!parse_vec3(tokens[2], &rt->scene.camera.orientation))
+	if (!parse_vec3(tokens[2], &rt->scene.camera.orientation) ||
+		!is_normalized(&rt->scene.camera.orientation))
 		exit_error("Invalid Camera orientation", rt);
 	rt->scene.camera.fov = ft_atoi(tokens[3]);
 	if (rt->scene.camera.fov < 0 || rt->scene.camera.fov > 180)
