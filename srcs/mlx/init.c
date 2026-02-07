@@ -6,7 +6,7 @@
 /*   By: rceschel <rceschel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 13:08:20 by rceschel          #+#    #+#             */
-/*   Updated: 2026/02/07 18:13:08 by rceschel         ###   ########.fr       */
+/*   Updated: 2026/02/07 18:15:56 by rceschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ int mlx_loop_init(t_minirt *rt) {
 	mlx_failure = mlx_data_init(&(rt->mlx), &(rt->win), 
 							WIN_WIDTH, WIN_HEIGHT, WIN_NAME);
 	if (mlx_failure)
-		return (1);
+		exit(1);
 	mlx_loop_hook(rt->win, NULL, NULL);
 	mlx_hook(rt->win, 17, 0, &close_window, rt);
 	mlx_hook(rt->win, 2, 1L << 0, &handle_keypress, rt);
