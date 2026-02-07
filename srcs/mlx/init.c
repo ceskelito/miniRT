@@ -6,7 +6,7 @@
 /*   By: rceschel <rceschel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 13:08:20 by rceschel          #+#    #+#             */
-/*   Updated: 2026/02/07 18:12:05 by rceschel         ###   ########.fr       */
+/*   Updated: 2026/02/07 18:13:08 by rceschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ int	mlx_data_init(void **mlx_ptr, void **win_ptr, int w_l, int w_h, char *w_name
 	return (0);
 }
 
-int	close_window(t_minirt *rt)
+int	mlx_close_window(t_minirt *rt)
 {
 	if (rt->win)
 		mlx_destroy_window(rt->mlx, rt->win);
