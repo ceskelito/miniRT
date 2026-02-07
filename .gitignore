@@ -1,5 +1,6 @@
 minirt
 *.json
+.cache
 
 # Prerequisites
 *.d
