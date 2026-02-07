@@ -48,9 +48,12 @@ PARSER 	=	parser			\
 UTILS 	=	debug		\
 			cleanup
 
+MLX_S 	=	init
+
 FILES	=	main		\
 			$(UTILS)	\
-			$(PARSER)
+			$(PARSER)	\
+			$(MLX_S)
 
 OBJ_DIR		= objs
 SRC_DIR		= srcs
@@ -60,7 +63,8 @@ SRCS 		= $(addsuffix .c, $(FILES))
 
 vpath %.c 	$(SRC_DIR) 			\
 			:$(SRC_DIR)/parser	\
-			:$(SRC_DIR)/utils
+			:$(SRC_DIR)/utils	\
+			:$(SRC_DIR)/mlx
 
 # ──────────────────────── #
 #        ANSI COLORS       #
@@ -73,6 +77,7 @@ RESET      := \033[0m
 # ──────────────────────── #
 #       MAIN RULES         #
 # ──────────────────────── #
+
 all: $(NAME)
 
 $(OBJ_DIR)/%.o: %.c | $(OBJ_DIR)
