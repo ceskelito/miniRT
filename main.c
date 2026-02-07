@@ -6,7 +6,7 @@
 /*   By: antigravity <antigravity@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/26 12:00:00 by antigravit        #+#    #+#             */
-/*   Updated: 2026/02/06 18:01:18 by rceschel         ###   ########.fr       */
+/*   Updated: 2026/02/07 13:05:12 by rceschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,24 +16,31 @@
 
 int	mlx_data_init(void **mlx_ptr, void **win_ptr, int w_l, int w_h, char *w_name)
 {
-	*mlx_ptr = mlx_init();
-	if (!*mlx_ptr)
+	void	*mlx;
+	void	*win;
+
+	mlx = mlx_init();
+	if (!mlx)
 		return (1);
-	*win_ptr = mlx_new_window(*mlx_ptr, w_l, w_h, w_name);
-	if (!*win_ptr)
+	win = mlx_new_window(mlx, w_l, w_h, w_name);
+	if (!win)
 	{
-		free(*mlx_ptr);
+		free(mlx);
 		return (1);
 	}
+	*mlx_ptr = mlx;
+	*win_ptr = win;
 	return (0);
 }
 
 int	close_window(t_minirt *rt)
 {
-	mlx_destroy_window(rt->mlx, rt->win);
-	mlx_destroy_display(rt->mlx);
+	if (rt->win)
+		mlx_destroy_window(rt->mlx, rt->win);
+	if (rt->mlx)
+		mlx_destroy_display(rt->mlx);
 	free_scene(rt);
-	return (0);
+	exit(0);
 }
 
 int	handle_keypress(int keycode, t_minirt *rt)
@@ -60,6 +67,7 @@ int	handle_keypress(int keycode, t_minirt *rt)
 int	main(int argc, char **argv)
 {
 	t_minirt	rt;
+	bool		mlx_failure;
 
 	if (argc != 2)
 	{
@@ -69,14 +77,13 @@ int	main(int argc, char **argv)
 	rt.scene.objects = NULL;
 	rt.mlx = NULL;
 	rt.win = NULL;
-	printf("Parsing scene: %s\n", argv[1]);
+	// printf("Parsing scene: %s\n", argv[1]);
 	parse_scene(argv[1], &rt);
-	printf("Parsing complete. Verifying data:\n");
+	// printf("Parsing complete. Verifying data:\n");
 	print_scene(&rt);
-	if (mlx_data_init(&(rt.mlx), &(rt.win), WIN_WIDTH, WIN_HEIGHT, WIN_NAME) != 0)
+	mlx_failure = mlx_data_init(&(rt.mlx), &(rt.win), WIN_WIDTH, WIN_HEIGHT, WIN_NAME);
+	if (mlx_failure)
 		return (1);
-	if (!rt.mlx || !rt.win)
-		return (ft_printf("NONEE"), 1);
 	mlx_loop_hook(rt.win, NULL, NULL);
 	mlx_hook(rt.win, 17, 0, &close_window, &rt);
 	mlx_hook(rt.win, 2, 1L << 0, &handle_keypress, &rt);
