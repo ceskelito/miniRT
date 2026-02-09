@@ -6,7 +6,7 @@
 /*   By: rceschel <rceschel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 13:08:20 by rceschel          #+#    #+#             */
-/*   Updated: 2026/02/07 18:15:56 by rceschel         ###   ########.fr       */
+/*   Updated: 2026/02/09 12:47:33 by rceschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include "mlx.h"
 #include <X11/keysym.h>
 
-int	mlx_data_init(void **mlx_ptr, void **win_ptr, int w_l, int w_h, char *w_name)
+static int	mlx_init_instance(void **mlx_ptr, void **win_ptr, int w_l, int w_h, char *w_name)
 {
 	void	*mlx;
 	void	*win;
@@ -44,10 +44,10 @@ int	mlx_close_window(t_minirt *rt)
 	exit(0);
 }
 
-int	handle_keypress(int keycode, t_minirt *rt)
+static int	handle_keypress(int keycode, t_minirt *rt)
 {
 	if (keycode == XK_Escape)
-		close_window(rt);
+		mlx_close_window(rt);
 	// else if (keycode == XK_Left || keycode == XK_a)
 	// 	win = move_player(map, -1, 0);
 	// else if (keycode == XK_Right || keycode == XK_d)
@@ -69,12 +69,12 @@ int mlx_loop_init(t_minirt *rt) {
 	
 	bool	mlx_failure;
 
-	mlx_failure = mlx_data_init(&(rt->mlx), &(rt->win), 
+	mlx_failure = mlx_init_instance(&(rt->mlx), &(rt->win), 
 							WIN_WIDTH, WIN_HEIGHT, WIN_NAME);
 	if (mlx_failure)
 		exit(1);
 	mlx_loop_hook(rt->win, NULL, NULL);
-	mlx_hook(rt->win, 17, 0, &close_window, rt);
+	mlx_hook(rt->win, 17, 0, &mlx_close_window, rt);
 	mlx_hook(rt->win, 2, 1L << 0, &handle_keypress, rt);
 	mlx_loop(rt->mlx);
 
