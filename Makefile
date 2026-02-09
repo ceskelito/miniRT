@@ -1,6 +1,14 @@
 include libft/mk.var.export/Makefile
 
 # ──────────────────────── #
+#        ANSI COLORS       #
+# ──────────────────────── #
+RED        := \033[0;31m
+GREEN      := \033[0;32m
+BLUE       := \033[0;34m
+RESET      := \033[0m
+
+# ──────────────────────── #
 #      PROJECT CONFIG      #
 # ──────────────────────── #
 NAME       = minirt
@@ -8,13 +16,16 @@ CC         = gcc
 RM         = rm -f
 MKDIR      = mkdir -p
 
-FT_PATH		= libft
-MLX_PATH	= minilibx
-
 CFLAGS     = -Wall -Wextra -Werror -g
-IFLAGS  = -I$(MLX_ROOT) -I$(LIBFT_ROOT)/headers -Iincludes
-LFLAGS	= -L$(MLX_ROOT)	-lmlx 	\
-    	  -L$(LIBFT_ROOT) 	-lft	\
+
+IFLAGS  = -I$(MLX_ROOT) 			\
+		  -I$(LIBFT_ROOT)/headers 	\
+		  -Iincludes
+
+LFLAGS	= -L$(MLX_ROOT)		\
+    	  -L$(LIBFT_ROOT) 	\
+		  -lmlx \
+		  -lft	\
 		  -lm 	\
 		  -lX11 \
 		  -lXext
@@ -26,11 +37,7 @@ LFLAGS	= -L$(MLX_ROOT)	-lmlx 	\
 MLX_ROOT	= minilibx
 MLX_NAME 	= libmlx.a
 
-# LIBEZ_ROOT	= ezalloc
-# LIBEZ_NAME	= libezalloc.a
-
 MLX			= $(MLX_ROOT)/$(MLX_NAME)
-# LIBEZ		= $(LIBEZ_ROOT)/$(LIBEZ_NAME)
 LIBFT 		= $(LIBFT_ROOT)/$(LIBFT_NAME)
 
 LIBRARIES 	= $(LIBFT) $(MLX) 
@@ -67,14 +74,6 @@ vpath %.c 	$(SRC_DIR) 			\
 			:$(SRC_DIR)/mlx
 
 # ──────────────────────── #
-#        ANSI COLORS       #
-# ──────────────────────── #
-RED        := \033[0;31m
-GREEN      := \033[0;32m
-BLUE       := \033[0;34m
-RESET      := \033[0m
-
-# ──────────────────────── #
 #       MAIN RULES         #
 # ──────────────────────── #
 
@@ -84,7 +83,7 @@ $(OBJ_DIR)/%.o: %.c | $(OBJ_DIR)
 	@$(CC) $(CFLAGS) $(IFLAGS) -c $< -o $@
 	@printf "$(GREEN)Compiling $(BLUE)$<$(RESET)\n"
 
-$(NAME): $(OBJS) $(LIBRARIES)
+$(NAME): $(OBJS) | $(LIBRARIES)
 	@$(CC) $(OBJS) $(LFLAGS) $(LIBRARIES) -o $(NAME)
 	@printf "$(GREEN)Linking $(BLUE)$(NAME)$(RESET)\n"	
 
@@ -94,12 +93,6 @@ $(OBJ_DIR):
 # ─────────── #
 #  LIBRARIES  #
 # ─────────── #
-
-# $(LIBFT):
-# 	$(MAKE) -C $(LIBFT_ROOT)
-#
-# $(MLX):
-# 	$(MAKE) -C $(MLX_ROOT)
 
 $(LIBRARIES):
 	$(MAKE) -C $(dir $@)
@@ -128,8 +121,7 @@ deepclean: clean
 
 deepfclean: fclean
 	$(MAKE) fclean -C $(LIBFT_ROOT)
-#	mlx doesn't have fclean target
-	$(MAKE) clean -C $(MLX_ROOT)
+	$(MAKE) clean -C $(MLX_ROOT) #	mlx doesn't have fclean target
 	@echo "\n$(GREEN)Deep fclean completed.\n$(RESET)"
 
 deepre: deepfclean all
