@@ -16,7 +16,7 @@ CC         = gcc
 RM         = rm -f
 MKDIR      = mkdir -p
 
-CFLAGS     = -Wall -Wextra -Werror -g
+CFLAGS     = -Wall -Wextra -Werror
 
 IFLAGS  = -I$(MLX_ROOT) 	\
 		  -I$(LIBFT_INCS) 	\
@@ -79,8 +79,14 @@ vpath %.c 	$(SRC_DIR) 			\
 
 all: $(NAME)
 
-run: all
-	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ./$(NAME) $(RT_FILE)
+debug: CFLAGS += -g3
+
+debug: all
+
+run: DEFAULT_RT = scenes/example.rt
+
+run: debug
+	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ./$(NAME) $(if $(RT_FILE),$(RT_FILE),$(DEFAULT_RT))
 
 $(OBJ_DIR)/%.o: %.c | $(OBJ_DIR)
 	@$(CC) $(CFLAGS) $(IFLAGS) -c $< -o $@
@@ -130,4 +136,4 @@ deepfclean: fclean
 deepre: deepfclean all
 
 # ──────────────────────── #
-.PHONY: all re clean fclean deepre deepclean deepfclean $(LIBRARIES)
+.PHONY: debug run all re clean fclean deepre deepclean deepfclean $(LIBRARIES)
