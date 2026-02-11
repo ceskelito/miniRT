@@ -18,8 +18,8 @@ MKDIR      = mkdir -p
 
 CFLAGS     = -Wall -Wextra -Werror -g
 
-IFLAGS  = -I$(MLX_ROOT) 			\
-		  -I$(LIBFT_ROOT)/headers 	\
+IFLAGS  = -I$(MLX_ROOT) 	\
+		  -I$(LIBFT_INCS) 	\
 		  -Iincludes
 
 LFLAGS	= -L$(MLX_ROOT)		\
