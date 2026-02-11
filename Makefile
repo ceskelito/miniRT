@@ -79,6 +79,9 @@ vpath %.c 	$(SRC_DIR) 			\
 
 all: $(NAME)
 
+run: all
+	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ./$(NAME)
+
 $(OBJ_DIR)/%.o: %.c | $(OBJ_DIR)
 	@$(CC) $(CFLAGS) $(IFLAGS) -c $< -o $@
 	@printf "$(GREEN)Compiling $(BLUE)$<$(RESET)\n"
