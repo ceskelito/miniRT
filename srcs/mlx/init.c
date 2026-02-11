@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rceschel <rceschel@student.42roma.it>      +#+  +:+       +#+        */
+/*   By: rceschel <rceschel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 13:08:20 by rceschel          #+#    #+#             */
-/*   Updated: 2026/02/09 12:47:33 by rceschel         ###   ########.fr       */
+/*   Updated: 2026/02/11 16:02:06 by rceschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,8 @@ static int	mlx_init_instance(void **mlx_ptr, void **win_ptr, int w_l, int w_h, c
 	}
 	*mlx_ptr = mlx;
 	*win_ptr = win;
+	mlx = NULL;
+	win = NULL;
 	return (0);
 }
 
@@ -38,8 +40,10 @@ int	mlx_close_window(t_minirt *rt)
 {
 	if (rt->win)
 		mlx_destroy_window(rt->mlx, rt->win);
-	if (rt->mlx)
+	if (rt->mlx) {
 		mlx_destroy_display(rt->mlx);
+		free(rt->mlx);
+	}
 	free_scene(rt);
 	exit(0);
 }
