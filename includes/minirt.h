@@ -6,7 +6,7 @@
 /*   By: rceschel <rceschel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/26 11:42:00 by antigravit        #+#    #+#             */
-/*   Updated: 2026/02/23 16:06:58 by rceschel         ###   ########.fr       */
+/*   Updated: 2026/03/26 17:02:48 by rceschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,15 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
+# include <math.h>
 
-# include "vec3.h" 	// recursively includes math.h 
+# include "vec3.h"
 # include "objects.h" // defines t_color
+
+typedef struct s_color t_color; // defined in includes/objets.h
+
+// Mandatory to avoid recursive inclusion
+typedef struct s_object	t_object;
 
 /*
 ** --------------------------------------------------------------------------
@@ -34,7 +40,7 @@
 # define EPSILON 0.00001
 
 /*
-** --------------------------------------------------------------------------
+* --------------------------------------------------------------------------
 ** Basic Structures
 ** --------------------------------------------------------------------------
 */
@@ -103,9 +109,6 @@ typedef struct s_light
 ** Main Scene & Context
 ** --------------------------------------------------------------------------
 */
-
-// Mandatory to avoid recursive inclusion
-typedef struct s_object	t_object;
 
 typedef struct s_scene
 {

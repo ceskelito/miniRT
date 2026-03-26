@@ -1,8 +1,6 @@
 #ifndef VEC3_H
 # define VEC3_H
 
-#include <math.h> // Not used directly, but used in the definitions
-
 typedef struct s_vec3
 {
 	double				x;
