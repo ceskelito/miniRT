@@ -1,4 +1,7 @@
 minirt
+
+!compile_commands.json
+
 *.json
 .cache
 
