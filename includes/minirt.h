@@ -1,0 +1,127 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minirt.h                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rceschel <rceschel@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/01/26 11:42:00 by antigravit        #+#    #+#             */
+/*   Updated: 2026/02/23 16:06:58 by rceschel         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#ifndef MINIRT_H
+# define MINIRT_H
+
+# include <fcntl.h>
+# include <stdbool.h>
+# include <stdio.h>
+# include <stdlib.h>
+# include <unistd.h>
+
+# include "vec3.h" 	// recursively includes math.h 
+# include "objects.h" // defines t_color
+
+/*
+** --------------------------------------------------------------------------
+** Macros
+** --------------------------------------------------------------------------
+*/
+
+# define WIN_WIDTH 1920
+# define WIN_HEIGHT 1080
+# define WIN_NAME "MiniRT"
+# define EPSILON 0.00001
+
+/*
+** --------------------------------------------------------------------------
+** Basic Structures
+** --------------------------------------------------------------------------
+*/
+
+// Ric -> Rob ??
+// Come mai abbiamo la struct colors,
+// se poi ogni elemento mantiene il suo colore nella propria?
+typedef struct s_colors
+{
+	t_color				ambient;
+	t_color				diffuse;
+	t_color				specular;
+	t_color				reflect;
+	t_color				refract;
+	bool				is_shadow;
+}						t_colors;
+
+typedef struct s_hit
+{
+	t_vec3				nhit;
+	t_vec3				phit;
+	float				t;
+	t_color				color;
+}						t_hit;
+
+/*
+** --------------------------------------------------------------------------
+** Ray Structure
+** --------------------------------------------------------------------------
+*/
+
+typedef struct s_ray
+{
+	t_vec3				origin;
+	t_vec3				dir;
+}						t_ray;
+
+/*
+** --------------------------------------------------------------------------
+** Scene Elements
+** --------------------------------------------------------------------------
+*/
+
+typedef struct s_ambient
+{
+	double				ratio;
+	t_color				color;
+}						t_ambient;
+
+typedef struct s_camera
+{
+	t_vec3				view_point;
+	t_vec3				orientation;
+	double				fov;
+}						t_camera;
+
+typedef struct s_light
+{
+	t_vec3				light_point;
+	double				brightness_ratio;
+	t_color				color;
+}						t_light;
+
+/*
+** --------------------------------------------------------------------------
+** Main Scene & Context
+** --------------------------------------------------------------------------
+*/
+
+// Mandatory to avoid recursive inclusion
+typedef struct s_object	t_object;
+
+typedef struct s_scene
+{
+	t_ambient			ambient;
+	t_camera			camera;
+	t_light				light;
+	t_object			*objects;
+}						t_scene;
+
+typedef struct s_minirt
+{
+	void				*mlx;
+	void				*win;
+	int					width;
+	int					height;
+	t_scene				scene;
+}						t_minirt;
+
+#endif
