@@ -13,17 +13,17 @@
 #include "minirt.h"
 
 /*
-** Calcolo dei coefficienti a, b, c dell'equazione quadratica
-** per l'intersezione raggio-cono.
+** Computes coefficients a, b, c of the quadratic equation
+** for ray-cone intersection.
 **
-** Il cono ha vertice (apice) in: center + height * axis
-** Il semiangolo alpha soddisfa: tan(a) = (diameter/2) / height
-** cos^2(a) = h^2 / (h^2 + r^2), chiamato 'm' nel codice.
+** The cone apex is at: center + height * axis
+** The half-angle alpha satisfies: tan(a) = (diameter/2) / height
+** cos^2(a) = h^2 / (h^2 + r^2), named 'm' in the code.
 **
-** Equazione implicita del cono dal vertice V con asse A:
+** Implicit cone equation from apex V with axis A:
 **   (P-V)·A)^2 = cos^2(a) * |P-V|^2
 **
-** Sostituendo P = O + tD e ponendo W = O - V:
+** Substituting P = O + tD and setting W = O - V:
 **   a = (D·A)^2 - m * (D·D)
 **   b = 2 * [(D·A)(W·A) - m * (D·W)]
 **   c = (W·A)^2 - m * (W·W)
@@ -47,14 +47,14 @@ static void	get_co_abc(t_ray ray, t_cone co, double *abc)
 }
 
 /*
-** Normale del cono nel punto di impatto.
+** Cone normal at the hit point.
 **
-** Data la superficie implicita F = (v·A)^2 - cos^2(a) * |v|^2 = 0
-** il gradiente (normale non normalizzata) e':
+** Given the implicit surface F = (v·A)^2 - cos^2(a) * |v|^2 = 0,
+** the gradient (unnormalized normal) is:
 **   grad(F) = 2 * [cos^2(a) * v - (v·A) * A]
 **
-** Questo punta verso l'esterno del cono.
-** v = phit - apex (vettore dal vertice al punto di impatto)
+** This points outward from the cone.
+** v = phit - apex (vector from apex to hit point)
 */
 static t_vec3	get_cone_normal(t_cone co, t_vec3 phit)
 {
@@ -71,15 +71,15 @@ static t_vec3	get_cone_normal(t_cone co, t_vec3 phit)
 }
 
 /*
-** Intersezione raggio-cono finito.
+** Finite ray-cone intersection.
 **
-** Passi:
-** 1. Calcola i coefficienti quadratici (get_co_abc)
-** 2. Risolvi at^2 + bt + c = 0 con il discriminante
-** 3. Prendi la radice piu' piccola positiva (la piu' vicina)
-** 4. Verifica che il punto di impatto sia entro l'altezza del cono:
-**    la proiezione 'h' dall'apice lungo l'asse deve essere
-**    in [-height, 0] (il cono si estende dall'apice verso la base)
+** Steps:
+** 1. Compute quadratic coefficients (get_co_abc)
+** 2. Solve at^2 + bt + c = 0 using the discriminant
+** 3. Take the smallest positive root (the nearest one)
+** 4. Check that the hit point lies within cone height:
+**    projection 'h' from apex along the axis must be
+**    in [-height, 0] (cone extends from apex toward base)
 */
 bool	hit_cone(t_ray ray, t_cone co, t_hit *hit)
 {

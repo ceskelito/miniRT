@@ -1,6 +1,6 @@
 #include "minirt.h"
 
-//serve per da interruttore per gestire l'oggetto giusto
+// Dispatches to the correct intersection routine by object type
 bool intersect(t_ray ray, t_object *obj, t_hit *hit)
 {
     if (obj->type == SPHERE)
@@ -18,7 +18,7 @@ bool intersect(t_ray ray, t_object *obj, t_hit *hit)
     return (false);
 }
 
-//funzione per il calcolo dei parametri del clilndro 
+// Computes a, b, c coefficients for cylinder intersection
 static void	get_cy_abc(t_ray ray, t_cylinder cy, double *abc)
 {
 	t_vec3	oc;

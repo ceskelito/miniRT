@@ -4,31 +4,31 @@ bool hit_plane(t_ray ray, t_plane pl, t_hit *hit)
 {
     double  denom;
     double  t;
-    t_vec3  p0l0; // Vettore tra origine raggio e punto sul piano
+	t_vec3  p0l0; // Vector between ray origin and a point on the plane
 
-    // 1. Calcoliamo il denominatore (prodotto scalare tra direzione raggio e normale piano)
-    // Se il prodotto scalare è 0, il raggio è perfettamente parallelo al piano.
+	// 1. Compute the denominator (dot product between ray direction and plane normal)
+	// If the dot product is 0, the ray is perfectly parallel to the plane.
     denom = vec3_dot(pl.normal, ray.dir);
 
-    // Usiamo EPSILON per evitare divisioni per zero o colpi quasi paralleli
+	// Use EPSILON to avoid divisions by zero or nearly parallel hits
     if (fabs(denom) < EPSILON)
         return (false);
 
-    // 2. Calcoliamo la distanza t
-    // Formula: t = ((PuntoPiano - OrigineRaggio) . Normale) / (DirezioneRaggio . Normale)
+	// 2. Compute distance t
+	// Formula: t = ((PlanePoint - RayOrigin) . Normal) / (RayDirection . Normal)
     p0l0 = vec3_sub(pl.point, ray.origin);
     t = vec3_dot(p0l0, pl.normal) / denom;
 
-    // 3. Verifichiamo se l'impatto è davanti alla camera
+	// 3. Check whether the intersection is in front of the camera
     if (t < EPSILON)
         return (false);
 
-    // 4. Se siamo qui, abbiamo colpito il piano! Riempiamo la struct hit
+	// 4. If we get here, the plane was hit. Fill the hit struct
     hit->t = t;
     hit->phit = vec3_add(ray.origin, vec3_mult(ray.dir, t));
     
-    // La normale del piano è fissa (quella del parser), ma dobbiamo assicurarci
-    // che punti "contro" il raggio (per l'illuminazione)
+	// The plane normal is fixed (from parsing), but it must point
+	// against the ray direction for consistent lighting
     if (denom > 0)
         hit->nhit = vec3_mult(pl.normal, -1.0);
     else
@@ -90,11 +90,11 @@ bool	hit_cylinder(t_ray ray, t_cylinder cy, t_hit *hit)
 }
 
 /*
-** Möller–Trumbore: intersezione raggio-triangolo.
-** Usa i lati (edge) e la normale pre-calcolati dal parser.
-** u e v sono le coordinate baricentriche: se u >= 0, v >= 0
-** e u + v <= 1, il punto di impatto cade dentro il triangolo.
-** params[0] = 1/determinante, params[1] = u, params[2] = v
+** Moller-Trumbore ray-triangle intersection.
+** Uses precomputed edges and normal from the parser.
+** u and v are barycentric coordinates: if u >= 0, v >= 0,
+** and u + v <= 1, the hit point lies inside the triangle.
+** params[0] = 1/determinant, params[1] = u, params[2] = v
 */
 bool	hit_triangle(t_ray ray, t_triangle tr, t_hit *hit)
 {

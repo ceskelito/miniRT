@@ -13,17 +13,17 @@
 #include "minirt.h"
 
 /*
-** Signed Distance Function (SDF) del toro.
+** Signed Distance Function (SDF) of a torus.
 **
-** Un toro e' definito da due raggi:
-**   big_r (R) = raggio maggiore (distanza dal centro all'anello)
-**   sml_r (r) = raggio minore (spessore del tubo)
+** A torus is defined by two radii:
+**   big_r (R) = major radius (distance from center to ring)
+**   sml_r (r) = minor radius (tube thickness)
 **
-** Per un punto P, distanza dall'asse del toro:
-**   dist_axis = sqrt(|v|^2 - proj^2), con proj = v · orient
-** La SDF del toro e':
+** For a point P, distance from torus axis:
+**   dist_axis = sqrt(|v|^2 - proj^2), where proj = v · orient
+** Torus SDF is:
 **   sqrt((dist_axis - R)^2 + proj^2) - r
-** Positiva fuori, negativa dentro, zero sulla superficie.
+** Positive outside, negative inside, zero on the surface.
 */
 static double	torus_sdf(t_vec3 p, t_torus tor)
 {
@@ -41,15 +41,15 @@ static double	torus_sdf(t_vec3 p, t_torus tor)
 }
 
 /*
-** Normale del toro nel punto di impatto.
+** Torus normal at the hit point.
 **
-** Strategia: trovare il punto piu' vicino sull'anello centrale
-** del toro (il cerchio di raggio R). La normale e' il vettore
-** che va da quel punto al punto di impatto, normalizzato.
+** Strategy: find the closest point on the torus center ring
+** (the circle of radius R). The normal is the normalized vector
+** from that ring point to the hit point.
 **
-** v_perp e' la componente di v perpendicolare all'asse del toro.
-** ring_pt = centro + normalize(v_perp) * R
-** normale = normalize(phit - ring_pt)
+** v_perp is the component of v perpendicular to the torus axis.
+** ring_pt = center + normalize(v_perp) * R
+** normal = normalize(phit - ring_pt)
 */
 static t_vec3	get_torus_normal(t_torus tor, t_vec3 phit)
 {
@@ -67,8 +67,8 @@ static t_vec3	get_torus_normal(t_torus tor, t_vec3 phit)
 }
 
 /*
-** Helper: riempie la struct hit per il toro e restituisce true.
-** Separata per rispettare il limite di 25 righe di hit_torus.
+** Helper: fills hit struct for torus and returns true.
+** Kept separate to satisfy the 25-line limit of hit_torus.
 */
 static bool	fill_torus_hit(t_hit *hit, t_torus tor, t_vec3 p, double t)
 {
@@ -80,14 +80,14 @@ static bool	fill_torus_hit(t_hit *hit, t_torus tor, t_vec3 p, double t)
 }
 
 /*
-** Intersezione raggio-toro tramite Sphere Tracing (ray marching).
+** Ray-torus intersection via Sphere Tracing (ray marching).
 **
-** Invece di risolvere l'equazione quartica (grado 4), usiamo
-** la SDF: ad ogni passo avanziamo lungo il raggio di una distanza
-** pari alla SDF stessa. Se la SDF diventa ~0, siamo sulla superficie.
+** Instead of solving the quartic equation (degree 4), we use
+** the SDF: each step advances along the ray by the SDF value.
+** If SDF becomes ~0, we are on the surface.
 **
-** Limiti: 256 iterazioni massime, distanza massima 10000 unita'.
-** fabs(dist) gestisce il caso di leggero overshoot (dist < 0).
+** Limits: 256 max iterations, max distance 10000 units.
+** fabs(dist) handles slight overshoot (dist < 0).
 */
 bool	hit_torus(t_ray ray, t_torus tor, t_hit *hit)
 {
