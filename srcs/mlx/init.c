@@ -6,7 +6,7 @@
 /*   By: rceschel <rceschel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 13:08:20 by rceschel          #+#    #+#             */
-/*   Updated: 2026/03/30 11:53:15 by rceschel         ###   ########.fr       */
+/*   Updated: 2026/03/30 15:10:18 by rceschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,22 +36,21 @@ static int	mlx_init_instance(void **mlx_ptr, void **win_ptr, int w_l, int w_h, c
 	return (0);
 }
 
-int	mlx_close_window(t_minirt *rt)
+int	mlx_close_window(void *mlx_ptr, void *mlx_win)//t_minirt *rt)
 {
-	if (rt->win)
-		mlx_destroy_window(rt->mlx, rt->win);
-	if (rt->mlx) {
-		mlx_destroy_display(rt->mlx);
-		free(rt->mlx);
+	if (mlx_win)
+		mlx_destroy_window(mlx_ptr, mlx_win);
+	if (mlx_ptr) {
+		mlx_destroy_display(mlx_ptr);
+		free(mlx_ptr);
 	}
-	free_scene(rt);
 	exit(EXIT_SUCCESS);
 }
 
 static int	handle_keypress(int keycode, t_minirt *rt)
 {
 	if (keycode == XK_Escape)
-		mlx_close_window(rt);
+		mlx_close_window(rt->mlx, rt->win);
 	// else if (keycode == XK_Left || keycode == XK_a)
 	// 	win = move_player(map, -1, 0);
 	// else if (keycode == XK_Right || keycode == XK_d)
