@@ -6,7 +6,7 @@
 /*   By: antigravity <antigravity@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/26 12:00:00 by antigravit        #+#    #+#             */
-/*   Updated: 2026/03/30 15:11:41 by rceschel         ###   ########.fr       */
+/*   Updated: 2026/03/30 17:45:03 by rceschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,6 @@ int	main(int argc, char **argv)
 	// You're code here
 
 	// mlx_close_window(rt->mlx, rt->win);
-	free_scene(&rt);
+	free_scene(&rt.scene);
 	return (0);
 }
