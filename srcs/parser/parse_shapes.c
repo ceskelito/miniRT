@@ -6,7 +6,7 @@
 /*   By: antigravity <antigravity@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/26 12:00:00 by antigravit        #+#    #+#             */
-/*   Updated: 2026/02/06 11:10:09 by rceschel         ###   ########.fr       */
+/*   Updated: 2026/03/30 15:49:24 by rceschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "objects.h"
 #include "parser.h"
 
-static void	add_object_to_scene(t_minirt *rt, t_object *new_obj)
+static char	*add_object_to_scene(t_minirt *rt, t_object *new_obj)
 {
 	t_object	*curr;
 
@@ -33,64 +33,64 @@ static void	add_object_to_scene(t_minirt *rt, t_object *new_obj)
 	}
 }
 
-void	parse_sphere(char **tokens, t_minirt *rt)
+char	*parse_sphere(char **tokens, t_minirt *rt)
 {
 	t_object	*obj;
 
 	if (!tokens[1] || !tokens[2] || !tokens[3] || tokens[4])
-		exit_error("Invalid Sphere format", rt);
+		return ("Invalid Sphere format");
 	obj = malloc(sizeof(t_object));
 	if (!obj)
-		exit_error("Malloc failed", rt);
+		return ("Malloc failed");
 	obj->type = SPHERE;
 	obj->next = NULL;
 	if (!parse_vec3(tokens[1], &obj->data.sp.center))
-		exit_error("Invalid Sphere center", rt);
+		return ("Invalid Sphere center");
 	obj->data.sp.diameter = ft_atof(tokens[2]);
 	if (!parse_color(tokens[3], &obj->data.sp.color))
-		exit_error("Invalid Sphere color", rt);
-	add_object_to_scene(rt, obj);
+		return ("Invalid Sphere color");
+	return (add_object_to_scene(rt, obj));
 }
 
-void	parse_plane(char **tokens, t_minirt *rt)
+char	*parse_plane(char **tokens, t_minirt *rt)
 {
 	t_object	*obj;
 
 	if (!tokens[1] || !tokens[2] || !tokens[3] || tokens[4])
-		exit_error("Invalid Plane format", rt);
+		return ("Invalid Plane format");
 	obj = malloc(sizeof(t_object));
 	if (!obj)
-		exit_error("Malloc failed", rt);
+		return ("Malloc failed");
 	obj->type = PLANE;
 	obj->next = NULL;
 	if (!parse_vec3(tokens[1], &obj->data.pl.point))
-		exit_error("Invalid Plane point", rt);
+		return ("Invalid Plane point");
 	if (!parse_vec3(tokens[2], &obj->data.pl.normal))
-		exit_error("Invalid Plane normal", rt);
+		return ("Invalid Plane normal");
 	if (!parse_color(tokens[3], &obj->data.pl.color))
-		exit_error("Invalid Plane color", rt);
-	add_object_to_scene(rt, obj);
+		return ("Invalid Plane color");
+	return (add_object_to_scene(rt, obj));
 }
 
-void	parse_cylinder(char **tokens, t_minirt *rt)
+char	*parse_cylinder(char **tokens, t_minirt *rt)
 {
 	t_object	*obj;
 
 	if (!tokens[1] || !tokens[2] || !tokens[3] || !tokens[4] || !tokens[5]
 		|| tokens[6])
-		exit_error("Invalid Cylinder format", rt);
+		return ("Invalid Cylinder format");
 	obj = malloc(sizeof(t_object));
 	if (!obj)
-		exit_error("Malloc failed", rt);
+		return ("Malloc failed");
 	obj->type = CYLINDER;
 	obj->next = NULL;
 	if (!parse_vec3(tokens[1], &obj->data.cy.center))
-		exit_error("Invalid Cylinder center", rt);
+		return ("Invalid Cylinder center");
 	if (!parse_vec3(tokens[2], &obj->data.cy.axis))
-		exit_error("Invalid Cylinder axis", rt);
+		return ("Invalid Cylinder axis");
 	obj->data.cy.diameter = ft_atof(tokens[3]);
 	obj->data.cy.height = ft_atof(tokens[4]);
 	if (!parse_color(tokens[5], &obj->data.cy.color))
-		exit_error("Invalid Cylinder color", rt);
-	add_object_to_scene(rt, obj);
+		return ("Invalid Cylinder color");
+	return (add_object_to_scene(rt, obj));
 }

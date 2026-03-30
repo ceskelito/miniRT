@@ -6,7 +6,7 @@
 /*   By: antigravity <antigravity@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/26 12:00:00 by antigravit        #+#    #+#             */
-/*   Updated: 2026/02/06 16:56:40 by rceschel         ###   ########.fr       */
+/*   Updated: 2026/03/30 15:47:17 by rceschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,57 +19,59 @@ static inline bool	is_normalized(t_vec3 *v) {
 			(v->z >= -1 && v->z <= 1));
 }
 
-void	parse_ambient(char **tokens, t_minirt *rt)
+char	*parse_ambient(char **tokens, t_minirt *rt)
 {
 	static int	count = 0;
 
 	if (count++ > 0)
-		exit_error("Multiple Ambient (A) defined", rt);
+		return ("Multiple Ambient (A) defined");
 	if (!tokens[1] || !tokens[2] || tokens[3])
-		exit_error("Invalid Ambient format: A <ratio> <R,G,B>", rt);
+		return ("Invalid Ambient format: A <ratio> <R,G,B>");
 	rt->scene.ambient.ratio = ft_atof(tokens[1]);
 	if (rt->scene.ambient.ratio < 0.0 || rt->scene.ambient.ratio > 1.0)
-		exit_error("Ambient ratio must be [0.0, 1.0]", rt);
+		return ("Ambient ratio must be [0.0, 1.0]");
 	if (!parse_color(tokens[2], &rt->scene.ambient.color))
-		exit_error("Invalid Ambient color", rt);
+		return ("Invalid Ambient color");
+	return (NULL);
 }
 
-void	parse_camera(char **tokens, t_minirt *rt)
+char	*parse_camera(char **tokens, t_minirt *rt)
 {
 	static int	count = 0;
 
 	if (count++ > 0)
-		exit_error("Multiple Cameras (C) defined", rt);
+		return ("Multiple Cameras (C) defined");
 	if (!tokens[1] || !tokens[2] || !tokens[3] || tokens[4])
-		exit_error("Invalid Camera format", rt);
+		return ("Invalid Camera format");
 	if (!parse_vec3(tokens[1], &rt->scene.camera.view_point))
-		exit_error("Invalid Camera view point", rt);
+		return ("Invalid Camera view point");
 	if (!parse_vec3(tokens[2], &rt->scene.camera.orientation) ||
 		!is_normalized(&rt->scene.camera.orientation))
-		exit_error("Invalid Camera orientation", rt);
+		return ("Invalid Camera orientation");
 	rt->scene.camera.fov = ft_atoi(tokens[3]);
 	if (rt->scene.camera.fov < 0 || rt->scene.camera.fov > 180)
-		exit_error("Camera FOV must be [0, 180]", rt);
+		return ("Camera FOV must be [0, 180]");
+	return (NULL);
 }
 
-void	parse_light(char **tokens, t_minirt *rt)
+char	*parse_light(char **tokens, t_minirt *rt)
 {
 	static int	count = 0;
 
 	if (count++ > 0)
-		exit_error("Multiple Lights (L) defined", rt);
+		return ("Multiple Lights (L) defined");
 	if (!tokens[1] || !tokens[2] || !tokens[3])
-		exit_error("Invalid Light format", rt);
+		return ("Invalid Light format");
 	if (!parse_vec3(tokens[1], &rt->scene.light.light_point))
-		exit_error("Invalid Light point", rt);
+		return ("Invalid Light point");
 	rt->scene.light.brightness_ratio = ft_atof(tokens[2]);
 	if (rt->scene.light.brightness_ratio < 0.0
 		|| rt->scene.light.brightness_ratio > 1.0)
-		exit_error("Light brightness must be [0.0, 1.0]", rt);
+		return ("Light brightness must be [0.0, 1.0]");
 	if (tokens[3])
 	{
 		if (!parse_color(tokens[3], &rt->scene.light.color))
-			exit_error("Invalid Light color", rt);
+			return ("Invalid Light color");
 	}
 	else
 	{
@@ -77,4 +79,5 @@ void	parse_light(char **tokens, t_minirt *rt)
 		rt->scene.light.color.g = 255;
 		rt->scene.light.color.b = 255;
 	}
+	return (NULL);
 }

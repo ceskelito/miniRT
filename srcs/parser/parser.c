@@ -6,7 +6,7 @@
 /*   By: antigravity <antigravity@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/26 12:00:00 by antigravit        #+#    #+#             */
-/*   Updated: 2026/03/30 15:27:33 by rceschel         ###   ########.fr       */
+/*   Updated: 2026/03/30 15:54:56 by rceschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,35 +29,37 @@ void	free_tokens(char **tokens)
 	free(tokens);
 }
 
-static void	dispatch_line(char **tokens, t_minirt *rt)
+static char	*dispatch_line(char **tokens, t_minirt *rt)
 {
+	char	*err;
+
+	err = NULL;
 	if (!tokens || !tokens[0])
-		return ;
+		return (NULL);
 	if (ft_strncmp(tokens[0], "A", 2) == 0)
-		parse_ambient(tokens, rt);
+		err = parse_ambient(tokens, rt);
 	else if (ft_strncmp(tokens[0], "C", 2) == 0)
-		parse_camera(tokens, rt);
+		err = parse_camera(tokens, rt);
 	else if (ft_strncmp(tokens[0], "L", 2) == 0)
-		parse_light(tokens, rt);
+		err = parse_light(tokens, rt);
 	else if (ft_strncmp(tokens[0], "sp", 3) == 0)
-		parse_sphere(tokens, rt);
+		err = parse_sphere(tokens, rt);
 	else if (ft_strncmp(tokens[0], "pl", 3) == 0)
-		parse_plane(tokens, rt);
+		err = parse_plane(tokens, rt);
 	else if (ft_strncmp(tokens[0], "cy", 3) == 0)
-		parse_cylinder(tokens, rt);
+		err = parse_cylinder(tokens, rt);
 	else if (tokens[0][0] == '#')
-		return ;
+		return (NULL);
 	else
-	{
-		free_tokens(tokens);
-		exit_error("Unknown identifier", rt);
-	}
+		err = "Unknown identifier";
+	return (err);
 }
 
 static void	process_line(char *line, t_minirt *rt)
 {
 	char	**tokens;
 	char	*trimmed;
+	char	*err;
 
 	if (!line)
 		return ;
@@ -72,9 +74,17 @@ static void	process_line(char *line, t_minirt *rt)
 	tokens = ft_split(trimmed, ' ');
 	free(trimmed);
 	if (!tokens)
+	{
+		free(line);
 		exit_error(NULL, rt); // exit_error("Memory allocation failed", rt);
-	dispatch_line(tokens, rt);
+	}
+	err = dispatch_line(tokens, rt);
 	free_tokens(tokens);
+	if (err)
+	{
+		free(line);
+		exit_error(err, rt);
+	}
 }
 
 void	parse_scene(char *filename, t_minirt *rt)
