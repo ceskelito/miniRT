@@ -6,7 +6,7 @@
 /*   By: antigravity <antigravity@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/26 12:00:00 by antigravit        #+#    #+#             */
-/*   Updated: 2026/03/30 17:05:22 by rceschel         ###   ########.fr       */
+/*   Updated: 2026/03/30 17:42:29 by rceschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,6 @@ void	exit_error(char *msg, t_minirt *rt)
 	else
 		perror("minirt: ");
 	if (rt)
-		free_scene(rt->scene);
+		free_scene(&rt->scene);
 	exit(EXIT_FAILURE);
 }

@@ -6,7 +6,7 @@
 /*   By: antigravity <antigravity@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/26 12:00:00 by antigravit        #+#    #+#             */
-/*   Updated: 2026/03/30 15:49:24 by rceschel         ###   ########.fr       */
+/*   Updated: 2026/03/30 17:43:55 by rceschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,26 +14,27 @@
 #include "objects.h"
 #include "parser.h"
 
-static char	*add_object_to_scene(t_minirt *rt, t_object *new_obj)
+static char	*add_object_to_scene(t_object *objects, t_object *new_obj)
 {
 	t_object	*curr;
 
 	if (!new_obj)
-		exit_error("Memory allocation failed for object", rt);
-	if (!rt->scene.objects)
+		return ("Memory allocation failed for object");
+	if (!objects)
 	{
-		rt->scene.objects = new_obj;
+		objects = new_obj;
 	}
 	else
 	{
-		curr = rt->scene.objects;
+		curr = objects;
 		while (curr->next)
 			curr = curr->next;
 		curr->next = new_obj;
 	}
+	return (NULL);
 }
 
-char	*parse_sphere(char **tokens, t_minirt *rt)
+char	*parse_sphere(char **tokens, t_object *objects)
 {
 	t_object	*obj;
 
@@ -49,10 +50,10 @@ char	*parse_sphere(char **tokens, t_minirt *rt)
 	obj->data.sp.diameter = ft_atof(tokens[2]);
 	if (!parse_color(tokens[3], &obj->data.sp.color))
 		return ("Invalid Sphere color");
-	return (add_object_to_scene(rt, obj));
+	return (add_object_to_scene(objects, obj));
 }
 
-char	*parse_plane(char **tokens, t_minirt *rt)
+char	*parse_plane(char **tokens, t_object *objects)
 {
 	t_object	*obj;
 
@@ -69,10 +70,10 @@ char	*parse_plane(char **tokens, t_minirt *rt)
 		return ("Invalid Plane normal");
 	if (!parse_color(tokens[3], &obj->data.pl.color))
 		return ("Invalid Plane color");
-	return (add_object_to_scene(rt, obj));
+	return (add_object_to_scene(objects, obj));
 }
 
-char	*parse_cylinder(char **tokens, t_minirt *rt)
+char	*parse_cylinder(char **tokens, t_object *objects)
 {
 	t_object	*obj;
 
@@ -92,5 +93,5 @@ char	*parse_cylinder(char **tokens, t_minirt *rt)
 	obj->data.cy.height = ft_atof(tokens[4]);
 	if (!parse_color(tokens[5], &obj->data.cy.color))
 		return ("Invalid Cylinder color");
-	return (add_object_to_scene(rt, obj));
+	return (add_object_to_scene(objects, obj));
 }

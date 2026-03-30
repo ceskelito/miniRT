@@ -6,7 +6,7 @@
 /*   By: antigravity <antigravity@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/26 12:00:00 by antigravit        #+#    #+#             */
-/*   Updated: 2026/03/30 15:54:56 by rceschel         ###   ########.fr       */
+/*   Updated: 2026/03/30 17:42:51 by rceschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	free_tokens(char **tokens)
 	free(tokens);
 }
 
-static char	*dispatch_line(char **tokens, t_minirt *rt)
+static char	*dispatch_line(char **tokens, t_scene *scene)
 {
 	char	*err;
 
@@ -37,17 +37,17 @@ static char	*dispatch_line(char **tokens, t_minirt *rt)
 	if (!tokens || !tokens[0])
 		return (NULL);
 	if (ft_strncmp(tokens[0], "A", 2) == 0)
-		err = parse_ambient(tokens, rt);
+		err = parse_ambient(tokens, &scene->ambient);
 	else if (ft_strncmp(tokens[0], "C", 2) == 0)
-		err = parse_camera(tokens, rt);
+		err = parse_camera(tokens, &scene->camera);
 	else if (ft_strncmp(tokens[0], "L", 2) == 0)
-		err = parse_light(tokens, rt);
+		err = parse_light(tokens, &scene->light);
 	else if (ft_strncmp(tokens[0], "sp", 3) == 0)
-		err = parse_sphere(tokens, rt);
+		err = parse_sphere(tokens, scene->objects);
 	else if (ft_strncmp(tokens[0], "pl", 3) == 0)
-		err = parse_plane(tokens, rt);
+		err = parse_plane(tokens, scene->objects);
 	else if (ft_strncmp(tokens[0], "cy", 3) == 0)
-		err = parse_cylinder(tokens, rt);
+		err = parse_cylinder(tokens, scene->objects);
 	else if (tokens[0][0] == '#')
 		return (NULL);
 	else
@@ -78,7 +78,7 @@ static void	process_line(char *line, t_minirt *rt)
 		free(line);
 		exit_error(NULL, rt); // exit_error("Memory allocation failed", rt);
 	}
-	err = dispatch_line(tokens, rt);
+	err = dispatch_line(tokens, &rt->scene);
 	free_tokens(tokens);
 	if (err)
 	{
