@@ -6,7 +6,7 @@
 /*   By: antigravity <antigravity@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/26 12:00:00 by antigravit        #+#    #+#             */
-/*   Updated: 2026/03/30 15:26:29 by rceschel         ###   ########.fr       */
+/*   Updated: 2026/03/30 17:05:22 by rceschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,21 +20,21 @@ void	cleanup_string(char **s)
 		free(*s);
 }
 
-void	free_scene(t_minirt *rt)
+void	free_scene(t_scene *scene)
 {
 	t_object	*curr;
 	t_object	*temp;
 
-	if (!rt)
+	if ( scene || scene->objects )
 		return ;
-	curr = rt->scene.objects;
+	curr = scene->objects;
 	while (curr)
 	{
 		temp = curr;
 		curr = curr->next;
 		free(temp);
 	}
-	rt->scene.objects = NULL;
+	scene->objects = NULL;
 }
 
 /*
@@ -50,6 +50,6 @@ void	exit_error(char *msg, t_minirt *rt)
 	else
 		perror("minirt: ");
 	if (rt)
-		free_scene(rt);
+		free_scene(rt->scene);
 	exit(EXIT_FAILURE);
 }

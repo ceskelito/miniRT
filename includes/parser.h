@@ -6,7 +6,7 @@
 /*   By: rceschel <rceschel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/26 12:00:00 by antigravit        #+#    #+#             */
-/*   Updated: 2026/03/30 15:50:08 by rceschel         ###   ########.fr       */
+/*   Updated: 2026/03/30 17:05:45 by rceschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ void	print_scene(t_minirt *rt);
 /*
 ** cleanup.c
 */
-void	free_scene(t_minirt *rt);
+void	free_scene(t_scene *scene);
 void	exit_error(char *msg, t_minirt *rt);
 void	free_tokens(char **tokens);
 
