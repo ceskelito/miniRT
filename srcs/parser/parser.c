@@ -6,7 +6,7 @@
 /*   By: antigravity <antigravity@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/26 12:00:00 by antigravit        #+#    #+#             */
-/*   Updated: 2026/02/06 15:57:51 by rceschel         ###   ########.fr       */
+/*   Updated: 2026/03/30 15:05:42 by rceschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,9 +69,8 @@ static void	process_line(char *line, t_minirt *rt)
 	tokens = ft_split(trimmed, ' ');
 	free(trimmed);
 	if (!tokens)
-		exit_error("Memory allocation failed", rt);
-	if (tokens[0])
-		dispatch_line(tokens, rt);
+		exit_error(NULL, rt); // exit_error("Memory allocation failed", rt);
+	dispatch_line(tokens, rt);
 	free_tokens(tokens);
 }
 
@@ -84,7 +83,8 @@ void	parse_scene(char *filename, t_minirt *rt)
 		exit_error("File must have .rt extension", rt);
 	fd = open(filename, O_RDONLY);
 	if (fd < 0)
-		exit_error("Cannot open file", rt);
+		exit_error(NULL, rt);
+		// exit_error("Cannot open file", rt);
 	while (1)
 	{
 		line = get_next_line(fd);

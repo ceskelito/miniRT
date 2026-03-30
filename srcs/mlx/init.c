@@ -6,7 +6,7 @@
 /*   By: rceschel <rceschel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 13:08:20 by rceschel          #+#    #+#             */
-/*   Updated: 2026/02/11 16:02:06 by rceschel         ###   ########.fr       */
+/*   Updated: 2026/03/30 11:53:15 by rceschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ int	mlx_close_window(t_minirt *rt)
 		free(rt->mlx);
 	}
 	free_scene(rt);
-	exit(0);
+	exit(EXIT_SUCCESS);
 }
 
 static int	handle_keypress(int keycode, t_minirt *rt)
