@@ -6,7 +6,7 @@
 /*   By: antigravity <antigravity@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/26 12:00:00 by antigravit        #+#    #+#             */
-/*   Updated: 2026/03/30 15:05:42 by rceschel         ###   ########.fr       */
+/*   Updated: 2026/03/30 15:27:33 by rceschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,10 @@ static void	dispatch_line(char **tokens, t_minirt *rt)
 	else if (tokens[0][0] == '#')
 		return ;
 	else
+	{
+		free_tokens(tokens);
 		exit_error("Unknown identifier", rt);
+	}
 }
 
 static void	process_line(char *line, t_minirt *rt)
