@@ -6,7 +6,7 @@
 /*   By: rceschel <rceschel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/26 12:00:00 by antigravit        #+#    #+#             */
-/*   Updated: 2026/03/30 17:40:26 by rceschel         ###   ########.fr       */
+/*   Updated: 2026/03/31 12:47:32 by rceschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,9 +39,9 @@ char	*parse_light(char **tokens, t_light *light);
 /*
 ** parse_shapes.c
 */
-char	*parse_sphere(char **tokens, t_object *objects);
-char	*parse_plane(char **tokens, t_object *objects);
-char	*parse_cylinder(char **tokens, t_object *objects);
+char	*parse_sphere(char **tokens, t_object **objects);
+char	*parse_plane(char **tokens, t_object **objects);
+char	*parse_cylinder(char **tokens, t_object **objects);
 
 /*
 ** debug.c

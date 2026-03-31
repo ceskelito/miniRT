@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: antigravity <antigravity@student.42.fr>    +#+  +:+       +#+        */
+/*   By: rceschel <rceschel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/26 12:00:00 by antigravit        #+#    #+#             */
-/*   Updated: 2026/03/30 17:42:51 by rceschel         ###   ########.fr       */
+/*   Updated: 2026/03/31 12:47:32 by rceschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,11 +43,11 @@ static char	*dispatch_line(char **tokens, t_scene *scene)
 	else if (ft_strncmp(tokens[0], "L", 2) == 0)
 		err = parse_light(tokens, &scene->light);
 	else if (ft_strncmp(tokens[0], "sp", 3) == 0)
-		err = parse_sphere(tokens, scene->objects);
+		err = parse_sphere(tokens, &scene->objects);
 	else if (ft_strncmp(tokens[0], "pl", 3) == 0)
-		err = parse_plane(tokens, scene->objects);
+		err = parse_plane(tokens, &scene->objects);
 	else if (ft_strncmp(tokens[0], "cy", 3) == 0)
-		err = parse_cylinder(tokens, scene->objects);
+		err = parse_cylinder(tokens, &scene->objects);
 	else if (tokens[0][0] == '#')
 		return (NULL);
 	else

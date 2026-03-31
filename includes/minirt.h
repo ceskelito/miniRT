@@ -6,7 +6,7 @@
 /*   By: rceschel <rceschel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/26 11:42:00 by antigravit        #+#    #+#             */
-/*   Updated: 2026/03/26 17:02:48 by rceschel         ###   ########.fr       */
+/*   Updated: 2026/03/31 12:04:43 by rceschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@
 # include <stdlib.h>
 # include <unistd.h>
 # include <math.h>
+# include <errno.h>
+# include <string.h> // strerror
 
 # include "vec3.h"
 # include "objects.h" // defines t_color
