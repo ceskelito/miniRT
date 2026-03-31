@@ -136,4 +136,4 @@ deepfclean: fclean
 deepre: deepfclean all
 
 # ──────────────────────── #
-.PHONY: debug run all re clean fclean deepre deepclean deepfclean $(LIBRARIES)
+.PHONY: debug run all re clean fclean deepre deepclean deepfclean
