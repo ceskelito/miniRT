@@ -16,17 +16,15 @@ CC         = gcc
 RM         = rm -f
 MKDIR      = mkdir -p
 
-CFLAGS     	= -Wall -Wextra -Werror
-DEBUG_FLAGS	= -g3
+CFLAGS     = -Wall -Wextra -Werror
 
 IFLAGS  = -I$(MLX_ROOT) 	\
 		  -I$(LIBFT_INCS) 	\
 		  -Iincludes
 
-LDFLAGS	= -L$(MLX_ROOT)		\
-    	  -L$(LIBFT_ROOT)
-
-LDLIBS	= -lmlx \
+LFLAGS	= -L$(MLX_ROOT)		\
+    	  -L$(LIBFT_ROOT) 	\
+		  -lmlx \
 		  -lft	\
 		  -lm 	\
 		  -lX11 \
@@ -81,17 +79,21 @@ vpath %.c 	$(SRC_DIR) 			\
 
 all: $(NAME)
 
-run: SCENE_FILE = scenes/example.rt
+debug: CFLAGS += -g3
 
-run: all
-	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ./$(NAME) $(SCENE_FILE)
+debug: all
+
+run: DEFAULT_RT = scenes/example.rt
+
+run: debug
+	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ./$(NAME) $(if $(RT_FILE),$(RT_FILE),$(DEFAULT_RT))
 
 $(OBJ_DIR)/%.o: %.c | $(OBJ_DIR)
-	@$(CC) $(CFLAGS) $(DEBUG_FLAGS) $(IFLAGS) -c $< -o $@
+	@$(CC) $(CFLAGS) $(IFLAGS) -c $< -o $@
 	@printf "$(GREEN)Compiling $(BLUE)$<$(RESET)\n"
 
 $(NAME): $(OBJS) | $(LIBRARIES)
-	@$(CC) $(OBJS) $(LDFLAGS) $(LDLIBS) $(LIBRARIES) -o $(NAME)
+	@$(CC) $(OBJS) $(LFLAGS) $(LIBRARIES) -o $(NAME)
 	@printf "$(GREEN)Linking $(BLUE)$(NAME)$(RESET)\n"	
 
 $(OBJ_DIR):
@@ -134,4 +136,4 @@ deepfclean: fclean
 deepre: deepfclean all
 
 # ──────────────────────── #
-.PHONY: debug run all re clean fclean deepre deepclean deepfclean $(LIBRARIES)
+.PHONY: debug run all re clean fclean deepre deepclean deepfclean
