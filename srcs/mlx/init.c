@@ -6,7 +6,7 @@
 /*   By: rceschel <rceschel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 13:08:20 by rceschel          #+#    #+#             */
-/*   Updated: 2026/02/11 16:02:06 by rceschel         ###   ########.fr       */
+/*   Updated: 2026/04/02 18:37:45 by rceschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,11 +38,11 @@ static int	mlx_init_instance(void **mlx_ptr, void **win_ptr, int w_l, int w_h, c
 
 int	mlx_close_window(t_minirt *rt)
 {
-	if (rt->win)
-		mlx_destroy_window(rt->mlx, rt->win);
-	if (rt->mlx) {
-		mlx_destroy_display(rt->mlx);
-		free(rt->mlx);
+	if (rt->mlx.win)
+		mlx_destroy_window(rt->mlx.ptr, rt->mlx.win);
+	if (rt->mlx.ptr) {
+		mlx_destroy_display(rt->mlx.ptr);
+		free(rt->mlx.ptr);
 	}
 	free_scene(rt);
 	exit(0);
@@ -73,14 +73,14 @@ int mlx_loop_init(t_minirt *rt) {
 	
 	bool	mlx_failure;
 
-	mlx_failure = mlx_init_instance(&(rt->mlx), &(rt->win), 
+	mlx_failure = mlx_init_instance(&(rt->mlx.ptr), &(rt->mlx.win), 
 							WIN_WIDTH, WIN_HEIGHT, WIN_NAME);
 	if (mlx_failure)
 		exit(1);
-	mlx_loop_hook(rt->win, NULL, NULL);
-	mlx_hook(rt->win, 17, 0, &mlx_close_window, rt);
-	mlx_hook(rt->win, 2, 1L << 0, &handle_keypress, rt);
-	mlx_loop(rt->mlx);
+	mlx_loop_hook(rt->mlx.win, NULL, NULL);
+	mlx_hook(rt->mlx.win, 17, 0, mlx_close_window, rt);
+	mlx_hook(rt->mlx.win, 2, 1L << 0, handle_keypress, rt);
+	mlx_loop(rt->mlx.ptr);
 
 	return (0);
 }

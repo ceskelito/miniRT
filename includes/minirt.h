@@ -6,7 +6,7 @@
 /*   By: rceschel <rceschel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/26 11:42:00 by antigravit        #+#    #+#             */
-/*   Updated: 2026/03/26 17:02:48 by rceschel         ###   ########.fr       */
+/*   Updated: 2026/04/02 18:34:06 by rceschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,13 +118,18 @@ typedef struct s_scene
 	t_object			*objects;
 }						t_scene;
 
+typedef struct s_mlx
+{
+	void	*ptr;
+	void	*win;
+}				t_mlx;
+
 typedef struct s_minirt
 {
-	void				*mlx;
-	void				*win;
-	int					width;
-	int					height;
-	t_scene				scene;
+	t_mlx		mlx;
+	int			width;
+	int			height;
+	t_scene		scene;
 }						t_minirt;
 
 #endif

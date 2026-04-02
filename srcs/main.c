@@ -6,7 +6,7 @@
 /*   By: antigravity <antigravity@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/26 12:00:00 by antigravit        #+#    #+#             */
-/*   Updated: 2026/02/07 18:18:49 by rceschel         ###   ########.fr       */
+/*   Updated: 2026/04/02 18:37:11 by rceschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,8 @@ int	main(int argc, char **argv)
 		return (1);
 	}
 	rt.scene.objects = NULL;
-	rt.mlx = NULL;
-	rt.win = NULL;
+	rt.mlx.ptr = NULL;
+	rt.mlx.win = NULL;
 	parse_scene(argv[1], &rt);
 	print_scene(&rt);
 	mlx_loop_init(&rt);
