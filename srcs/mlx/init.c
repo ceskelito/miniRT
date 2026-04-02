@@ -6,7 +6,7 @@
 /*   By: rceschel <rceschel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 13:08:20 by rceschel          #+#    #+#             */
-/*   Updated: 2026/04/02 18:37:45 by rceschel         ###   ########.fr       */
+/*   Updated: 2026/04/02 18:51:05 by rceschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,21 +36,28 @@ static int	mlx_init_instance(void **mlx_ptr, void **win_ptr, int w_l, int w_h, c
 	return (0);
 }
 
-int	mlx_close_window(void *mlx_ptr, void *mlx_win)//t_minirt *rt)
+int	mlx_close_window(t_mlx *mlx)
 {
-	if (rt->mlx.win)
-		mlx_destroy_window(rt->mlx.ptr, rt->mlx.win);
-	if (rt->mlx.ptr) {
-		mlx_destroy_display(rt->mlx.ptr);
-		free(rt->mlx.ptr);
+	if (mlx->win)
+		mlx_destroy_window(mlx->ptr, mlx->win);
+	if (mlx->ptr) {
+		mlx_destroy_display(mlx->ptr);
+		free(mlx->ptr);
 	}
+	return (0);
+}
+
+int rt_close_program(t_minirt *rt)
+{
+	mlx_close_window(&rt->mlx);
+	free_scene(&rt->scene);
 	exit(EXIT_SUCCESS);
 }
 
 static int	handle_keypress(int keycode, t_minirt *rt)
 {
 	if (keycode == XK_Escape)
-		mlx_close_window(rt->mlx, rt->win);
+		rt_close_program(rt);
 	// else if (keycode == XK_Left || keycode == XK_a)
 	// 	win = move_player(map, -1, 0);
 	// else if (keycode == XK_Right || keycode == XK_d)
@@ -77,7 +84,7 @@ int mlx_loop_init(t_minirt *rt) {
 	if (mlx_failure)
 		exit(1);
 	mlx_loop_hook(rt->mlx.win, NULL, NULL);
-	mlx_hook(rt->mlx.win, 17, 0, mlx_close_window, rt);
+	mlx_hook(rt->mlx.win, 17, 0, rt_close_program, rt);
 	mlx_hook(rt->mlx.win, 2, 1L << 0, handle_keypress, rt);
 	mlx_loop(rt->mlx.ptr);
 
