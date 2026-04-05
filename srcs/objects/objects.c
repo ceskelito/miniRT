@@ -64,29 +64,64 @@ bool	hit_sphere(t_ray ray, t_sphere sp, t_hit *hit)
 	return (true);
 }
 
+/* Computes quadratic coefficients for the infinite cylinder equation.
+** Moved here from objects_utils.c so hit_cylinder can call it as static. */
+static void	get_cy_abc(t_ray ray, t_cylinder cy, double *abc)
+{
+	t_vec3	oc;
+
+	oc = vec3_sub(ray.origin, cy.center);
+	abc[0] = vec3_dot(ray.dir, ray.dir)
+		- pow(vec3_dot(ray.dir, cy.axis), 2);
+	abc[1] = 2 * (vec3_dot(ray.dir, oc)
+			- (vec3_dot(ray.dir, cy.axis) * vec3_dot(oc, cy.axis)));
+	abc[2] = vec3_dot(oc, oc) - pow(vec3_dot(oc, cy.axis), 2)
+		- pow(cy.diameter / 2, 2);
+}
+
+/*
+** Validates a single cylinder root: checks that t is positive and that the
+** hit point lies within the finite height of the cylinder.
+** Extracted so hit_cylinder can test both roots independently.
+*/
+static bool	cy_check_root(t_ray ray, t_cylinder cy, double t, t_hit *hit)
+{
+	double	h;
+
+	if (t < EPSILON)
+		return (false);
+	hit->phit = vec3_add(ray.origin, vec3_mult(ray.dir, t));
+	h = vec3_dot(vec3_sub(hit->phit, cy.center), cy.axis);
+	if (h < -cy.height / 2.0 || h > cy.height / 2.0)
+		return (false);
+	hit->t = (float)t;
+	hit->nhit = vec3_normalize(vec3_sub(hit->phit,
+				vec3_add(cy.center, vec3_mult(cy.axis, h))));
+	hit->color = cy.color;
+	return (true);
+}
+
+/*
+** Ray-cylinder intersection.  Tries the nearest root first; if its hit point
+** falls outside the finite height, falls back to the farther root.
+*/
 bool	hit_cylinder(t_ray ray, t_cylinder cy, t_hit *hit)
 {
 	double	abc[3];
-	double	t;
 	double	disc;
-	double	h;
+	double	t1;
+	double	t2;
 
 	get_cy_abc(ray, cy, abc);
 	disc = abc[1] * abc[1] - 4 * abc[0] * abc[2];
 	if (disc < 0)
 		return (false);
-	t = (-abc[1] - sqrt(disc)) / (2.0 * abc[0]);
-	if (t < EPSILON)
-		t = (-abc[1] + sqrt(disc)) / (2.0 * abc[0]);
-	hit->phit = vec3_add(ray.origin, vec3_mult(ray.dir, t));
-	h = vec3_dot(vec3_sub(hit->phit, cy.center), cy.axis);
-	if (t < EPSILON || h < -cy.height / 2.0 || h > cy.height / 2.0)
-		return (false);
-	hit->t = (float)t;
-	hit->nhit = vec3_normalize(vec3_sub(hit->phit, vec3_add(cy.center,
-					vec3_mult(cy.axis, h))));
-	hit->color = cy.color;
-	return (true);
+	t1 = (-abc[1] - sqrt(disc)) / (2.0 * abc[0]);
+	t2 = (-abc[1] + sqrt(disc)) / (2.0 * abc[0]);
+	/* Try nearest root first; fall back to farther root if height check fails */
+	if (cy_check_root(ray, cy, t1, hit))
+		return (true);
+	return (cy_check_root(ray, cy, t2, hit));
 }
 
 /*

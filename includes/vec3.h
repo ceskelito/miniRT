@@ -12,7 +12,8 @@ t_vec3	vec3_add(t_vec3 a, t_vec3 b);
 t_vec3	vec3_sub(t_vec3 a, t_vec3 b);
 t_vec3	vec3_mult(t_vec3 a, double scalar);
 t_vec3	vec3_normalize(t_vec3 a);
-double	vec3_dot(t_vec3 a, t_vec3 b); // Scalar Product
+double	vec3_dot(t_vec3 a, t_vec3 b); /* Scalar Product */
 double	vec3_length(t_vec3 a);
+t_vec3	vec3_cross(t_vec3 a, t_vec3 b); /* Cross product — needed by camera ray generation */
 
 #endif

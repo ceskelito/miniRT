@@ -134,4 +134,40 @@ typedef struct s_minirt
 	t_scene		scene;
 }						t_minirt;
 
+/*
+** --------------------------------------------------------------------------
+** Function Prototypes
+** --------------------------------------------------------------------------
+*/
+
+/* srcs/vector/hit.c */
+t_color	trace_ray(t_scene *scene, t_ray ray);
+
+/* srcs/objects/objects.c */
+bool	hit_sphere(t_ray ray, t_sphere sp, t_hit *hit);
+bool	hit_plane(t_ray ray, t_plane pl, t_hit *hit);
+bool	hit_cylinder(t_ray ray, t_cylinder cy, t_hit *hit);
+bool	hit_triangle(t_ray ray, t_triangle tr, t_hit *hit);
+
+/* srcs/objects/objects_utils.c */
+bool	intersect(t_ray ray, t_object *obj, t_hit *hit);
+
+/* srcs/objects/objects_cone.c */
+bool	hit_cone(t_ray ray, t_cone co, t_hit *hit);
+
+/* srcs/objects/objects_torus.c */
+bool	hit_torus(t_ray ray, t_torus tor, t_hit *hit);
+
+/* srcs/color/color.c */
+t_color	calculate_lighting(t_scene *scene, t_hit *hit);
+bool	is_in_shadow(t_scene *scene, t_vec3 point, t_vec3 light_dir);
+t_color	color_mult_ratio(t_color obj_c, t_color light_c, double ratio);
+t_color	color_add(t_color a, t_color b);
+
+/* srcs/mlx/render.c */
+void	render(t_minirt *rt);
+
+/* srcs/mlx/init.c */
+int		mlx_loop_init(t_minirt *rt);
+
 #endif

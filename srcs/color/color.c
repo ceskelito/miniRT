@@ -43,8 +43,9 @@ bool is_in_shadow(t_scene *scene, t_vec3 point, t_vec3 light_dir)
     t_object *obj;
     double  dist_to_light;
 
-    // Offset the origin to avoid self-intersections (shadow acne).
-    shadow_ray.origin = vec3_add(point, vec3_mult(hit.nhit, EPSILON)); 
+    /* Offset origin along light direction to avoid self-intersection (shadow acne).
+    ** Using light_dir instead of the uninitialized hit.nhit. */
+    shadow_ray.origin = vec3_add(point, vec3_mult(light_dir, EPSILON));
     shadow_ray.dir = light_dir;
     
     dist_to_light = vec3_length(vec3_sub(scene->light.light_point, point));

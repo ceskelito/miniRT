@@ -55,12 +55,28 @@ PARSER 	=	parser			\
 UTILS 	=	debug		\
 			cleanup
 
-MLX_S 	=	init
+MLX_S 	=	init		\
+			render
+
+# Vector math and ray-object intersection
+VECTOR	=	vector		\
+			hit
+
+# Per-shape intersection routines
+OBJECTS	=	objects			\
+			objects_utils	\
+			objects_cone	\
+			objects_torus
+
+COLOR	=	color
 
 FILES	=	main		\
 			$(UTILS)	\
 			$(PARSER)	\
-			$(MLX_S)
+			$(MLX_S)	\
+			$(VECTOR)	\
+			$(OBJECTS)	\
+			$(COLOR)
 
 OBJ_DIR		= objs
 SRC_DIR		= srcs
@@ -68,10 +84,13 @@ SRC_DIR		= srcs
 OBJS		= $(addsuffix .o, $(addprefix $(OBJ_DIR)/, $(FILES)))
 SRCS 		= $(addsuffix .c, $(FILES))
 
-vpath %.c 	$(SRC_DIR) 			\
+vpath %.c 	$(SRC_DIR)			\
 			:$(SRC_DIR)/parser	\
 			:$(SRC_DIR)/utils	\
-			:$(SRC_DIR)/mlx
+			:$(SRC_DIR)/mlx		\
+			:$(SRC_DIR)/vector	\
+			:$(SRC_DIR)/objects	\
+			:$(SRC_DIR)/color
 
 # ──────────────────────── #
 #       MAIN RULES         #

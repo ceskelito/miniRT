@@ -18,16 +18,4 @@ bool intersect(t_ray ray, t_object *obj, t_hit *hit)
     return (false);
 }
 
-// Computes a, b, c coefficients for cylinder intersection
-static void	get_cy_abc(t_ray ray, t_cylinder cy, double *abc)
-{
-	t_vec3	oc;
-
-	oc = vec3_sub(ray.origin, cy.center);
-	abc[0] = vec3_dot(ray.dir, ray.dir) - pow(vec3_dot(ray.dir, cy.axis), 2);
-	abc[1] = 2 * (vec3_dot(ray.dir, oc) - (vec3_dot(ray.dir, cy.axis)
-				* vec3_dot(oc, cy.axis)));
-	abc[2] = vec3_dot(oc, oc) - pow(vec3_dot(oc, cy.axis), 2)
-		- pow(cy.diameter / 2, 2);
-}
 
