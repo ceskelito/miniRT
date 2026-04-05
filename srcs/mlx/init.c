@@ -75,19 +75,23 @@ static int	handle_keypress(int keycode, t_minirt *rt)
 	return (0);
 }
 
-int mlx_loop_init(t_minirt *rt) {
-	
+int mlx_loop_init(t_minirt *rt)
+{
 	bool	mlx_failure;
 
-	mlx_failure = mlx_init_instance(&(rt->mlx.ptr), &(rt->mlx.win), 
+	mlx_failure = mlx_init_instance(&(rt->mlx.ptr), &(rt->mlx.win),
 							WIN_WIDTH, WIN_HEIGHT, WIN_NAME);
 	if (mlx_failure)
 		exit(1);
-	mlx_loop_hook(rt->mlx.win, NULL, NULL);
+	/* Store final dimensions so render() can use them */
+	rt->width = WIN_WIDTH;
+	rt->height = WIN_HEIGHT;
+	/* Render the scene once into the window before entering the event loop */
+	render(rt);
+	/* Event 17 = window close (X button), event 2 = key press */
 	mlx_hook(rt->mlx.win, 17, 0, rt_close_program, rt);
 	mlx_hook(rt->mlx.win, 2, 1L << 0, handle_keypress, rt);
 	mlx_loop(rt->mlx.ptr);
-
 	return (0);
 }
 

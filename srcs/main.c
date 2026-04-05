@@ -12,9 +12,6 @@
 
 #include "parser.h"
 
-int mlx_loop_init(t_minirt *rt);
-int	mlx_close_window(void *mlx_ptr, void *mlx_win);
-
 int	main(int argc, char **argv)
 {
 	t_minirt	rt;
@@ -28,12 +25,8 @@ int	main(int argc, char **argv)
 	rt.mlx.ptr = NULL;
 	rt.mlx.win = NULL;
 	parse_scene(argv[1], &rt);
-	print_scene(&rt);
-	// mlx_loop_init(&rt);
-
-	// You're code here
-
-	// mlx_close_window(rt->mlx, rt->win);
-	free_scene(&rt.scene);
+	/* Open window, render the scene, then enter the MLX event loop.
+	** rt_close_program (ESC / X button) handles cleanup and exit. */
+	mlx_loop_init(&rt);
 	return (0);
 }
