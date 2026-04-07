@@ -6,14 +6,14 @@
 /*   By: antigravity <antigravity@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/26 12:00:00 by antigravit        #+#    #+#             */
-/*   Updated: 2026/02/07 18:18:49 by rceschel         ###   ########.fr       */
+/*   Updated: 2026/04/02 18:37:11 by rceschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parser.h"
 
 int mlx_loop_init(t_minirt *rt);
-int	mlx_close_window(t_minirt *rt); // exit the program
+int	mlx_close_window(void *mlx_ptr, void *mlx_win);
 
 int	main(int argc, char **argv)
 {
@@ -25,14 +25,15 @@ int	main(int argc, char **argv)
 		return (1);
 	}
 	rt.scene.objects = NULL;
-	rt.mlx = NULL;
-	rt.win = NULL;
+	rt.mlx.ptr = NULL;
+	rt.mlx.win = NULL;
 	parse_scene(argv[1], &rt);
 	print_scene(&rt);
-	mlx_loop_init(&rt);
+	// mlx_loop_init(&rt);
 
 	// You're code here
 
-	mlx_close_window(&rt);
+	// mlx_close_window(rt->mlx, rt->win);
+	free_scene(&rt.scene);
 	return (0);
 }

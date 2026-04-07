@@ -6,7 +6,7 @@
 /*   By: rceschel <rceschel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/26 12:00:00 by antigravit        #+#    #+#             */
-/*   Updated: 2026/03/26 17:03:02 by rceschel         ###   ########.fr       */
+/*   Updated: 2026/03/31 12:47:32 by rceschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,16 +32,16 @@ int		is_whitespace(char c);
 /*
 ** parse_elements.c
 */
-void	parse_ambient(char **tokens, t_minirt *rt);
-void	parse_camera(char **tokens, t_minirt *rt);
-void	parse_light(char **tokens, t_minirt *rt);
+char	*parse_ambient(char **tokens, t_ambient *ambient);
+char	*parse_camera(char **tokens, t_camera *camera);
+char	*parse_light(char **tokens, t_light *light);
 
 /*
 ** parse_shapes.c
 */
-void	parse_sphere(char **tokens, t_minirt *rt);
-void	parse_plane(char **tokens, t_minirt *rt);
-void	parse_cylinder(char **tokens, t_minirt *rt);
+char	*parse_sphere(char **tokens, t_object **objects);
+char	*parse_plane(char **tokens, t_object **objects);
+char	*parse_cylinder(char **tokens, t_object **objects);
 
 /*
 ** debug.c
@@ -51,7 +51,7 @@ void	print_scene(t_minirt *rt);
 /*
 ** cleanup.c
 */
-void	free_scene(t_minirt *rt);
+void	free_scene(t_scene *scene);
 void	exit_error(char *msg, t_minirt *rt);
 void	free_tokens(char **tokens);
 

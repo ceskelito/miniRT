@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: antigravity <antigravity@student.42.fr>    +#+  +:+       +#+        */
+/*   By: rceschel <rceschel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/26 12:00:00 by antigravit        #+#    #+#             */
-/*   Updated: 2026/02/06 15:57:51 by rceschel         ###   ########.fr       */
+/*   Updated: 2026/04/02 18:52:03 by rceschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,32 +29,37 @@ void	free_tokens(char **tokens)
 	free(tokens);
 }
 
-static void	dispatch_line(char **tokens, t_minirt *rt)
+static char	*dispatch_line(char **tokens, t_scene *scene)
 {
+	char	*err;
+
+	err = NULL;
 	if (!tokens || !tokens[0])
-		return ;
+		return (NULL);
 	if (ft_strncmp(tokens[0], "A", 2) == 0)
-		parse_ambient(tokens, rt);
+		err = parse_ambient(tokens, &scene->ambient);
 	else if (ft_strncmp(tokens[0], "C", 2) == 0)
-		parse_camera(tokens, rt);
+		err = parse_camera(tokens, &scene->camera);
 	else if (ft_strncmp(tokens[0], "L", 2) == 0)
-		parse_light(tokens, rt);
+		err = parse_light(tokens, &scene->light);
 	else if (ft_strncmp(tokens[0], "sp", 3) == 0)
-		parse_sphere(tokens, rt);
+		err = parse_sphere(tokens, &scene->objects);
 	else if (ft_strncmp(tokens[0], "pl", 3) == 0)
-		parse_plane(tokens, rt);
+		err = parse_plane(tokens, &scene->objects);
 	else if (ft_strncmp(tokens[0], "cy", 3) == 0)
-		parse_cylinder(tokens, rt);
+		err = parse_cylinder(tokens, &scene->objects);
 	else if (tokens[0][0] == '#')
-		return ;
+		return (NULL);
 	else
-		exit_error("Unknown identifier", rt);
+		err = "Unknown identifier";
+	return (err);
 }
 
 static void	process_line(char *line, t_minirt *rt)
 {
 	char	**tokens;
 	char	*trimmed;
+	char	*err;
 
 	if (!line)
 		return ;
@@ -69,10 +74,17 @@ static void	process_line(char *line, t_minirt *rt)
 	tokens = ft_split(trimmed, ' ');
 	free(trimmed);
 	if (!tokens)
-		exit_error("Memory allocation failed", rt);
-	if (tokens[0])
-		dispatch_line(tokens, rt);
+	{
+		free(line);
+		exit_error(strerror(errno), rt);
+	}
+	err = dispatch_line(tokens, &rt->scene);
 	free_tokens(tokens);
+	if (err)
+	{
+		free(line);
+		exit_error(err, rt);
+	}
 }
 
 void	parse_scene(char *filename, t_minirt *rt)
@@ -84,7 +96,7 @@ void	parse_scene(char *filename, t_minirt *rt)
 		exit_error("File must have .rt extension", rt);
 	fd = open(filename, O_RDONLY);
 	if (fd < 0)
-		exit_error("Cannot open file", rt);
+		exit_error(strerror(errno), rt); // exit_error("Cannot open file", rt);
 	while (1)
 	{
 		line = get_next_line(fd);
