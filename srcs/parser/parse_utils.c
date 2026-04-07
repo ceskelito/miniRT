@@ -6,7 +6,7 @@
 /*   By: antigravity <antigravity@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/26 12:00:00 by antigravit        #+#    #+#             */
-/*   Updated: 2026/02/06 11:10:14 by rceschel         ###   ########.fr       */
+/*   Updated: 2026/04/07 10:41:14 by rceschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,10 +32,8 @@ double	ft_atof(char *str)
 	factor = 1.0;
 	sign = 1;
 	if (str[i] == '-' || str[i] == '+')
-	{
 		if (str[i++] == '-')
 			sign = -1;
-	}
 	while (ft_isdigit(str[i]))
 		res = res * 10 + (str[i++] - '0');
 	if (str[i] == '.')

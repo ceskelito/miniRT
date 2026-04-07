@@ -6,7 +6,7 @@
 /*   By: rceschel <rceschel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/26 12:00:00 by antigravit        #+#    #+#             */
-/*   Updated: 2026/04/02 18:52:03 by rceschel         ###   ########.fr       */
+/*   Updated: 2026/04/07 10:42:30 by rceschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,10 +67,7 @@ static void	process_line(char *line, t_minirt *rt)
 	if (!trimmed)
 		return ;
 	if (ft_strlen(trimmed) == 0)
-	{
-		free(trimmed);
-		return ;
-	}
+		return (free(trimmed));
 	tokens = ft_split(trimmed, ' ');
 	free(trimmed);
 	if (!tokens)
@@ -87,6 +84,7 @@ static void	process_line(char *line, t_minirt *rt)
 	}
 }
 
+// exit_error("Cannot open file", rt);
 void	parse_scene(char *filename, t_minirt *rt)
 {
 	int		fd;
@@ -96,7 +94,7 @@ void	parse_scene(char *filename, t_minirt *rt)
 		exit_error("File must have .rt extension", rt);
 	fd = open(filename, O_RDONLY);
 	if (fd < 0)
-		exit_error(strerror(errno), rt); // exit_error("Cannot open file", rt);
+		exit_error(strerror(errno), rt);
 	while (1)
 	{
 		line = get_next_line(fd);

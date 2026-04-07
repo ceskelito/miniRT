@@ -6,7 +6,7 @@
 /*   By: rceschel <rceschel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/26 12:00:00 by antigravit        #+#    #+#             */
-/*   Updated: 2026/03/31 12:49:05 by rceschel         ###   ########.fr       */
+/*   Updated: 2026/04/07 10:40:04 by rceschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,19 @@
 #include "objects.h"
 #include "parser.h"
 
+/*
+ * The functions in this file will return the error message to throwas
+ * as a string.
+ * In case no errors are encountered, the return value will be NULL.
+ * */
+
+// return ("Memory allocation failed for object");
 static char	*add_object_to_scene(t_object **objects, t_object *new_obj)
 {
 	t_object	*curr;
 
 	if (!new_obj)
 		return (strerror(errno));
-		// return ("Memory allocation failed for object");
 	if (!*objects)
 	{
 		*objects = new_obj;
@@ -34,6 +40,8 @@ static char	*add_object_to_scene(t_object **objects, t_object *new_obj)
 	}
 	return (NULL);
 }
+
+//return ("Malloc failed");
 char	*parse_sphere(char **tokens, t_object **objects)
 {
 	t_object	*obj;
@@ -43,7 +51,7 @@ char	*parse_sphere(char **tokens, t_object **objects)
 		return ("Invalid Sphere format");
 	obj = malloc(sizeof(t_object));
 	if (!obj)
-		return (strerror(errno));//("Malloc failed");
+		return (strerror(errno));
 	obj->type = SPHERE;
 	obj->next = NULL;
 	if (!parse_vec3(tokens[1], &obj->data.sp.center))
@@ -55,6 +63,7 @@ char	*parse_sphere(char **tokens, t_object **objects)
 	return (err);
 }
 
+//return ("Malloc failed");
 char	*parse_plane(char **tokens, t_object **objects)
 {
 	t_object	*obj;
@@ -63,7 +72,7 @@ char	*parse_plane(char **tokens, t_object **objects)
 		return ("Invalid Plane format");
 	obj = malloc(sizeof(t_object));
 	if (!obj)
-		return (strerror(errno));//("Malloc failed");
+		return (strerror(errno));
 	obj->type = PLANE;
 	obj->next = NULL;
 	if (!parse_vec3(tokens[1], &obj->data.pl.point))
@@ -75,6 +84,7 @@ char	*parse_plane(char **tokens, t_object **objects)
 	return (add_object_to_scene(objects, obj));
 }
 
+//return ("Malloc failed");
 char	*parse_cylinder(char **tokens, t_object **objects)
 {
 	t_object	*obj;
@@ -84,7 +94,7 @@ char	*parse_cylinder(char **tokens, t_object **objects)
 		return ("Invalid Cylinder format");
 	obj = malloc(sizeof(t_object));
 	if (!obj)
-		return (strerror(errno));//("Malloc failed");
+		return (strerror(errno));
 	obj->type = CYLINDER;
 	obj->next = NULL;
 	if (!parse_vec3(tokens[1], &obj->data.cy.center))
