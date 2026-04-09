@@ -6,7 +6,7 @@
 /*   By: rceschel <rceschel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 13:08:20 by rceschel          #+#    #+#             */
-/*   Updated: 2026/04/09 17:13:28 by rceschel         ###   ########.fr       */
+/*   Updated: 2026/04/09 17:27:33 by rceschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,21 +123,22 @@ static t_object *get_selected_object(t_minirt *rt, int x, int y)
 
 #define RESIZE_ABS_VALUE 5
 
+enum { MOUSE_LEFT = 1, MOUSE_RIGHT = 3, MOUSE_CENTER = 2, SCROLL_UP = 4, SCROLL_DOWN = 5 };
+
 int handle_mouse_events(int button, int x, int y, t_minirt *rt)
 {
 	t_object	*selected;
 	int			resize_value;
 
-	if (button == 1)
+	if (button == MOUSE_LEFT)
 		resize_value = RESIZE_ABS_VALUE;
-	else if (button == 2)
+	else if (button == MOUSE_RIGHT)
 		resize_value = RESIZE_ABS_VALUE * -1;
 	else
 		return (0);
 	selected = get_selected_object(rt, x, y);
 	if (selected)
 	{
-		// printf("Selected object type: %d\n", selected->type);
 		if (selected->type == SPHERE)
 			selected->data.sp.diameter += resize_value;
 		else if (selected->type == CYLINDER)
