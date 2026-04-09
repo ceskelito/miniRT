@@ -6,7 +6,7 @@
 /*   By: antigravity <antigravity@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/26 12:00:00 by antigravit        #+#    #+#             */
-/*   Updated: 2026/04/02 18:37:11 by rceschel         ###   ########.fr       */
+/*   Updated: 2026/04/09 16:02:18 by rceschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,5 +28,6 @@ int	main(int argc, char **argv)
 	/* Open window, render the scene, then enter the MLX event loop.
 	** rt_close_program (ESC / X button) handles cleanup and exit. */
 	mlx_loop_init(&rt);
+	printf("Ciaoooooo\n");
 	return (0);
 }

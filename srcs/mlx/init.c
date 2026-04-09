@@ -6,7 +6,7 @@
 /*   By: rceschel <rceschel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 13:08:20 by rceschel          #+#    #+#             */
-/*   Updated: 2026/04/02 18:51:05 by rceschel         ###   ########.fr       */
+/*   Updated: 2026/04/09 16:31:33 by rceschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,38 @@ static int	handle_keypress(int keycode, t_minirt *rt)
 	return (0);
 }
 
+/*
+ * How to handle events:
+ *
+ * 1. On left click, check if the coordinates intersect an object
+ *		(maybe we have an appropriate function yet..?)
+ *		USE THE INTERSECT: shot a ray like for rendering
+ *
+ * 2. In case of, higlith the object
+ * 2.1 Display a legend of possible commands
+ *
+ * 3. Apply trasformation on the selected object
+ * */
+t_ray	camera_ray(t_camera cam, int px, int py, int w, int h);
+
+/*
+ * An object is found if at least one of the color gradient is not balck (background)
+ * */
+static bool is_object_selected(t_minirt *rt, int x, int y)
+{
+	t_color test;
+
+	test = trace_ray(&rt->scene, camera_ray(rt->scene.camera, x, y, rt->width, rt->height));
+	return (test.r || test.g || test.b);
+}
+
+int handle_mouse_events(int button, int x, int y, t_minirt *rt)
+{
+	if ( button == 1 && is_object_selected(rt, x, y))
+		printf("YEEEEEEEEE\n");
+	return (0);
+}
+
 int mlx_loop_init(t_minirt *rt)
 {
 	bool	mlx_failure;
@@ -91,6 +123,7 @@ int mlx_loop_init(t_minirt *rt)
 	/* Event 17 = window close (X button), event 2 = key press */
 	mlx_hook(rt->mlx.win, 17, 0, rt_close_program, rt);
 	mlx_hook(rt->mlx.win, 2, 1L << 0, handle_keypress, rt);
+	mlx_mouse_hook(rt->mlx.win, handle_mouse_events, rt);
 	mlx_loop(rt->mlx.ptr);
 	return (0);
 }

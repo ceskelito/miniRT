@@ -18,7 +18,7 @@ static int	color_to_int(t_color c)
 **   ndc_x maps [0, width]  → [-1, 1] left to right, scaled by aspect ratio
 **   ndc_y maps [0, height] → [ 1,-1] top to bottom (screen Y is inverted)
 */
-static t_ray	camera_ray(t_camera cam, int px, int py, int w, int h)
+t_ray	camera_ray(t_camera cam, int px, int py, int w, int h)
 {
 	t_vec3	forward;
 	t_vec3	world_up;
