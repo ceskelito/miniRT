@@ -30,6 +30,8 @@ LFLAGS	= -L$(MLX_ROOT)		\
 		  -lX11 \
 		  -lXext
 
+VALGRIND_FLAGS = --leak-check=full --show-leak-kinds=all --track-origins=yes --suppressions=minilibx.supp
+
 # ────────────────────── #
 #   EXTERNAL LIBRARIES   #
 # ────────────────────── #
@@ -86,7 +88,7 @@ debug: all
 run: DEFAULT_RT = scenes/example.rt
 
 run: debug
-	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ./$(NAME) $(if $(RT_FILE),$(RT_FILE),$(DEFAULT_RT))
+	valgrind $(VALGRIND_FLAGS) ./$(NAME) $(if $(RT_FILE),$(RT_FILE),$(DEFAULT_RT))
 
 $(OBJ_DIR)/%.o: %.c | $(OBJ_DIR)
 	@$(CC) $(CFLAGS) $(IFLAGS) -c $< -o $@
