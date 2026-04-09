@@ -58,7 +58,8 @@ UTILS 	=	debug		\
 			cleanup
 
 MLX_S 	=	init		\
-			render
+			render		\
+			events_hooks
 
 # Vector math and ray-object intersection
 VECTOR	=	vector		\
