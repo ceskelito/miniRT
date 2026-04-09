@@ -6,7 +6,7 @@
 /*   By: rceschel <rceschel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 13:08:20 by rceschel          #+#    #+#             */
-/*   Updated: 2026/04/09 16:31:33 by rceschel         ###   ########.fr       */
+/*   Updated: 2026/04/09 17:03:04 by rceschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,8 @@ static int	handle_keypress(int keycode, t_minirt *rt)
 	return (0);
 }
 
+/***** START OF MOUSE OBJECT SELECTION *****/
+
 /*
  * How to handle events:
  *
@@ -89,23 +91,50 @@ static int	handle_keypress(int keycode, t_minirt *rt)
  * */
 t_ray	camera_ray(t_camera cam, int px, int py, int w, int h);
 
-/*
- * An object is found if at least one of the color gradient is not balck (background)
- * */
-static bool is_object_selected(t_minirt *rt, int x, int y)
+static t_object *get_selected_object(t_minirt *rt, int x, int y)
 {
-	t_color test;
+    t_hit		closest_hit;
+    t_hit		current_hit;
+    t_object	*curr;
+	t_object	*closest;
+	t_ray		ray;
 
-	test = trace_ray(&rt->scene, camera_ray(rt->scene.camera, x, y, rt->width, rt->height));
-	return (test.r || test.g || test.b);
+    closest_hit.t = INFINITY; // Start from infinity
+    curr = rt->scene.objects;
+
+    while (curr)
+    {
+		ray = camera_ray(rt->scene.camera, x, y, rt->width, rt->height);
+        if (intersect(ray, curr, &current_hit)) // Intersection dispatcher by currect type
+        {
+            if (current_hit.t < closest_hit.t)
+			{
+                closest_hit = current_hit;
+				closest = curr;
+			}
+        }
+        curr = curr->next;
+    }
+
+    if (closest_hit.t == INFINITY)
+		return (NULL);
+	return (closest);
 }
 
 int handle_mouse_events(int button, int x, int y, t_minirt *rt)
 {
-	if ( button == 1 && is_object_selected(rt, x, y))
-		printf("YEEEEEEEEE\n");
+	t_object	*selected;
+	if (button != 1)
+		return (0);
+	selected = get_selected_object(rt, x, y);
+	if (selected)
+	{
+		printf("Selected object type: %d\n", selected->type);
+	}
 	return (0);
 }
+
+/***** END OF MOUSE OBJECT SELECTION *****/
 
 int mlx_loop_init(t_minirt *rt)
 {
