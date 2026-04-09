@@ -6,7 +6,7 @@
 /*   By: rceschel <rceschel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/26 11:42:00 by antigravit        #+#    #+#             */
-/*   Updated: 2026/04/02 18:34:06 by rceschel         ###   ########.fr       */
+/*   Updated: 2026/04/09 18:17:53 by rceschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,6 +118,7 @@ typedef struct s_scene
 	t_camera			camera;
 	t_light				light;
 	t_object			*objects;
+	t_object			*selected_object;
 }						t_scene;
 
 typedef struct s_mlx

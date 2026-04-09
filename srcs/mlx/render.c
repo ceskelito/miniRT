@@ -84,4 +84,6 @@ void	render(t_minirt *rt)
 	}
 	mlx_put_image_to_window(rt->mlx.ptr, rt->mlx.win, img, 0, 0);
 	mlx_destroy_image(rt->mlx.ptr, img);
+	if (rt->scene.selected_object != NULL)
+		mlx_string_put(rt->mlx.ptr, rt->mlx.win, 10, 10, 0xFFFFFF,"Object Selected.\nThe legend will implemented soon!");
 }
