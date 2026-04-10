@@ -21,7 +21,6 @@ bool intersect(t_ray ray, t_object *obj, t_hit *hit)
 /*
  * Return a pointer to the object selected from mouse click
  * */
-t_ray	camera_ray(t_camera cam, int px, int py, int w, int h);
 t_object *get_selected_object(t_minirt *rt, int x, int y)
 {
     t_hit		closest_hit;
@@ -46,7 +45,6 @@ t_object *get_selected_object(t_minirt *rt, int x, int y)
         }
         curr = curr->next;
     }
-
     if (closest_hit.t == INFINITY)
 		return (NULL);
 	return (closest);

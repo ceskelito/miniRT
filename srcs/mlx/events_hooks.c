@@ -6,7 +6,7 @@
 /*   By: rceschel <rceschel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/09 17:30:13 by rceschel          #+#    #+#             */
-/*   Updated: 2026/04/09 18:25:03 by rceschel         ###   ########.fr       */
+/*   Updated: 2026/04/10 11:39:23 by rceschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,6 @@
  *
  * I will create an header
  * */
-t_object	*get_selected_object(t_minirt *rt, int x, int y);
-int			resize_object(t_object *selected, int resize_value);
 
 int handle_mouse_events(int button, int x, int y, t_minirt *rt)
 {
@@ -74,7 +72,6 @@ int handle_mouse_events(int button, int x, int y, t_minirt *rt)
 
 /***** END OF MOUSE OBJECT SELECTION *****/
 
-int rt_close_program(t_minirt *rt);
 int	handle_keypress(int keycode, t_minirt *rt)
 {
 	if (keycode == XK_Escape)
