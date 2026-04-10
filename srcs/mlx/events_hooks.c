@@ -6,7 +6,7 @@
 /*   By: rceschel <rceschel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/09 17:30:13 by rceschel          #+#    #+#             */
-/*   Updated: 2026/04/10 11:48:47 by rceschel         ###   ########.fr       */
+/*   Updated: 2026/04/10 15:12:23 by rceschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,13 +34,15 @@
  * I will create an header
  * */
 
+int print_legend(t_minirt *rt);
 int handle_mouse_events(int button, int x, int y, t_minirt *rt)
 {
 
 	if (button == MOUSE_LEFT)
 	{
 		rt->scene.selected_object = get_selected_object(rt, x, y);
-		render(rt);
+		// render(rt);
+		print_legend(rt);
 	}
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: rceschel <rceschel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/26 11:42:00 by antigravit        #+#    #+#             */
-/*   Updated: 2026/04/10 11:39:19 by rceschel         ###   ########.fr       */
+/*   Updated: 2026/04/10 14:52:19 by rceschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,6 +119,7 @@ typedef struct s_scene
 	t_light				light;
 	t_object			*objects;
 	t_object			*selected_object;
+	int					expanded_legend;
 }						t_scene;
 
 typedef struct s_mlx

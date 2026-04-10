@@ -57,9 +57,11 @@ PARSER 	=	parser			\
 UTILS 	=	debug		\
 			cleanup
 
-MLX_S 	=	init		\
-			render		\
-			events_hooks
+MLX_S 	=	init			\
+			render			\
+			events_hooks	\
+			print_legend	\
+			mlx_imglib
 
 # Vector math and ray-object intersection
 VECTOR	=	vector		\
