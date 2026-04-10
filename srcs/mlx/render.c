@@ -49,6 +49,20 @@ t_ray	camera_ray(t_camera cam, int px, int py, int w, int h)
 	return (ray);
 }
 
+// static const char *g_legend_resize;
+// static const char *g_legend_translation;
+// static const char *g_legend_rotation;
+
+static int print_legend(t_minirt *rt)
+{
+	if (rt->scene.selected_object != NULL)
+	{
+		mlx_string_put(rt->mlx.ptr, rt->mlx.win, 10, 10, 0xFFFFFF,
+				"Object Selected.\nThe legend will implemented soon!");
+	}
+	return (0);
+}
+
 /*
 ** Renders the entire scene into an off-screen MLX image buffer,
 ** then blits it to the window in a single call for efficiency.
@@ -84,6 +98,5 @@ void	render(t_minirt *rt)
 	}
 	mlx_put_image_to_window(rt->mlx.ptr, rt->mlx.win, img, 0, 0);
 	mlx_destroy_image(rt->mlx.ptr, img);
-	if (rt->scene.selected_object != NULL)
-		mlx_string_put(rt->mlx.ptr, rt->mlx.win, 10, 10, 0xFFFFFF,"Object Selected.\nThe legend will implemented soon!");
+	print_legend(rt);
 }

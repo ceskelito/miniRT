@@ -19,7 +19,8 @@ bool intersect(t_ray ray, t_object *obj, t_hit *hit)
 }
 
 /*
- * Return a pointer to the object selected from mouse click
+ * Returns a pointer to the object selected from mouse click.
+ * Returns NULL in case of no object (or plane) selected.
  * */
 t_object *get_selected_object(t_minirt *rt, int x, int y)
 {
@@ -45,7 +46,7 @@ t_object *get_selected_object(t_minirt *rt, int x, int y)
         }
         curr = curr->next;
     }
-    if (closest_hit.t == INFINITY)
+    if (closest_hit.t == INFINITY || closest->type == PLANE)
 		return (NULL);
 	return (closest);
 }
