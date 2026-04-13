@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "parser.h"
+#include "legend.h"
 
 int	main(int argc, char **argv)
 {
@@ -23,6 +24,7 @@ int	main(int argc, char **argv)
 	}
 	rt.scene.objects = NULL;
 	rt.scene.selected_object = NULL;
+	rt.scene.expanded_legend = NO_LEGEND;
 	rt.mlx.ptr = NULL;
 	rt.mlx.win = NULL;
 	parse_scene(argv[1], &rt);

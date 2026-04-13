@@ -6,7 +6,7 @@
 /*   By: rceschel <rceschel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/10 14:15:14 by rceschel          #+#    #+#             */
-/*   Updated: 2026/04/13 11:46:06 by rceschel         ###   ########.fr       */
+/*   Updated: 2026/04/13 12:38:27 by rceschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,9 +116,8 @@ static void	print_text(t_minirt *rt)
 
 int	print_legend(t_minirt *rt)
 {
-	/* DEBUG */
-	rt->scene.expanded_legend = RESIZE;
-	/* DEBUG */
+	if (!rt->scene.selected_object)
+		return (0);
 	print_background(rt);
 	print_text(rt);
 	return (0);

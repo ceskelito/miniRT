@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   events_hooks.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rceschel <rceschel@student.42roma.it>      +#+  +:+       +#+        */
+/*   By: rceschel <rceschel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/09 17:30:13 by rceschel          #+#    #+#             */
-/*   Updated: 2026/04/10 15:12:23 by rceschel         ###   ########.fr       */
+/*   Updated: 2026/04/13 12:40:20 by rceschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
+#include "legend.h"
 #include <X11/keysym.h>
 
 /***** START OF MOUSE OBJECT SELECTION *****/
@@ -34,15 +35,20 @@
  * I will create an header
  * */
 
-int print_legend(t_minirt *rt);
 int handle_mouse_events(int button, int x, int y, t_minirt *rt)
 {
 
 	if (button == MOUSE_LEFT)
 	{
 		rt->scene.selected_object = get_selected_object(rt, x, y);
-		// render(rt);
-		print_legend(rt);
+		rt->scene.expanded_legend = RESIZE; // DEBUG
+		if (rt->scene.selected_object)
+			print_legend(rt);
+		else
+		{
+			rt->scene.expanded_legend = NO_LEGEND;
+			render(rt);
+		}
 	}
 	return (0);
 }
@@ -53,6 +59,24 @@ int	handle_keypress(int keycode, t_minirt *rt)
 {
 	if (keycode == XK_Escape)
 		rt_close_program(rt);
+	if (rt->scene.expanded_legend == RESIZE && rt->scene.selected_object)
+	{
+		if (keycode == XK_Up)
+		{
+			resize_object(rt->scene.selected_object, RESIZE_ABS_VALUE);
+		}
+		else if (keycode == XK_Down)
+			resize_object(rt->scene.selected_object, -RESIZE_ABS_VALUE);
+		render(rt);
+	}
+	else if (rt->scene.expanded_legend == TRANSFORM)
+	{
+
+	}
+	else if (rt->scene.expanded_legend == ROTATE)
+	{
+
+	}
 	// else if (keycode == XK_Left || keycode == XK_a)
 	// 	win = move_player(map, -1, 0);
 	// else if (keycode == XK_Right || keycode == XK_d)
