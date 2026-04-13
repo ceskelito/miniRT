@@ -6,7 +6,7 @@
 /*   By: rceschel <rceschel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/09 17:30:13 by rceschel          #+#    #+#             */
-/*   Updated: 2026/04/13 12:40:20 by rceschel         ###   ########.fr       */
+/*   Updated: 2026/04/13 16:42:27 by rceschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,8 @@ int handle_mouse_events(int button, int x, int y, t_minirt *rt)
 		else
 		{
 			rt->scene.expanded_legend = NO_LEGEND;
-			render(rt);
+			render(rt); // I need to render all the scene in order to remove the legend from the screen
+						// Maybe we can work on an ad-hoc function to render only a section
 		}
 	}
 	return (0);
@@ -59,12 +60,21 @@ int	handle_keypress(int keycode, t_minirt *rt)
 {
 	if (keycode == XK_Escape)
 		rt_close_program(rt);
+
+	if (rt->scene.selected_object != NULL)
+	{
+		if (keycode == XK_1)
+			rt->scene.expanded_legend = RESIZE;
+		else if (keycode == XK_2)
+			rt->scene.expanded_legend = TRANSFORM;
+		else if (keycode == XK_3)
+			rt->scene.expanded_legend = ROTATE;
+		print_legend(rt);
+	}
 	if (rt->scene.expanded_legend == RESIZE && rt->scene.selected_object)
 	{
 		if (keycode == XK_Up)
-		{
 			resize_object(rt->scene.selected_object, RESIZE_ABS_VALUE);
-		}
 		else if (keycode == XK_Down)
 			resize_object(rt->scene.selected_object, -RESIZE_ABS_VALUE);
 		render(rt);

@@ -6,7 +6,7 @@
 /*   By: rceschel <rceschel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 12:29:45 by rceschel          #+#    #+#             */
-/*   Updated: 2026/04/13 11:30:16 by rceschel         ###   ########.fr       */
+/*   Updated: 2026/04/13 16:01:19 by rceschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,4 +67,27 @@ int	img_set_background(t_img *img, int color)
 		y++;
 	}
 	return (0);
+}
+
+void	img_add_frame(t_img *img, int color)
+{
+	int	x;
+	int	y;
+
+	if (!img || !img->addr)
+		return ;
+	x = 0;
+	y = 0;
+	while (x < img->width)
+	{
+		img_put_pixel(img, x, 0, color);
+		img_put_pixel(img, x, img->height - 1, color);
+		x++;
+	}
+	while (y < img->height)
+	{
+		img_put_pixel(img, 0, y, color);
+		img_put_pixel(img, img->width - 1, y, color);
+		y++;
+	}
 }

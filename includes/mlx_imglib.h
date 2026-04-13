@@ -6,7 +6,7 @@
 /*   By: rceschel <rceschel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 12:27:08 by rceschel          #+#    #+#             */
-/*   Updated: 2026/04/10 14:39:16 by rceschel         ###   ########.fr       */
+/*   Updated: 2026/04/13 16:02:02 by rceschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,13 +33,11 @@ typedef struct s_img
 	int		height;		// to set manually if not xpm
 }				t_img;
 
-int	img_set_background(t_img *img, int color);
-int	img_get_offset(t_img *img, int x, int y);
-int	img_put_pixel(t_img *img, int x, int y, int color);
-int	img_get_offset_4_byte(int line_length, int x, int y);
-int img_put_pixel_4_byte(int *pixels, int line_length,
-			int x, int y, int color);
-int	img_create(void *mlx, t_img *img, int img_width,
+int		img_set_background(t_img *img, int color);
+int		img_get_offset(t_img *img, int x, int y);
+int		img_put_pixel(t_img *img, int x, int y, int color);
+int		img_create(void *mlx, t_img *img, int img_width,
 			int img_height);
+void	img_add_frame(t_img *img, int color);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: rceschel <rceschel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/10 14:15:14 by rceschel          #+#    #+#             */
-/*   Updated: 2026/04/13 12:38:27 by rceschel         ###   ########.fr       */
+/*   Updated: 2026/04/13 16:03:32 by rceschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,8 @@ static const char	*g_legend_rotate[] = {
 static const char	**g_legends[] = {
 	g_legend_resize,
 	g_legend_transform,
-	g_legend_rotate
+	g_legend_rotate,
+	NULL
 };
 
 static int	count_elem(const char *g_legend[])
@@ -48,77 +49,65 @@ static int	count_elem(const char *g_legend[])
 	return (i);
 }
 
-static void	img_add_frame(t_img *img, int color)
-{
-	int	x;
-	int	y;
+#define WHITE 0xFFFFFF
+#define BLACK 0x000000
 
-	if (!img || !img->addr)
-		return ;
-	x = 0;
-	y = 0;
-	while (x < img->width)
-	{
-		img_put_pixel(img, x, 0, color);
-		img_put_pixel(img, x, img->height - 1, color);
-		x++;
-	}
-	while (y < img->height)
-	{
-		img_put_pixel(img, 0, y, color);
-		img_put_pixel(img, img->width - 1, y, color);
-		y++;
-	}
-}
-
-static void	print_background(t_minirt *rt)
+static int new_print_background(t_mlx *mlx, const char *legend[], int b_color, int f_color, int x, int y)
 {
 	t_img	background;
-	int		height;
 	int		width;
+	int		height;
 
-	height = CHAR_HEIGHT * (MENU_ITEMS);
-	if (rt->scene.expanded_legend != NO_LEGEND)
-		height += CHAR_HEIGHT
-			* count_elem(g_legends[rt->scene.expanded_legend]);
 	width = CHAR_WIDTH * 20;
-	if (img_create(rt->mlx.ptr, &background, width, height) == -1)
-		exit_error("Failed in creating mlx's image", rt);
-	if (img_set_background(&background, 0x000000) == -1)
-		exit_error("Failed in filling mlx's image background", rt);
-	img_add_frame(&background, 0xFFFFFF);
-	mlx_put_image_to_window(rt->mlx.ptr, rt->mlx.win, background.img, X, Y);
-	mlx_destroy_image(rt->mlx.ptr, background.img);
+	height = CHAR_HEIGHT * (count_elem(legend) + 2);
+	img_create(mlx->ptr, &background, width, height);
+	img_set_background(&background, b_color);
+	img_add_frame(&background, f_color);
+	mlx_put_image_to_window(mlx->ptr, mlx->win, background.img, x, y);
+	mlx_destroy_image(mlx->ptr, background.img);
+	return (height);
 }
 
-static void	print_text(t_minirt *rt)
+static void new_print_text(t_mlx *mlx, const char *legend[], int color, int x, int y)
 {
-	int	printing_height;
+	int i;
+	int n;
 
-	printing_height = Y + CHAR_HEIGHT;
-	for (int i = 0; i < MENU_ITEMS; i++)
+	i = 0;
+	n = count_elem(legend);
+	while (i < n)
 	{
-		if (i != 0)
-			printing_height += (CHAR_HEIGHT);
-		mlx_string_put(rt->mlx.ptr, rt->mlx.win, X + 10, printing_height,
-			0xFFFFFF, (char *)g_legends[i][0]);
-		if (rt->scene.expanded_legend == i)
-		{
-			for (int j = 1; g_legends[i][j]; j++)
-			{
-				printing_height += (CHAR_HEIGHT);
-				mlx_string_put(rt->mlx.ptr, rt->mlx.win, X * 3 + 10,
-					printing_height, 0xFFFFFF, (char *)(g_legends[i][j]));
-			}
-		}
+		mlx_string_put(mlx->ptr, mlx->win, x, y, color, (char *)legend[i]);
+		if (i == 0)
+			x += 10;
+		y += CHAR_HEIGHT;
+		i++;
 	}
 }
 
 int	print_legend(t_minirt *rt)
 {
+	int b_color;
+	int f_color;
+	int old_y;
+	int y;
+
 	if (!rt->scene.selected_object)
 		return (0);
-	print_background(rt);
-	print_text(rt);
+	y = Y;
+	for (int i = 0; i < MENU_ITEMS; i++)
+	{
+		b_color = BLACK;
+		f_color = WHITE;
+		if (i == rt->scene.expanded_legend)
+		{
+			b_color = WHITE;
+			f_color = BLACK;
+		}
+		old_y = y;
+		y += new_print_background(&rt->mlx, g_legends[i], b_color, f_color, X, y);
+		y += 10;	
+		new_print_text(&rt->mlx, g_legends[i], f_color, X + CHAR_WIDTH * 2, old_y + CHAR_HEIGHT * 2);
+	}
 	return (0);
 }
