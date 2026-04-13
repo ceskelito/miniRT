@@ -62,13 +62,15 @@ MLX_S 	=	init		\
 
 # Vector math and ray-object intersection
 VECTOR	=	vector		\
+			vector_utils	\
 			hit
 
 # Per-shape intersection routines
 OBJECTS	=	objects			\
 			objects_utils	\
 			objects_cone	\
-			objects_torus
+			objects_torus	\
+			objects_cylinder
 
 COLOR	=	color
 

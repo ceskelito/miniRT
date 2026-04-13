@@ -6,7 +6,7 @@
 /*   By: rceschel <rceschel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/23 12:00:00 by rceschel          #+#    #+#             */
-/*   Updated: 2026/02/23 12:00:00 by rceschel         ###   ########.fr       */
+/*   Updated: 2026/04/13 12:00:00 by rceschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,18 +15,8 @@
 /*
 ** Computes coefficients a, b, c of the quadratic equation
 ** for ray-cone intersection.
-**
 ** The cone apex is at: center + height * axis
-** The half-angle alpha satisfies: tan(a) = (diameter/2) / height
-** cos^2(a) = h^2 / (h^2 + r^2), named 'm' in the code.
-**
-** Implicit cone equation from apex V with axis A:
-**   (P-V)·A)^2 = cos^2(a) * |P-V|^2
-**
-** Substituting P = O + tD and setting W = O - V:
-**   a = (D·A)^2 - m * (D·D)
-**   b = 2 * [(D·A)(W·A) - m * (D·W)]
-**   c = (W·A)^2 - m * (W·W)
+** tan(half_angle) = (diameter/2) / height; cos^2 = h^2/(h^2+r^2) = m
 */
 static void	get_co_abc(t_ray ray, t_cone co, double *abc)
 {
@@ -48,13 +38,7 @@ static void	get_co_abc(t_ray ray, t_cone co, double *abc)
 
 /*
 ** Cone normal at the hit point.
-**
-** Given the implicit surface F = (v·A)^2 - cos^2(a) * |v|^2 = 0,
-** the gradient (unnormalized normal) is:
-**   grad(F) = 2 * [cos^2(a) * v - (v·A) * A]
-**
-** This points outward from the cone.
-** v = phit - apex (vector from apex to hit point)
+** grad(F) = 2 * [cos^2(a) * v - (v.A) * A], where v = phit - apex.
 */
 static t_vec3	get_cone_normal(t_cone co, t_vec3 phit)
 {
@@ -71,18 +55,29 @@ static t_vec3	get_cone_normal(t_cone co, t_vec3 phit)
 }
 
 /*
-** Validates a single cone root: checks t > 0 and that the hit
-** point lies within the finite height (h in [-height, 0] from apex).
+** Tests the lateral surface of the cone.
+** Both roots are tried; the height range [-height, 0] from apex is enforced.
 */
-static bool	co_check_root(t_ray ray, t_cone co, double t, t_hit *hit)
+static bool	hit_co_body(t_ray ray, t_cone co, t_hit *hit)
 {
+	double	abc[3];
+	double	disc;
+	double	t;
 	double	h;
+	t_vec3	base;
 
+	get_co_abc(ray, co, abc);
+	disc = abc[1] * abc[1] - 4 * abc[0] * abc[2];
+	if (disc < 0)
+		return (false);
+	t = (-abc[1] - sqrt(disc)) / (2.0 * abc[0]);
+	if (t < EPSILON)
+		t = (-abc[1] + sqrt(disc)) / (2.0 * abc[0]);
 	if (t < EPSILON)
 		return (false);
 	hit->phit = vec3_add(ray.origin, vec3_mult(ray.dir, t));
-	h = vec3_dot(vec3_sub(hit->phit, vec3_add(co.center,
-					vec3_mult(co.axis, co.height))), co.axis);
+	base = vec3_add(co.center, vec3_mult(co.axis, co.height));
+	h = vec3_dot(vec3_sub(hit->phit, base), co.axis);
 	if (h < -co.height || h > 0)
 		return (false);
 	hit->t = (float)t;
@@ -91,29 +86,9 @@ static bool	co_check_root(t_ray ray, t_cone co, double t, t_hit *hit)
 	return (true);
 }
 
-/* Tests the lateral surface of the cone, trying both roots. */
-static bool	hit_co_body(t_ray ray, t_cone co, t_hit *hit)
-{
-	double	abc[3];
-	double	disc;
-	double	t1;
-	double	t2;
-
-	get_co_abc(ray, co, abc);
-	disc = abc[1] * abc[1] - 4 * abc[0] * abc[2];
-	if (disc < 0)
-		return (false);
-	t1 = (-abc[1] - sqrt(disc)) / (2.0 * abc[0]);
-	t2 = (-abc[1] + sqrt(disc)) / (2.0 * abc[0]);
-	if (co_check_root(ray, co, t1, hit))
-		return (true);
-	return (co_check_root(ray, co, t2, hit));
-}
-
 /*
 ** Ray-disc intersection for the cone base cap.
-** The base is at 'center' (opposite end from apex) with radius diameter/2.
-** Normal points outward: opposite to axis direction.
+** The base disc is at 'center' with radius diameter/2.
 */
 static bool	hit_co_cap(t_ray ray, t_cone co, t_hit *hit)
 {
