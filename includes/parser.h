@@ -42,6 +42,8 @@ char	*parse_light(char **tokens, t_light *light);
 char	*parse_sphere(char **tokens, t_object **objects);
 char	*parse_plane(char **tokens, t_object **objects);
 char	*parse_cylinder(char **tokens, t_object **objects);
+char	*parse_cone(char **tokens, t_object **objects);
+char	*parse_torus(char **tokens, t_object **objects);
 
 /*
 ** debug.c

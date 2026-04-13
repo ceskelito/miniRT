@@ -48,6 +48,10 @@ static char	*dispatch_line(char **tokens, t_scene *scene)
 		err = parse_plane(tokens, &scene->objects);
 	else if (ft_strncmp(tokens[0], "cy", 3) == 0)
 		err = parse_cylinder(tokens, &scene->objects);
+	else if (ft_strncmp(tokens[0], "co", 3) == 0)
+		err = parse_cone(tokens, &scene->objects);
+	else if (ft_strncmp(tokens[0], "to", 3) == 0)
+		err = parse_torus(tokens, &scene->objects);
 	else if (tokens[0][0] == '#')
 		return (NULL);
 	else

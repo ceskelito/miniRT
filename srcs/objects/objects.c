@@ -102,10 +102,10 @@ static bool	cy_check_root(t_ray ray, t_cylinder cy, double t, t_hit *hit)
 }
 
 /*
-** Ray-cylinder intersection.  Tries the nearest root first; if its hit point
-** falls outside the finite height, falls back to the farther root.
+** Tests the body (lateral surface) of the cylinder.
+** Extracted so hit_cylinder can compare body vs cap hits.
 */
-bool	hit_cylinder(t_ray ray, t_cylinder cy, t_hit *hit)
+static bool	hit_cy_body(t_ray ray, t_cylinder cy, t_hit *hit)
 {
 	double	abc[3];
 	double	disc;
@@ -118,10 +118,73 @@ bool	hit_cylinder(t_ray ray, t_cylinder cy, t_hit *hit)
 		return (false);
 	t1 = (-abc[1] - sqrt(disc)) / (2.0 * abc[0]);
 	t2 = (-abc[1] + sqrt(disc)) / (2.0 * abc[0]);
-	/* Try nearest root first; fall back to farther root if height check fails */
 	if (cy_check_root(ray, cy, t1, hit))
 		return (true);
 	return (cy_check_root(ray, cy, t2, hit));
+}
+
+/*
+** Ray-disc intersection for a cylinder cap.
+** cap_offset is +height/2 (top) or -height/2 (bottom).
+** The disc is a plane at center + axis*cap_offset; any hit beyond
+** the cylinder radius is rejected.
+*/
+static bool	hit_cy_cap(t_ray ray, t_cylinder cy, double cap_offset,
+				t_hit *hit)
+{
+	t_vec3	cap_center;
+	double	denom;
+	double	t;
+	t_vec3	diff;
+
+	denom = vec3_dot(ray.dir, cy.axis);
+	if (fabs(denom) < EPSILON)
+		return (false);
+	cap_center = vec3_add(cy.center, vec3_mult(cy.axis, cap_offset));
+	t = vec3_dot(vec3_sub(cap_center, ray.origin), cy.axis) / denom;
+	if (t < EPSILON)
+		return (false);
+	diff = vec3_sub(vec3_add(ray.origin, vec3_mult(ray.dir, t)), cap_center);
+	if (vec3_dot(diff, diff) > pow(cy.diameter / 2.0, 2))
+		return (false);
+	hit->t = (float)t;
+	hit->phit = vec3_add(ray.origin, vec3_mult(ray.dir, t));
+	/* Normal points outward: same as axis for top, opposite for bottom */
+	if (denom > 0)
+		hit->nhit = vec3_mult(cy.axis, -1.0);
+	else
+		hit->nhit = cy.axis;
+	hit->color = cy.color;
+	return (true);
+}
+
+/*
+** Full ray-cylinder intersection: tests the lateral body and both caps,
+** then returns the closest hit among the three.
+*/
+bool	hit_cylinder(t_ray ray, t_cylinder cy, t_hit *hit)
+{
+	t_hit	tmp;
+	bool	found;
+
+	found = false;
+	hit->t = INFINITY;
+	if (hit_cy_body(ray, cy, &tmp) && tmp.t < hit->t)
+	{
+		*hit = tmp;
+		found = true;
+	}
+	if (hit_cy_cap(ray, cy, cy.height / 2.0, &tmp) && tmp.t < hit->t)
+	{
+		*hit = tmp;
+		found = true;
+	}
+	if (hit_cy_cap(ray, cy, -cy.height / 2.0, &tmp) && tmp.t < hit->t)
+	{
+		*hit = tmp;
+		found = true;
+	}
+	return (found);
 }
 
 /*

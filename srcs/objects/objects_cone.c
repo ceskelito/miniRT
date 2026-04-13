@@ -71,30 +71,13 @@ static t_vec3	get_cone_normal(t_cone co, t_vec3 phit)
 }
 
 /*
-** Finite ray-cone intersection.
-**
-** Steps:
-** 1. Compute quadratic coefficients (get_co_abc)
-** 2. Solve at^2 + bt + c = 0 using the discriminant
-** 3. Take the smallest positive root (the nearest one)
-** 4. Check that the hit point lies within cone height:
-**    projection 'h' from apex along the axis must be
-**    in [-height, 0] (cone extends from apex toward base)
+** Validates a single cone root: checks t > 0 and that the hit
+** point lies within the finite height (h in [-height, 0] from apex).
 */
-bool	hit_cone(t_ray ray, t_cone co, t_hit *hit)
+static bool	co_check_root(t_ray ray, t_cone co, double t, t_hit *hit)
 {
-	double	abc[3];
-	double	disc;
-	double	t;
 	double	h;
 
-	get_co_abc(ray, co, abc);
-	disc = abc[1] * abc[1] - 4 * abc[0] * abc[2];
-	if (disc < 0)
-		return (false);
-	t = (-abc[1] - sqrt(disc)) / (2.0 * abc[0]);
-	if (t < EPSILON)
-		t = (-abc[1] + sqrt(disc)) / (2.0 * abc[0]);
 	if (t < EPSILON)
 		return (false);
 	hit->phit = vec3_add(ray.origin, vec3_mult(ray.dir, t));
@@ -106,4 +89,77 @@ bool	hit_cone(t_ray ray, t_cone co, t_hit *hit)
 	hit->nhit = get_cone_normal(co, hit->phit);
 	hit->color = co.color;
 	return (true);
+}
+
+/* Tests the lateral surface of the cone, trying both roots. */
+static bool	hit_co_body(t_ray ray, t_cone co, t_hit *hit)
+{
+	double	abc[3];
+	double	disc;
+	double	t1;
+	double	t2;
+
+	get_co_abc(ray, co, abc);
+	disc = abc[1] * abc[1] - 4 * abc[0] * abc[2];
+	if (disc < 0)
+		return (false);
+	t1 = (-abc[1] - sqrt(disc)) / (2.0 * abc[0]);
+	t2 = (-abc[1] + sqrt(disc)) / (2.0 * abc[0]);
+	if (co_check_root(ray, co, t1, hit))
+		return (true);
+	return (co_check_root(ray, co, t2, hit));
+}
+
+/*
+** Ray-disc intersection for the cone base cap.
+** The base is at 'center' (opposite end from apex) with radius diameter/2.
+** Normal points outward: opposite to axis direction.
+*/
+static bool	hit_co_cap(t_ray ray, t_cone co, t_hit *hit)
+{
+	double	denom;
+	double	t;
+	t_vec3	diff;
+
+	denom = vec3_dot(ray.dir, co.axis);
+	if (fabs(denom) < EPSILON)
+		return (false);
+	t = vec3_dot(vec3_sub(co.center, ray.origin), co.axis) / denom;
+	if (t < EPSILON)
+		return (false);
+	diff = vec3_sub(vec3_add(ray.origin, vec3_mult(ray.dir, t)), co.center);
+	if (vec3_dot(diff, diff) > pow(co.diameter / 2.0, 2))
+		return (false);
+	hit->t = (float)t;
+	hit->phit = vec3_add(ray.origin, vec3_mult(ray.dir, t));
+	if (denom > 0)
+		hit->nhit = vec3_mult(co.axis, -1.0);
+	else
+		hit->nhit = co.axis;
+	hit->color = co.color;
+	return (true);
+}
+
+/*
+** Full ray-cone intersection: tests the lateral body and the base cap,
+** then returns the closest hit.
+*/
+bool	hit_cone(t_ray ray, t_cone co, t_hit *hit)
+{
+	t_hit	tmp;
+	bool	found;
+
+	found = false;
+	hit->t = INFINITY;
+	if (hit_co_body(ray, co, &tmp) && tmp.t < hit->t)
+	{
+		*hit = tmp;
+		found = true;
+	}
+	if (hit_co_cap(ray, co, &tmp) && tmp.t < hit->t)
+	{
+		*hit = tmp;
+		found = true;
+	}
+	return (found);
 }
