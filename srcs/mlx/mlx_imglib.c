@@ -6,7 +6,7 @@
 /*   By: rceschel <rceschel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 12:29:45 by rceschel          #+#    #+#             */
-/*   Updated: 2026/04/10 14:39:24 by rceschel         ###   ########.fr       */
+/*   Updated: 2026/04/13 11:30:16 by rceschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,8 @@ int	img_set_background(t_img *img, int color)
 		x = 0;
 		while (x < img->width)
 		{
-			img_put_pixel(img, x, y, color);
+			if (img_put_pixel(img, x, y, color) == MLX_ERROR)
+				return (MLX_ERROR);
 			x++;
 		}
 		y++;

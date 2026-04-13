@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   print_legend.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rceschel <rceschel@student.42roma.it>      +#+  +:+       +#+        */
+/*   By: rceschel <rceschel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/10 14:15:14 by rceschel          #+#    #+#             */
-/*   Updated: 2026/04/10 16:34:04 by rceschel         ###   ########.fr       */
+/*   Updated: 2026/04/13 11:46:06 by rceschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,8 @@ static void	img_add_frame(t_img *img, int color)
 	int	x;
 	int	y;
 
+	if (!img || !img->addr)
+		return ;
 	x = 0;
 	y = 0;
 	while (x < img->width)
@@ -61,7 +63,7 @@ static void	img_add_frame(t_img *img, int color)
 		img_put_pixel(img, x, img->height - 1, color);
 		x++;
 	}
-	while (y < img->width)
+	while (y < img->height)
 	{
 		img_put_pixel(img, 0, y, color);
 		img_put_pixel(img, img->width - 1, y, color);
@@ -82,11 +84,11 @@ static void	print_background(t_minirt *rt)
 	width = CHAR_WIDTH * 20;
 	if (img_create(rt->mlx.ptr, &background, width, height) == -1)
 		exit_error("Failed in creating mlx's image", rt);
-	if (img_set_background(&background, 0x000000))
+	if (img_set_background(&background, 0x000000) == -1)
 		exit_error("Failed in filling mlx's image background", rt);
 	img_add_frame(&background, 0xFFFFFF);
 	mlx_put_image_to_window(rt->mlx.ptr, rt->mlx.win, background.img, X, Y);
-	mlx_destroy_image(rt->mlx.ptr, background.addr);
+	mlx_destroy_image(rt->mlx.ptr, background.img);
 }
 
 static void	print_text(t_minirt *rt)
