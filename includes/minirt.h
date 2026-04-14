@@ -6,7 +6,7 @@
 /*   By: rceschel <rceschel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/26 11:42:00 by antigravit        #+#    #+#             */
-/*   Updated: 2026/04/14 16:54:49 by rceschel         ###   ########.fr       */
+/*   Updated: 2026/04/14 17:50:07 by rceschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,6 +165,7 @@ t_object	*get_selected_object(t_minirt *rt, int x, int y);
 
 /* srcs/objects/objects_operations */
 int			resize_object(t_object *selected, int resize_value);
+int			rotate_object(t_object *selected, char axis, int rotate_value);
 int			object_translate(double *axe, int translate_value);
 
 

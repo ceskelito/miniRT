@@ -32,6 +32,9 @@ static const char	*g_legend_translate[] = {
 
 static const char	*g_legend_rotate[] = {
 	"3 - Rotate",
+	"UP/DN: X axis",
+	"LF/RT: Y axis",
+	"A/D: Z axis",
 	NULL
 };
 
