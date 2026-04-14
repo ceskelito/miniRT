@@ -106,9 +106,7 @@ vpath %.c 	$(SRC_DIR)			\
 
 all: $(NAME)
 
-debug: CFLAGS += -g3
-
-debug: all
+debug: CFLAGS += -g3 $(MAKE) $(MAKEFLAGS)
 
 run: DEFAULT_RT = scenes/example.rt
 
