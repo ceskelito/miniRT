@@ -6,7 +6,7 @@
 /*   By: rceschel <rceschel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/26 11:42:00 by antigravit        #+#    #+#             */
-/*   Updated: 2026/04/10 11:37:37 by rceschel         ###   ########.fr       */
+/*   Updated: 2026/04/14 16:38:13 by rceschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,14 +16,7 @@
 # include "vec3.h"
 
 # define RESIZE_ABS_VALUE 5
-
-enum {
-	MOUSE_LEFT 		= 1,
-	MOUSE_CENTER 	= 2,
-	MOUSE_RIGHT 	= 3,
-	SCROLL_UP 		= 4,
-	SCROLL_DOWN 	= 5
-};
+# define ROTATE_ABS_VALUE 5
 
 typedef struct s_color
 {

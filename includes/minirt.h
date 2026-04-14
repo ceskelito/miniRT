@@ -6,7 +6,7 @@
 /*   By: rceschel <rceschel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/26 11:42:00 by antigravit        #+#    #+#             */
-/*   Updated: 2026/04/10 14:52:19 by rceschel         ###   ########.fr       */
+/*   Updated: 2026/04/14 16:36:02 by rceschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,14 @@ typedef struct s_object	t_object;
 ** Macros
 ** --------------------------------------------------------------------------
 */
+
+enum {
+	MOUSE_LEFT 		= 1,
+	MOUSE_CENTER 	= 2,
+	MOUSE_RIGHT 	= 3,
+	SCROLL_UP 		= 4,
+	SCROLL_DOWN 	= 5
+};
 
 # define WIN_WIDTH 1920
 # define WIN_HEIGHT 1080
