@@ -6,11 +6,12 @@
 /*   By: antigravity <antigravity@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/26 12:00:00 by antigravit        #+#    #+#             */
-/*   Updated: 2026/04/02 18:37:11 by rceschel         ###   ########.fr       */
+/*   Updated: 2026/04/09 18:27:24 by rceschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parser.h"
+#include "legend.h"
 
 int	main(int argc, char **argv)
 {
@@ -22,6 +23,8 @@ int	main(int argc, char **argv)
 		return (1);
 	}
 	rt.scene.objects = NULL;
+	rt.scene.selected_object = NULL;
+	rt.scene.expanded_legend = NO_LEGEND;
 	rt.mlx.ptr = NULL;
 	rt.mlx.win = NULL;
 	parse_scene(argv[1], &rt);

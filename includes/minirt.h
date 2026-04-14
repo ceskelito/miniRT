@@ -6,7 +6,7 @@
 /*   By: rceschel <rceschel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/26 11:42:00 by antigravit        #+#    #+#             */
-/*   Updated: 2026/04/02 18:34:06 by rceschel         ###   ########.fr       */
+/*   Updated: 2026/04/10 14:52:19 by rceschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,6 +118,8 @@ typedef struct s_scene
 	t_camera			camera;
 	t_light				light;
 	t_object			*objects;
+	t_object			*selected_object;
+	int					expanded_legend;
 }						t_scene;
 
 typedef struct s_mlx
@@ -150,7 +152,9 @@ bool	hit_cylinder(t_ray ray, t_cylinder cy, t_hit *hit);
 bool	hit_triangle(t_ray ray, t_triangle tr, t_hit *hit);
 
 /* srcs/objects/objects_utils.c */
-bool	intersect(t_ray ray, t_object *obj, t_hit *hit);
+bool		intersect(t_ray ray, t_object *obj, t_hit *hit);
+t_object	*get_selected_object(t_minirt *rt, int x, int y);
+int			resize_object(t_object *selected, int resize_value);
 
 /* srcs/objects/objects_cone.c */
 bool	hit_cone(t_ray ray, t_cone co, t_hit *hit);
@@ -166,8 +170,10 @@ t_color	color_add(t_color a, t_color b);
 
 /* srcs/mlx/render.c */
 void	render(t_minirt *rt);
+t_ray	camera_ray(t_camera cam, int px, int py, int w, int h);
 
 /* srcs/mlx/init.c */
 int		mlx_loop_init(t_minirt *rt);
+int		rt_close_program(t_minirt *rt);
 
 #endif

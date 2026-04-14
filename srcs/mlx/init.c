@@ -6,14 +6,13 @@
 /*   By: rceschel <rceschel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 13:08:20 by rceschel          #+#    #+#             */
-/*   Updated: 2026/04/02 18:51:05 by rceschel         ###   ########.fr       */
+/*   Updated: 2026/04/09 18:17:04 by rceschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
 #include "parser.h"
 #include "mlx.h"
-#include <X11/keysym.h>
 
 static int	mlx_init_instance(void **mlx_ptr, void **win_ptr, int w_l, int w_h, char *w_name)
 {
@@ -54,26 +53,8 @@ int rt_close_program(t_minirt *rt)
 	exit(EXIT_SUCCESS);
 }
 
-static int	handle_keypress(int keycode, t_minirt *rt)
-{
-	if (keycode == XK_Escape)
-		rt_close_program(rt);
-	// else if (keycode == XK_Left || keycode == XK_a)
-	// 	win = move_player(map, -1, 0);
-	// else if (keycode == XK_Right || keycode == XK_d)
-	// 	win = move_player(map, 1, 0);
-	// else if (keycode == XK_Up || keycode == XK_w)
-	// 	win = move_player(map, 0, -1);
-	// else if (keycode == XK_Down || keycode == XK_s)
-	// 	win = move_player(map, 0, 1);
-	// if (win)
-	// {
-	//		ft_printf("Moves count: %i\n", map->player.moves + 1);
-	//		ft_printf("Error\nToo skilled player has won the game\n");
-	// 	close_window(map);
-	// }
-	return (0);
-}
+int	handle_keypress(int keycode, t_minirt *rt);
+int handle_mouse_events(int button, int x, int y, t_minirt *rt);
 
 int mlx_loop_init(t_minirt *rt)
 {
@@ -91,6 +72,7 @@ int mlx_loop_init(t_minirt *rt)
 	/* Event 17 = window close (X button), event 2 = key press */
 	mlx_hook(rt->mlx.win, 17, 0, rt_close_program, rt);
 	mlx_hook(rt->mlx.win, 2, 1L << 0, handle_keypress, rt);
+	mlx_mouse_hook(rt->mlx.win, handle_mouse_events, rt);
 	mlx_loop(rt->mlx.ptr);
 	return (0);
 }

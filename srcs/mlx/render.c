@@ -1,4 +1,5 @@
 #include "minirt.h"
+#include "legend.h"
 #include "mlx.h"
 #include <math.h>
 
@@ -18,7 +19,7 @@ static int	color_to_int(t_color c)
 **   ndc_x maps [0, width]  → [-1, 1] left to right, scaled by aspect ratio
 **   ndc_y maps [0, height] → [ 1,-1] top to bottom (screen Y is inverted)
 */
-static t_ray	camera_ray(t_camera cam, int px, int py, int w, int h)
+t_ray	camera_ray(t_camera cam, int px, int py, int w, int h)
 {
 	t_vec3	forward;
 	t_vec3	world_up;
@@ -48,6 +49,10 @@ static t_ray	camera_ray(t_camera cam, int px, int py, int w, int h)
 	);
 	return (ray);
 }
+
+// static const char *g_legend_resize;
+// static const char *g_legend_translation;
+// static const char *g_legend_rotation;
 
 /*
 ** Renders the entire scene into an off-screen MLX image buffer,
@@ -84,4 +89,5 @@ void	render(t_minirt *rt)
 	}
 	mlx_put_image_to_window(rt->mlx.ptr, rt->mlx.win, img, 0, 0);
 	mlx_destroy_image(rt->mlx.ptr, img);
+	print_legend(rt);
 }
