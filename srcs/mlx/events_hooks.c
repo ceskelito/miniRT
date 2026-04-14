@@ -83,9 +83,21 @@ int	handle_keypress(int keycode, t_minirt *rt)
 	{
 
 	}
-	else if (rt->scene.expanded_legend == ROTATE)
+	else if (rt->scene.expanded_legend == ROTATE && rt->scene.selected_object)
 	{
-
+		if (keycode == XK_Up)
+			rotate_object(rt->scene.selected_object, 'x', ROTATE_ABS_VALUE);
+		else if (keycode == XK_Down)
+			rotate_object(rt->scene.selected_object, 'x', -ROTATE_ABS_VALUE);
+		else if (keycode == XK_Right)
+			rotate_object(rt->scene.selected_object, 'y', ROTATE_ABS_VALUE);
+		else if (keycode == XK_Left)
+			rotate_object(rt->scene.selected_object, 'y', -ROTATE_ABS_VALUE);
+		else if (keycode == XK_d)
+			rotate_object(rt->scene.selected_object, 'z', ROTATE_ABS_VALUE);
+		else if (keycode == XK_a)
+			rotate_object(rt->scene.selected_object, 'z', -ROTATE_ABS_VALUE);
+		render(rt);
 	}
 	// else if (keycode == XK_Left || keycode == XK_a)
 	// 	win = move_player(map, -1, 0);
