@@ -6,7 +6,7 @@
 /*   By: rceschel <rceschel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/26 12:00:00 by rceschel          #+#    #+#             */
-/*   Updated: 2026/04/13 12:00:00 by rceschel         ###   ########.fr       */
+/*   Updated: 2026/04/14 16:28:32 by rceschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,13 @@ int resize_object(t_object *selected, int resize_value)
 	{
 		selected->data.cy.diameter += resize_value;
 		selected->data.cy.height += resize_value;
+	}
+	else if (selected->type == TORUS)
+	{
+		selected->data.to.sml_r += ( (float) resize_value / 2 );
+		selected->data.to.sml_r2 += pow(selected->data.to.sml_r, 2);
+		selected->data.to.big_r += resize_value;
+		selected->data.to.big_r2 += pow(selected->data.to.big_r, 2);
 	}
 	else
 		return (0);
