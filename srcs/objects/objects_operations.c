@@ -6,7 +6,7 @@
 /*   By: rceschel <rceschel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/14 16:32:03 by rceschel          #+#    #+#             */
-/*   Updated: 2026/04/14 17:51:38 by rceschel         ###   ########.fr       */
+/*   Updated: 2026/04/14 17:54:30 by rceschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,12 @@ int	object_resize(t_object *selected, int resize_value)
 		selected->data.to.sml_r2 += pow(selected->data.to.sml_r, 2);
 		selected->data.to.big_r += resize_value;
 		selected->data.to.big_r2 += pow(selected->data.to.big_r, 2);
+	}
+	else if (selected->type == CONE)
+	{
+		selected->data.co.diameter += ((float)resize_value / 2);
+		selected->data.co.height += resize_value;
+
 	}
 	else
 		return (0);
