@@ -6,7 +6,7 @@
 /*   By: rceschel <rceschel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/10 14:15:14 by rceschel          #+#    #+#             */
-/*   Updated: 2026/04/14 17:57:48 by rceschel         ###   ########.fr       */
+/*   Updated: 2026/04/14 18:00:23 by rceschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ static int	count_elem(const char *g_legend[])
 #define WHITE 0xFFFFFF
 #define BLACK 0x000000
 
-static int new_print_background(t_mlx *mlx, const char *legend[], int b_color, int f_color, int x, int y)
+static int print_background(t_mlx *mlx, const char *legend[], int b_color, int f_color, int x, int y)
 {
 	t_img	background;
 	int		width;
@@ -74,7 +74,7 @@ static int new_print_background(t_mlx *mlx, const char *legend[], int b_color, i
 	return (height);
 }
 
-static void new_print_text(t_mlx *mlx, const char *legend[], int color, int x, int y)
+static void print_text(t_mlx *mlx, const char *legend[], int color, int x, int y)
 {
 	int i;
 	int n;
@@ -111,9 +111,9 @@ int	print_legend(t_minirt *rt)
 			f_color = BLACK;
 		}
 		old_y = y;
-		y += new_print_background(&rt->mlx, g_legends[i], b_color, f_color, X, y);
+		y += print_background(&rt->mlx, g_legends[i], b_color, f_color, X, y);
 		y += 10;	
-		new_print_text(&rt->mlx, g_legends[i], f_color, X + CHAR_WIDTH * 2, old_y + CHAR_HEIGHT * 2);
+		print_text(&rt->mlx, g_legends[i], f_color, X + CHAR_WIDTH * 2, old_y + CHAR_HEIGHT * 2);
 	}
 	return (0);
 }

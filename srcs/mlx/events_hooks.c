@@ -6,34 +6,13 @@
 /*   By: rceschel <rceschel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/09 17:30:13 by rceschel          #+#    #+#             */
-/*   Updated: 2026/04/14 17:51:31 by rceschel         ###   ########.fr       */
+/*   Updated: 2026/04/14 18:10:58 by rceschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
 #include "legend.h"
 #include <X11/keysym.h>
-
-/***** START OF MOUSE OBJECT SELECTION *****/
-
-/*
- * How to handle events:
- *
- * 1. On left click, check if the coordinates intersect an object
- *		(maybe we have an appropriate function yet..?)
- *		USE THE INTERSECT: shot a ray like for rendering
- *
- * 2. In case of, higlith the object
- * 2.1 Display a legend of possible commands
- *
- * 3. Apply trasformation on the selected object
- * */
-
-/* Functions from:
- * srcs/objects/objects_utils.c 
- *
- * I will create an header
- * */
 
 int handle_mouse_events(int button, int x, int y, t_minirt *rt)
 {
@@ -62,7 +41,7 @@ int	handle_keypress(int keycode, t_minirt *rt)
 	if (keycode == XK_Escape)
 		rt_close_program(rt);
 
-	if (rt->scene.selected_object != NULL)
+	if ((keycode == XK_1 || keycode == XK_2 || keycode == XK_3) && rt->scene.selected_object != NULL)
 	{
 		if (keycode == XK_1)
 			rt->scene.expanded_legend = RESIZE;
@@ -70,7 +49,10 @@ int	handle_keypress(int keycode, t_minirt *rt)
 			rt->scene.expanded_legend = TRANSFORM;
 		else if (keycode == XK_3)
 			rt->scene.expanded_legend = ROTATE;
+		else
+			return (0);
 		print_legend(rt);
+		return (0);
 	}
 	if (rt->scene.expanded_legend == RESIZE && rt->scene.selected_object)
 	{
@@ -78,9 +60,11 @@ int	handle_keypress(int keycode, t_minirt *rt)
 			object_resize(rt->scene.selected_object, RESIZE_ABS_VALUE);
 		else if (keycode == XK_Down)
 			object_resize(rt->scene.selected_object, -RESIZE_ABS_VALUE);
+		else
+			return (0);
 		render(rt);
 	}
-	else if (rt->scene.expanded_legend == TRANSFORM)
+	else if (rt->scene.expanded_legend == TRANSFORM && rt->scene.selected_object)
 	{
 		t_vec3	*center;
 		if (rt->scene.selected_object->type == SPHERE)
@@ -126,21 +110,11 @@ int	handle_keypress(int keycode, t_minirt *rt)
 			object_rotate(rt->scene.selected_object, 'z', ROTATE_ABS_VALUE);
 		else if (keycode == XK_a)
 			object_rotate(rt->scene.selected_object, 'z', -ROTATE_ABS_VALUE);
+		else
+			return (0);
 		render(rt);
 	}
-	// else if (keycode == XK_Left || keycode == XK_a)
-	// 	win = move_player(map, -1, 0);
-	// else if (keycode == XK_Right || keycode == XK_d)
-	// 	win = move_player(map, 1, 0);
-	// else if (keycode == XK_Up || keycode == XK_w)
-	// 	win = move_player(map, 0, -1);
-	// else if (keycode == XK_Down || keycode == XK_s)
-	// 	win = move_player(map, 0, 1);
-	// if (win)
-	// {
-	//		ft_printf("Moves count: %i\n", map->player.moves + 1);
-	//		ft_printf("Error\nToo skilled player has won the game\n");
-	// 	close_window(map);
-	// }
+	else
+		return (0);
 	return (0);
 }
