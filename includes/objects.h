@@ -6,7 +6,7 @@
 /*   By: rceschel <rceschel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/26 11:42:00 by antigravit        #+#    #+#             */
-/*   Updated: 2026/04/14 16:48:27 by rceschel         ###   ########.fr       */
+/*   Updated: 2026/04/14 20:17:40 by rceschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,6 @@
 # define OBJECTS_H
 
 # include "vec3.h"
-
-# define RESIZE_ABS_VALUE 5
-# define ROTATE_ABS_VALUE 5
-# define TRANSL_ABS_VALUE 5
 
 typedef struct s_color
 {

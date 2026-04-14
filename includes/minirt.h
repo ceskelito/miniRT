@@ -6,7 +6,7 @@
 /*   By: rceschel <rceschel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/26 11:42:00 by antigravit        #+#    #+#             */
-/*   Updated: 2026/04/14 17:51:56 by rceschel         ###   ########.fr       */
+/*   Updated: 2026/04/14 20:18:16 by rceschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ typedef struct s_object	t_object;
 ** --------------------------------------------------------------------------
 */
 
+// Mouse Buttons
 enum {
 	MOUSE_LEFT 		= 1,
 	MOUSE_CENTER 	= 2,
@@ -44,10 +45,18 @@ enum {
 	SCROLL_DOWN 	= 5
 };
 
-# define WIN_WIDTH 1920
-# define WIN_HEIGHT 1080
+/**  MLX Window  **/
+# define WIN_WIDTH 960
+# define WIN_HEIGHT 540
 # define WIN_NAME "MiniRT"
+
+/**  Math Constants  **/
 # define EPSILON 0.00001
+
+/**  Objects Tranformations  **/
+# define RESIZE_ABS_VALUE WIN_WIDTH / 384
+# define ROTATE_ABS_VALUE WIN_WIDTH / 384
+# define TRANSL_ABS_VALUE WIN_WIDTH / 384
 
 /*
 * --------------------------------------------------------------------------
