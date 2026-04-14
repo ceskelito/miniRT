@@ -6,7 +6,7 @@
 /*   By: rceschel <rceschel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/23 12:00:00 by rceschel          #+#    #+#             */
-/*   Updated: 2026/02/23 12:00:00 by rceschel         ###   ########.fr       */
+/*   Updated: 2026/04/13 12:00:00 by rceschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,18 +15,8 @@
 /*
 ** Computes coefficients a, b, c of the quadratic equation
 ** for ray-cone intersection.
-**
 ** The cone apex is at: center + height * axis
-** The half-angle alpha satisfies: tan(a) = (diameter/2) / height
-** cos^2(a) = h^2 / (h^2 + r^2), named 'm' in the code.
-**
-** Implicit cone equation from apex V with axis A:
-**   (P-V)·A)^2 = cos^2(a) * |P-V|^2
-**
-** Substituting P = O + tD and setting W = O - V:
-**   a = (D·A)^2 - m * (D·D)
-**   b = 2 * [(D·A)(W·A) - m * (D·W)]
-**   c = (W·A)^2 - m * (W·W)
+** tan(half_angle) = (diameter/2) / height; cos^2 = h^2/(h^2+r^2) = m
 */
 static void	get_co_abc(t_ray ray, t_cone co, double *abc)
 {
@@ -48,13 +38,7 @@ static void	get_co_abc(t_ray ray, t_cone co, double *abc)
 
 /*
 ** Cone normal at the hit point.
-**
-** Given the implicit surface F = (v·A)^2 - cos^2(a) * |v|^2 = 0,
-** the gradient (unnormalized normal) is:
-**   grad(F) = 2 * [cos^2(a) * v - (v·A) * A]
-**
-** This points outward from the cone.
-** v = phit - apex (vector from apex to hit point)
+** grad(F) = 2 * [cos^2(a) * v - (v.A) * A], where v = phit - apex.
 */
 static t_vec3	get_cone_normal(t_cone co, t_vec3 phit)
 {
@@ -71,22 +55,16 @@ static t_vec3	get_cone_normal(t_cone co, t_vec3 phit)
 }
 
 /*
-** Finite ray-cone intersection.
-**
-** Steps:
-** 1. Compute quadratic coefficients (get_co_abc)
-** 2. Solve at^2 + bt + c = 0 using the discriminant
-** 3. Take the smallest positive root (the nearest one)
-** 4. Check that the hit point lies within cone height:
-**    projection 'h' from apex along the axis must be
-**    in [-height, 0] (cone extends from apex toward base)
+** Tests the lateral surface of the cone.
+** Both roots are tried; the height range [-height, 0] from apex is enforced.
 */
-bool	hit_cone(t_ray ray, t_cone co, t_hit *hit)
+static bool	hit_co_body(t_ray ray, t_cone co, t_hit *hit)
 {
 	double	abc[3];
 	double	disc;
 	double	t;
 	double	h;
+	t_vec3	base;
 
 	get_co_abc(ray, co, abc);
 	disc = abc[1] * abc[1] - 4 * abc[0] * abc[2];
@@ -98,12 +76,65 @@ bool	hit_cone(t_ray ray, t_cone co, t_hit *hit)
 	if (t < EPSILON)
 		return (false);
 	hit->phit = vec3_add(ray.origin, vec3_mult(ray.dir, t));
-	h = vec3_dot(vec3_sub(hit->phit, vec3_add(co.center,
-					vec3_mult(co.axis, co.height))), co.axis);
+	base = vec3_add(co.center, vec3_mult(co.axis, co.height));
+	h = vec3_dot(vec3_sub(hit->phit, base), co.axis);
 	if (h < -co.height || h > 0)
 		return (false);
 	hit->t = (float)t;
 	hit->nhit = get_cone_normal(co, hit->phit);
 	hit->color = co.color;
 	return (true);
+}
+
+/*
+** Ray-disc intersection for the cone base cap.
+** The base disc is at 'center' with radius diameter/2.
+*/
+static bool	hit_co_cap(t_ray ray, t_cone co, t_hit *hit)
+{
+	double	denom;
+	double	t;
+	t_vec3	diff;
+
+	denom = vec3_dot(ray.dir, co.axis);
+	if (fabs(denom) < EPSILON)
+		return (false);
+	t = vec3_dot(vec3_sub(co.center, ray.origin), co.axis) / denom;
+	if (t < EPSILON)
+		return (false);
+	diff = vec3_sub(vec3_add(ray.origin, vec3_mult(ray.dir, t)), co.center);
+	if (vec3_dot(diff, diff) > pow(co.diameter / 2.0, 2))
+		return (false);
+	hit->t = (float)t;
+	hit->phit = vec3_add(ray.origin, vec3_mult(ray.dir, t));
+	if (denom > 0)
+		hit->nhit = vec3_mult(co.axis, -1.0);
+	else
+		hit->nhit = co.axis;
+	hit->color = co.color;
+	return (true);
+}
+
+/*
+** Full ray-cone intersection: tests the lateral body and the base cap,
+** then returns the closest hit.
+*/
+bool	hit_cone(t_ray ray, t_cone co, t_hit *hit)
+{
+	t_hit	tmp;
+	bool	found;
+
+	found = false;
+	hit->t = INFINITY;
+	if (hit_co_body(ray, co, &tmp) && tmp.t < hit->t)
+	{
+		*hit = tmp;
+		found = true;
+	}
+	if (hit_co_cap(ray, co, &tmp) && tmp.t < hit->t)
+	{
+		*hit = tmp;
+		found = true;
+	}
+	return (found);
 }

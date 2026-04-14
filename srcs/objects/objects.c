@@ -1,41 +1,38 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   objects.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rceschel <rceschel@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/01/26 12:00:00 by rceschel          #+#    #+#             */
+/*   Updated: 2026/04/13 12:00:00 by rceschel         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minirt.h"
 
-bool hit_plane(t_ray ray, t_plane pl, t_hit *hit)
+bool	hit_plane(t_ray ray, t_plane pl, t_hit *hit)
 {
-    double  denom;
-    double  t;
-	t_vec3  p0l0; // Vector between ray origin and a point on the plane
+	double	denom;
+	double	t;
+	t_vec3	p0l0;
 
-	// 1. Compute the denominator (dot product between ray direction and plane normal)
-	// If the dot product is 0, the ray is perfectly parallel to the plane.
-    denom = vec3_dot(pl.normal, ray.dir);
-
-	// Use EPSILON to avoid divisions by zero or nearly parallel hits
-    if (fabs(denom) < EPSILON)
-        return (false);
-
-	// 2. Compute distance t
-	// Formula: t = ((PlanePoint - RayOrigin) . Normal) / (RayDirection . Normal)
-    p0l0 = vec3_sub(pl.point, ray.origin);
-    t = vec3_dot(p0l0, pl.normal) / denom;
-
-	// 3. Check whether the intersection is in front of the camera
-    if (t < EPSILON)
-        return (false);
-
-	// 4. If we get here, the plane was hit. Fill the hit struct
-    hit->t = t;
-    hit->phit = vec3_add(ray.origin, vec3_mult(ray.dir, t));
-    
-	// The plane normal is fixed (from parsing), but it must point
-	// against the ray direction for consistent lighting
-    if (denom > 0)
-        hit->nhit = vec3_mult(pl.normal, -1.0);
-    else
-        hit->nhit = pl.normal;
-        
-    hit->color = pl.color;
-    return (true);
+	denom = vec3_dot(pl.normal, ray.dir);
+	if (fabs(denom) < EPSILON)
+		return (false);
+	p0l0 = vec3_sub(pl.point, ray.origin);
+	t = vec3_dot(p0l0, pl.normal) / denom;
+	if (t < EPSILON)
+		return (false);
+	hit->t = t;
+	hit->phit = vec3_add(ray.origin, vec3_mult(ray.dir, t));
+	if (denom > 0)
+		hit->nhit = vec3_mult(pl.normal, -1.0);
+	else
+		hit->nhit = pl.normal;
+	hit->color = pl.color;
+	return (true);
 }
 
 bool	hit_sphere(t_ray ray, t_sphere sp, t_hit *hit)
@@ -64,72 +61,26 @@ bool	hit_sphere(t_ray ray, t_sphere sp, t_hit *hit)
 	return (true);
 }
 
-/* Computes quadratic coefficients for the infinite cylinder equation.
-** Moved here from objects_utils.c so hit_cylinder can call it as static. */
-static void	get_cy_abc(t_ray ray, t_cylinder cy, double *abc)
-{
-	t_vec3	oc;
-
-	oc = vec3_sub(ray.origin, cy.center);
-	abc[0] = vec3_dot(ray.dir, ray.dir)
-		- pow(vec3_dot(ray.dir, cy.axis), 2);
-	abc[1] = 2 * (vec3_dot(ray.dir, oc)
-			- (vec3_dot(ray.dir, cy.axis) * vec3_dot(oc, cy.axis)));
-	abc[2] = vec3_dot(oc, oc) - pow(vec3_dot(oc, cy.axis), 2)
-		- pow(cy.diameter / 2, 2);
-}
-
 /*
-** Validates a single cylinder root: checks that t is positive and that the
-** hit point lies within the finite height of the cylinder.
-** Extracted so hit_cylinder can test both roots independently.
+** Fills the hit struct for a triangle and returns true.
+** Extracted from hit_triangle to stay within the 25-line limit.
 */
-static bool	cy_check_root(t_ray ray, t_cylinder cy, double t, t_hit *hit)
+static bool	fill_tr_hit(t_hit *hit, t_triangle tr, t_ray ray, double t)
 {
-	double	h;
-
-	if (t < EPSILON)
-		return (false);
+	hit->t = t;
 	hit->phit = vec3_add(ray.origin, vec3_mult(ray.dir, t));
-	h = vec3_dot(vec3_sub(hit->phit, cy.center), cy.axis);
-	if (h < -cy.height / 2.0 || h > cy.height / 2.0)
-		return (false);
-	hit->t = (float)t;
-	hit->nhit = vec3_normalize(vec3_sub(hit->phit,
-				vec3_add(cy.center, vec3_mult(cy.axis, h))));
-	hit->color = cy.color;
+	if (vec3_dot(tr.n, ray.dir) > 0)
+		hit->nhit = vec3_mult(tr.n, -1.0);
+	else
+		hit->nhit = tr.n;
+	hit->color = tr.color;
 	return (true);
-}
-
-/*
-** Ray-cylinder intersection.  Tries the nearest root first; if its hit point
-** falls outside the finite height, falls back to the farther root.
-*/
-bool	hit_cylinder(t_ray ray, t_cylinder cy, t_hit *hit)
-{
-	double	abc[3];
-	double	disc;
-	double	t1;
-	double	t2;
-
-	get_cy_abc(ray, cy, abc);
-	disc = abc[1] * abc[1] - 4 * abc[0] * abc[2];
-	if (disc < 0)
-		return (false);
-	t1 = (-abc[1] - sqrt(disc)) / (2.0 * abc[0]);
-	t2 = (-abc[1] + sqrt(disc)) / (2.0 * abc[0]);
-	/* Try nearest root first; fall back to farther root if height check fails */
-	if (cy_check_root(ray, cy, t1, hit))
-		return (true);
-	return (cy_check_root(ray, cy, t2, hit));
 }
 
 /*
 ** Moller-Trumbore ray-triangle intersection.
 ** Uses precomputed edges and normal from the parser.
-** u and v are barycentric coordinates: if u >= 0, v >= 0,
-** and u + v <= 1, the hit point lies inside the triangle.
-** params[0] = 1/determinant, params[1] = u, params[2] = v
+** u and v are barycentric coordinates.
 */
 bool	hit_triangle(t_ray ray, t_triangle tr, t_hit *hit)
 {
@@ -155,12 +106,5 @@ bool	hit_triangle(t_ray ray, t_triangle tr, t_hit *hit)
 	t = params[0] * vec3_dot(tr.edge[1], qvec);
 	if (t < EPSILON)
 		return (false);
-	hit->t = t;
-	hit->phit = vec3_add(ray.origin, vec3_mult(ray.dir, t));
-	if (vec3_dot(tr.n, ray.dir) > 0)
-		hit->nhit = vec3_mult(tr.n, -1.0);
-	else
-		hit->nhit = tr.n;
-	hit->color = tr.color;
-	return (true);
+	return (fill_tr_hit(hit, tr, ray, t));
 }

@@ -107,3 +107,53 @@ char	*parse_cylinder(char **tokens, t_object **objects)
 		return (free(obj), "Invalid Cylinder color");
 	return (add_object_to_scene(objects, obj));
 }
+
+/* cone: co <center> <axis> <diameter> <height> <r,g,b> */
+char	*parse_cone(char **tokens, t_object **objects)
+{
+	t_object	*obj;
+
+	if (!tokens[1] || !tokens[2] || !tokens[3] || !tokens[4] || !tokens[5]
+		|| tokens[6])
+		return ("Invalid Cone format");
+	obj = malloc(sizeof(t_object));
+	if (!obj)
+		return (strerror(errno));
+	obj->type = CONE;
+	obj->next = NULL;
+	if (!parse_vec3(tokens[1], &obj->data.co.center))
+		return (free(obj), "Invalid Cone center");
+	if (!parse_vec3(tokens[2], &obj->data.co.axis))
+		return (free(obj), "Invalid Cone axis");
+	obj->data.co.diameter = ft_atof(tokens[3]);
+	obj->data.co.height = ft_atof(tokens[4]);
+	if (!parse_color(tokens[5], &obj->data.co.color))
+		return (free(obj), "Invalid Cone color");
+	return (add_object_to_scene(objects, obj));
+}
+
+/* torus: to <center> <orient> <big_r> <sml_r> <r,g,b> */
+char	*parse_torus(char **tokens, t_object **objects)
+{
+	t_object	*obj;
+
+	if (!tokens[1] || !tokens[2] || !tokens[3] || !tokens[4] || !tokens[5]
+		|| tokens[6])
+		return ("Invalid Torus format");
+	obj = malloc(sizeof(t_object));
+	if (!obj)
+		return (strerror(errno));
+	obj->type = TORUS;
+	obj->next = NULL;
+	if (!parse_vec3(tokens[1], &obj->data.to.coords))
+		return (free(obj), "Invalid Torus center");
+	if (!parse_vec3(tokens[2], &obj->data.to.orient))
+		return (free(obj), "Invalid Torus orient");
+	obj->data.to.big_r = (float)ft_atof(tokens[3]);
+	obj->data.to.big_r2 = obj->data.to.big_r * obj->data.to.big_r;
+	obj->data.to.sml_r = (float)ft_atof(tokens[4]);
+	obj->data.to.sml_r2 = obj->data.to.sml_r * obj->data.to.sml_r;
+	if (!parse_color(tokens[5], &obj->data.to.color))
+		return (free(obj), "Invalid Torus color");
+	return (add_object_to_scene(objects, obj));
+}

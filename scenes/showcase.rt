@@ -1,0 +1,21 @@
+# Complete showcase — all objects clearly visible
+# Camera slightly above and behind, looking forward and slightly down
+
+A 0.3 255,255,255
+C 0,25,-50 0,-0.2,1 65
+L -20,40,-10 0.8 255,255,255
+
+# Ground plane — light grey
+pl 0,-5,0 0,1,0 200,200,200
+
+# Blue cylinder (with caps) — center
+cy 5,-5,25 0,1,0 8 18 40,80,220
+
+# Orange cone — center-right (apex up, base at y=-5)
+co 25,-5,25 0,1,0 14 18 230,130,30
+
+# Green torus — far left, lying flat
+to -20,2,35 0,1,0 7 2.5 40,200,60
+
+# Purple small sphere — background accent
+sp 15,10,45 8 160,40,220
