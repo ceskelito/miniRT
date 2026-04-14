@@ -6,7 +6,7 @@
 /*   By: rceschel <rceschel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/10 14:15:14 by rceschel          #+#    #+#             */
-/*   Updated: 2026/04/14 16:52:04 by rceschel         ###   ########.fr       */
+/*   Updated: 2026/04/14 17:57:48 by rceschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,17 +24,17 @@ static const char	*g_legend_resize[] = {
 
 static const char	*g_legend_translate[] = {
 	"2 - Translate",
-	"UP-DN: Move on Y axe",
-	"DX-SX: Move on X axe",
-	"Z-X  : Move on Z axis",
+	"UP/DN: Move on Y axe",
+	"LF/RT: Move on X axe",
+	"Z/X  : Move on Z axe",
 	NULL
 };
 
 static const char	*g_legend_rotate[] = {
 	"3 - Rotate",
-	"UP/DN: X axis",
-	"LF/RT: Y axis",
-	"A/D: Z axis",
+	"UP/DN: Rotate on X axe",
+	"LF/RT: Rotate on Y axe",
+	"A/D  : Rotate on Z axe",
 	NULL
 };
 
@@ -64,7 +64,7 @@ static int new_print_background(t_mlx *mlx, const char *legend[], int b_color, i
 	int		width;
 	int		height;
 
-	width = CHAR_WIDTH * 20;
+	width = CHAR_WIDTH * 22;
 	height = CHAR_HEIGHT * (count_elem(legend) + 2);
 	img_create(mlx->ptr, &background, width, height);
 	img_set_background(&background, b_color);
