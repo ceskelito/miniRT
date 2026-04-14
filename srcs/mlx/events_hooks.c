@@ -23,7 +23,7 @@ int handle_mouse_events(int button, int x, int y, t_minirt *rt)
 		if (rt->scene.expanded_legend == NO_LEGEND)
 			rt->scene.expanded_legend = RESIZE;
 		if (rt->scene.selected_object)
-			print_legend(rt);
+			print_operations_legend(rt);
 		else
 		{
 			rt->scene.expanded_legend = NO_LEGEND;
@@ -51,7 +51,7 @@ int	handle_keypress(int keycode, t_minirt *rt)
 			rt->scene.expanded_legend = ROTATE;
 		else
 			return (0);
-		print_legend(rt);
+		print_operations_legend(rt);
 		return (0);
 	}
 	if (rt->scene.expanded_legend == RESIZE && rt->scene.selected_object)

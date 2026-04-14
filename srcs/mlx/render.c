@@ -89,5 +89,6 @@ void	render(t_minirt *rt)
 	}
 	mlx_put_image_to_window(rt->mlx.ptr, rt->mlx.win, img, 0, 0);
 	mlx_destroy_image(rt->mlx.ptr, img);
-	print_legend(rt);
+	print_operations_legend(rt);
+	print_camera_legend(rt);
 }

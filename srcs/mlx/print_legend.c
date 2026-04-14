@@ -6,7 +6,7 @@
 /*   By: rceschel <rceschel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/10 14:15:14 by rceschel          #+#    #+#             */
-/*   Updated: 2026/04/14 18:00:23 by rceschel         ###   ########.fr       */
+/*   Updated: 2026/04/14 20:50:13 by rceschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ static void print_text(t_mlx *mlx, const char *legend[], int color, int x, int y
 	}
 }
 
-int	print_legend(t_minirt *rt)
+int	print_operations_legend(t_minirt *rt)
 {
 	int b_color;
 	int f_color;
@@ -116,4 +116,23 @@ int	print_legend(t_minirt *rt)
 		print_text(&rt->mlx, g_legends[i], f_color, X + CHAR_WIDTH * 2, old_y + CHAR_HEIGHT * 2);
 	}
 	return (0);
+}
+
+// CAMERA AND LIGHTS
+
+# define FOREGROUND 0x228B22
+
+static const char *g_legend_camera[] = {
+	"C: Control Camera",
+	NULL
+};
+
+int print_camera_legend(t_minirt *rt)
+{
+	int ret;
+	int start_x = WIN_WIDTH - (X + 25 + 200);
+
+	ret = print_background(&rt->mlx, g_legend_camera, FOREGROUND, WHITE, start_x, Y);
+	print_text(&rt->mlx, g_legend_camera, WHITE, start_x + CHAR_WIDTH * 2, Y + CHAR_HEIGHT * 2);
+	return (ret);
 }
