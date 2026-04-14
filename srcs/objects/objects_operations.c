@@ -6,7 +6,7 @@
 /*   By: rceschel <rceschel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/14 16:32:03 by rceschel          #+#    #+#             */
-/*   Updated: 2026/04/14 17:49:06 by rceschel         ###   ########.fr       */
+/*   Updated: 2026/04/14 17:51:38 by rceschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,14 +91,4 @@ int	object_resize(t_object *selected, int resize_value)
 	else
 		return (0);
 	return (1);
-}
-
-int	resize_object(t_object *selected, int resize_value)
-{
-	return (object_resize(selected, resize_value));
-}
-
-int	rotate_object(t_object *selected, char axis, int rotate_value)
-{
-	return (object_rotate(selected, axis, rotate_value));
 }
