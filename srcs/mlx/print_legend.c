@@ -6,7 +6,7 @@
 /*   By: rceschel <rceschel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/10 14:15:14 by rceschel          #+#    #+#             */
-/*   Updated: 2026/04/13 16:03:32 by rceschel         ###   ########.fr       */
+/*   Updated: 2026/04/14 16:52:04 by rceschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,11 @@ static const char	*g_legend_resize[] = {
 	NULL
 };
 
-static const char	*g_legend_transform[] = {
-	"2 - Transform",
+static const char	*g_legend_translate[] = {
+	"2 - Translate",
+	"UP-DN: Move on Y axe",
+	"DX-SX: Move on X axe",
+	"Z-X  : Move on Z axis",
 	NULL
 };
 
@@ -34,7 +37,7 @@ static const char	*g_legend_rotate[] = {
 
 static const char	**g_legends[] = {
 	g_legend_resize,
-	g_legend_transform,
+	g_legend_translate,
 	g_legend_rotate,
 	NULL
 };

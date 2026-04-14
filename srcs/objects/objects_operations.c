@@ -6,7 +6,7 @@
 /*   By: rceschel <rceschel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/14 16:32:03 by rceschel          #+#    #+#             */
-/*   Updated: 2026/04/14 16:39:22 by rceschel         ###   ########.fr       */
+/*   Updated: 2026/04/14 16:48:01 by rceschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,12 @@ int object_rotate(int type, double *axe, int rotate_value)
 	}
 
 	return (1);
+}
+
+int object_translate(double *axe, int translate_value)
+{
+	*axe += translate_value;
+	return (0);
 }
 
 int object_resize(t_object *selected, int resize_value)

@@ -6,7 +6,7 @@
 /*   By: rceschel <rceschel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/26 11:42:00 by antigravit        #+#    #+#             */
-/*   Updated: 2026/04/14 16:36:02 by rceschel         ###   ########.fr       */
+/*   Updated: 2026/04/14 16:54:49 by rceschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,7 +162,11 @@ bool	hit_triangle(t_ray ray, t_triangle tr, t_hit *hit);
 /* srcs/objects/objects_utils.c */
 bool		intersect(t_ray ray, t_object *obj, t_hit *hit);
 t_object	*get_selected_object(t_minirt *rt, int x, int y);
+
+/* srcs/objects/objects_operations */
 int			resize_object(t_object *selected, int resize_value);
+int			object_translate(double *axe, int translate_value);
+
 
 /* srcs/objects/objects_cone.c */
 bool	hit_cone(t_ray ray, t_cone co, t_hit *hit);

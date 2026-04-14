@@ -6,7 +6,7 @@
 /*   By: rceschel <rceschel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/26 12:00:00 by rceschel          #+#    #+#             */
-/*   Updated: 2026/04/14 16:31:59 by rceschel         ###   ########.fr       */
+/*   Updated: 2026/04/14 16:48:58 by rceschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ t_object *get_selected_object(t_minirt *rt, int x, int y)
         }
         curr = curr->next;
     }
-    if (closest_hit.t == INFINITY || closest->type == PLANE)
+    if (closest_hit.t == INFINITY)
 		return (NULL);
 	return (closest);
 }

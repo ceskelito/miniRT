@@ -73,7 +73,8 @@ OBJECTS	=	objects			\
 			objects_utils	\
 			objects_cone	\
 			objects_torus	\
-			objects_cylinder
+			objects_cylinder\
+			objects_operations
 
 COLOR	=	color
 

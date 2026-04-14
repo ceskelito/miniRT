@@ -6,7 +6,7 @@
 /*   By: rceschel <rceschel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/09 17:30:13 by rceschel          #+#    #+#             */
-/*   Updated: 2026/04/13 16:42:27 by rceschel         ###   ########.fr       */
+/*   Updated: 2026/04/14 17:11:05 by rceschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,8 @@ int handle_mouse_events(int button, int x, int y, t_minirt *rt)
 	if (button == MOUSE_LEFT)
 	{
 		rt->scene.selected_object = get_selected_object(rt, x, y);
-		rt->scene.expanded_legend = RESIZE; // DEBUG
+		if (rt->scene.expanded_legend == NO_LEGEND)
+			rt->scene.expanded_legend = RESIZE;
 		if (rt->scene.selected_object)
 			print_legend(rt);
 		else
@@ -81,7 +82,35 @@ int	handle_keypress(int keycode, t_minirt *rt)
 	}
 	else if (rt->scene.expanded_legend == TRANSFORM)
 	{
+		t_vec3	*center;
+		if (rt->scene.selected_object->type == SPHERE)
+			center = &rt->scene.selected_object->data.sp.center;
+		else if (rt->scene.selected_object->type == CYLINDER)
+			center = &rt->scene.selected_object->data.cy.center;
+		else if (rt->scene.selected_object->type == TORUS)
+			center = &rt->scene.selected_object->data.to.coords;
+		else if (rt->scene.selected_object->type == CONE)
+			center = &rt->scene.selected_object->data.co.center;
+		else if (rt->scene.selected_object->type == PLANE)
+			center = &rt->scene.selected_object->data.pl.point;
+		else
+			return (-1);
 
+		if (keycode == XK_Up)
+			object_translate(&center->y, TRANSL_ABS_VALUE);
+		else if (keycode == XK_Down)	
+			object_translate(&center->y, -TRANSL_ABS_VALUE);
+		else if (keycode == XK_Right)	
+			object_translate(&center->x, TRANSL_ABS_VALUE);
+		else if (keycode == XK_Left)	
+			object_translate(&center->x, -TRANSL_ABS_VALUE);
+		else if (keycode == XK_x)
+			object_translate(&center->z, TRANSL_ABS_VALUE);
+		else if (keycode == XK_z)
+			object_translate(&center->z, -TRANSL_ABS_VALUE);
+		else
+			return (0);
+		render(rt);
 	}
 	else if (rt->scene.expanded_legend == ROTATE)
 	{
