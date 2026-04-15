@@ -6,7 +6,7 @@
 /*   By: antigravity <antigravity@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/26 12:00:00 by antigravit        #+#    #+#             */
-/*   Updated: 2026/04/09 18:27:24 by rceschel         ###   ########.fr       */
+/*   Updated: 2026/04/15 16:18:37 by rceschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,8 @@ int	main(int argc, char **argv)
 	}
 	rt.scene.objects = NULL;
 	rt.scene.selected_object = NULL;
-	rt.scene.expanded_legend = NO_LEGEND;
+	rt.scene.focused_op_legend = NO_LEGEND;
+	rt.scene.focused_right_legend = NO_LEGEND;
 	rt.mlx.ptr = NULL;
 	rt.mlx.win = NULL;
 	parse_scene(argv[1], &rt);

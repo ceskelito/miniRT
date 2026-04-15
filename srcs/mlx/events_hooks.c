@@ -20,13 +20,13 @@ int handle_mouse_events(int button, int x, int y, t_minirt *rt)
 	if (button == MOUSE_LEFT)
 	{
 		rt->scene.selected_object = get_selected_object(rt, x, y);
-		if (rt->scene.expanded_legend == NO_LEGEND)
-			rt->scene.expanded_legend = RESIZE;
+		if (rt->scene.focused_op_legend == NO_LEGEND)
+			rt->scene.focused_op_legend = RESIZE;
 		if (rt->scene.selected_object)
 			print_operations_legend(rt);
 		else
 		{
-			rt->scene.expanded_legend = NO_LEGEND;
+			rt->scene.focused_op_legend = NO_LEGEND;
 			render(rt); // I need to render all the scene in order to remove the legend from the screen
 						// Maybe we can work on an ad-hoc function to render only a section
 		}
@@ -44,17 +44,17 @@ int	handle_keypress(int keycode, t_minirt *rt)
 	if ((keycode == XK_1 || keycode == XK_2 || keycode == XK_3) && rt->scene.selected_object != NULL)
 	{
 		if (keycode == XK_1)
-			rt->scene.expanded_legend = RESIZE;
+			rt->scene.focused_op_legend = RESIZE;
 		else if (keycode == XK_2)
-			rt->scene.expanded_legend = TRANSFORM;
+			rt->scene.focused_op_legend = TRANSFORM;
 		else if (keycode == XK_3)
-			rt->scene.expanded_legend = ROTATE;
+			rt->scene.focused_op_legend = ROTATE;
 		else
 			return (0);
 		print_operations_legend(rt);
 		return (0);
 	}
-	if (rt->scene.expanded_legend == RESIZE && rt->scene.selected_object)
+	if (rt->scene.focused_op_legend == RESIZE && rt->scene.selected_object)
 	{
 		if (keycode == XK_Up)
 			object_resize(rt->scene.selected_object, RESIZE_ABS_VALUE);
@@ -64,7 +64,7 @@ int	handle_keypress(int keycode, t_minirt *rt)
 			return (0);
 		render(rt);
 	}
-	else if (rt->scene.expanded_legend == TRANSFORM && rt->scene.selected_object)
+	else if (rt->scene.focused_op_legend == TRANSFORM && rt->scene.selected_object)
 	{
 		t_vec3	*center;
 		if (rt->scene.selected_object->type == SPHERE)
@@ -96,7 +96,7 @@ int	handle_keypress(int keycode, t_minirt *rt)
 			return (0);
 		render(rt);
 	}
-	else if (rt->scene.expanded_legend == ROTATE && rt->scene.selected_object)
+	else if (rt->scene.focused_op_legend == ROTATE && rt->scene.selected_object)
 	{
 		if (keycode == XK_Up)
 			object_rotate(rt->scene.selected_object, 'x', ROTATE_ABS_VALUE);

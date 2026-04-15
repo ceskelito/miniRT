@@ -6,13 +6,14 @@
 /*   By: rceschel <rceschel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/10 14:15:14 by rceschel          #+#    #+#             */
-/*   Updated: 2026/04/15 10:51:53 by rceschel         ###   ########.fr       */
+/*   Updated: 2026/04/15 16:50:33 by rceschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "legend.h"
 #include "minirt.h"
 
+// Left Legends: Operations to perform.
 static const char	*g_legend_resize[] = {
 	"1 - Resize",
 	"UP: increase size",
@@ -36,61 +37,51 @@ static const char	*g_legend_rotate[] = {
 	NULL
 };
 
-static const char	**g_legends[] = {
-	g_legend_resize,
-	g_legend_translate,
-	g_legend_rotate,
-	NULL
+static const t_legends g_operations_set = {
+	.start_x = X,
+	.start_y = Y,
+
+	.colors_focused.background = WHITE,
+	.colors_focused.foreground = BLACK,
+
+	.colors_ignored.background = BLACK,
+	.colors_ignored.foreground = WHITE,
+
+	.legends = {
+		g_legend_resize,
+		g_legend_translate,
+		g_legend_rotate,
+		NULL
+	}
 };
 
-int print_legens(t_mlx *mlx, const char **legends[], int start_x, int start_y, int b_color, int f_color)
-{
-
-}
-
-int	print_operations_legend(t_minirt *rt)
-{
-	int b_color;
-	int f_color;
-	int old_y;
-	int y;
-
-	if (!rt->scene.selected_object)
-		return (0);
-	y = Y;
-	// Maybe i can put this cycle in a stand alone function?
-	for (int i = 0; g_legends[i]; i++)
-	{
-		b_color = BLACK;
-		f_color = WHITE;
-		if (i == rt->scene.expanded_legend)
-		{
-			b_color = WHITE;
-			f_color = BLACK;
-		}
-		old_y = y;
-		y += print_background(&rt->mlx, g_legends[i], b_color, f_color, X, y);
-		y += 10;	
-		print_text(&rt->mlx, g_legends[i], f_color, X + CHAR_WIDTH * 2, old_y + CHAR_HEIGHT * 2);
-	}
-	return (0);
-}
-
-// CAMERA AND LIGHTS
+// Right Legends: Camera and Lights selection; Other operations.
 
 static const char *g_legend_camera[] = {
+	"Camera Control",
 	"C: Control Camera",
 	NULL,
 };
 
 static const char *g_legend_lights[] = {
+	"Lights Control",
 	"L: Control Lights",
 	"P: Previous Light",
 	"N: Next Light",
 	NULL
 };
 
-static const t_legends g_right_legends = {
+static const char *g_legend_other[] = {
+	"Other commands",
+	"R: Render again",
+	"X: Remove focus",
+	"",
+	"Click on an object",
+	"to select it",
+	NULL
+};
+
+static const t_legends g_right_set = {
 	.start_x = WIN_WIDTH - (X + 25 + 200),
 	.start_y = Y,
 
@@ -103,33 +94,53 @@ static const t_legends g_right_legends = {
 	.legends = {
 		g_legend_camera,
 		g_legend_lights,
+		g_legend_other,
 		NULL
 	}
 };
 
+int struct_print_legends(t_mlx *mlx, t_scene *scene, const t_legends *set)
+{
+	t_legend_colors colors;
+	int				printing_height;
+	int				occupied_height;
+	int				i;
+
+	printing_height = set->start_y;
+	i = 0;
+	while(set->legends[i])
+	{
+		// Selected Lights or Camera: they cannot be resized
+		if (i == ROTATE && scene->focused_right_legend != NO_LEGEND)
+		{
+			i++;
+			continue;
+		}
+		colors = set->colors_ignored;
+		if (i == scene->focused_op_legend)
+			colors = set->colors_focused;
+		occupied_height = printing_height;
+		printing_height += print_background(mlx, set->legends[i], colors.background, colors.foreground, set->start_x, printing_height);
+		printing_height += 10;
+		print_text(mlx, set->legends[i], colors.foreground, set->start_x + CHAR_WIDTH * 2, occupied_height + CHAR_HEIGHT * 2);
+		i++;
+	}
+	return (occupied_height);
+}
+
+int	print_operations_legend(t_minirt *rt)
+{
+	int ret;
+	if (!rt->scene.selected_object)
+		return (0);
+	ret = struct_print_legends(&rt->mlx, &rt->scene, &g_operations_set);
+	return (ret);
+}
+
 int print_camera_legend(t_minirt *rt)
 {
 	int ret;
-	int start_y;
-	int start_x;
-	int b_color;
-	int f_color;
 
-	start_x = WIN_WIDTH - (X + 25 + 200);
-	start_y = Y;
-
-	b_color = GREEN;
-	f_color = WHITE;
-	// if rt->scene.right_legend != NO_LEGEND
-	// {
-	//		b_color = WHITE;
-	//		f_color = BALCK;
-	// }
-	ret = print_background(&rt->mlx, g_legend_camera, b_color, f_color, start_x, start_y);
-	print_text(&rt->mlx, g_legend_camera, f_color, start_x + CHAR_WIDTH * 2, start_y + CHAR_HEIGHT * 2);
-	ret += 10;
-	start_y += ret;
-	ret += print_background(&rt->mlx, g_legend_lights, b_color, f_color, start_x, start_y);
-	print_text(&rt->mlx, g_legend_lights, f_color, start_x + CHAR_WIDTH * 2, start_y + CHAR_HEIGHT * 2);
+	ret = struct_print_legends(&rt->mlx, &rt->scene, &g_right_set);
 	return (ret);
 }
