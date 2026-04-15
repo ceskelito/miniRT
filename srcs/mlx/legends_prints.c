@@ -1,19 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   print_legend.c                                     :+:      :+:    :+:   */
+/*   legends_prints.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rceschel <rceschel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/10 14:15:14 by rceschel          #+#    #+#             */
-/*   Updated: 2026/04/14 20:50:13 by rceschel         ###   ########.fr       */
+/*   Updated: 2026/04/15 10:51:53 by rceschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "legend.h"
 #include "minirt.h"
-#include "mlx_imglib.h"
-#include "parser.h" //exit_error() -- why is it defined in this header???
 
 static const char	*g_legend_resize[] = {
 	"1 - Resize",
@@ -45,50 +43,9 @@ static const char	**g_legends[] = {
 	NULL
 };
 
-static int	count_elem(const char *g_legend[])
+int print_legens(t_mlx *mlx, const char **legends[], int start_x, int start_y, int b_color, int f_color)
 {
-	int	i;
 
-	i = 0;
-	while (g_legend[i])
-		i++;
-	return (i);
-}
-
-#define WHITE 0xFFFFFF
-#define BLACK 0x000000
-
-static int print_background(t_mlx *mlx, const char *legend[], int b_color, int f_color, int x, int y)
-{
-	t_img	background;
-	int		width;
-	int		height;
-
-	width = CHAR_WIDTH * 22;
-	height = CHAR_HEIGHT * (count_elem(legend) + 2);
-	img_create(mlx->ptr, &background, width, height);
-	img_set_background(&background, b_color);
-	img_add_frame(&background, f_color);
-	mlx_put_image_to_window(mlx->ptr, mlx->win, background.img, x, y);
-	mlx_destroy_image(mlx->ptr, background.img);
-	return (height);
-}
-
-static void print_text(t_mlx *mlx, const char *legend[], int color, int x, int y)
-{
-	int i;
-	int n;
-
-	i = 0;
-	n = count_elem(legend);
-	while (i < n)
-	{
-		mlx_string_put(mlx->ptr, mlx->win, x, y, color, (char *)legend[i]);
-		if (i == 0)
-			x += 10;
-		y += CHAR_HEIGHT;
-		i++;
-	}
 }
 
 int	print_operations_legend(t_minirt *rt)
@@ -101,7 +58,8 @@ int	print_operations_legend(t_minirt *rt)
 	if (!rt->scene.selected_object)
 		return (0);
 	y = Y;
-	for (int i = 0; i < MENU_ITEMS; i++)
+	// Maybe i can put this cycle in a stand alone function?
+	for (int i = 0; g_legends[i]; i++)
 	{
 		b_color = BLACK;
 		f_color = WHITE;
@@ -120,19 +78,58 @@ int	print_operations_legend(t_minirt *rt)
 
 // CAMERA AND LIGHTS
 
-# define FOREGROUND 0x228B22
-
 static const char *g_legend_camera[] = {
 	"C: Control Camera",
+	NULL,
+};
+
+static const char *g_legend_lights[] = {
+	"L: Control Lights",
+	"P: Previous Light",
+	"N: Next Light",
 	NULL
+};
+
+static const t_legends g_right_legends = {
+	.start_x = WIN_WIDTH - (X + 25 + 200),
+	.start_y = Y,
+
+	.colors_focused.background = WHITE,
+	.colors_focused.foreground = BLACK,
+
+	.colors_ignored.background = GREEN,
+	.colors_ignored.foreground = WHITE,
+
+	.legends = {
+		g_legend_camera,
+		g_legend_lights,
+		NULL
+	}
 };
 
 int print_camera_legend(t_minirt *rt)
 {
 	int ret;
-	int start_x = WIN_WIDTH - (X + 25 + 200);
+	int start_y;
+	int start_x;
+	int b_color;
+	int f_color;
 
-	ret = print_background(&rt->mlx, g_legend_camera, FOREGROUND, WHITE, start_x, Y);
-	print_text(&rt->mlx, g_legend_camera, WHITE, start_x + CHAR_WIDTH * 2, Y + CHAR_HEIGHT * 2);
+	start_x = WIN_WIDTH - (X + 25 + 200);
+	start_y = Y;
+
+	b_color = GREEN;
+	f_color = WHITE;
+	// if rt->scene.right_legend != NO_LEGEND
+	// {
+	//		b_color = WHITE;
+	//		f_color = BALCK;
+	// }
+	ret = print_background(&rt->mlx, g_legend_camera, b_color, f_color, start_x, start_y);
+	print_text(&rt->mlx, g_legend_camera, f_color, start_x + CHAR_WIDTH * 2, start_y + CHAR_HEIGHT * 2);
+	ret += 10;
+	start_y += ret;
+	ret += print_background(&rt->mlx, g_legend_lights, b_color, f_color, start_x, start_y);
+	print_text(&rt->mlx, g_legend_lights, f_color, start_x + CHAR_WIDTH * 2, start_y + CHAR_HEIGHT * 2);
 	return (ret);
 }

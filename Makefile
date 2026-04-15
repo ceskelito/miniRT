@@ -60,7 +60,8 @@ UTILS 	=	debug		\
 MLX_S 	=	init			\
 			render			\
 			events_hooks	\
-			print_legend	\
+			legends_prints	\
+			legends_utils	\
 			mlx_imglib
 
 # Vector math and ray-object intersection
