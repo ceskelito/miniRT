@@ -6,7 +6,7 @@
 /*   By: rceschel <rceschel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/10 14:15:14 by rceschel          #+#    #+#             */
-/*   Updated: 2026/04/15 17:05:04 by rceschel         ###   ########.fr       */
+/*   Updated: 2026/04/15 18:30:34 by rceschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ static const t_legends	g_right_set = {
 }
 };
 
-int	struct_print_legends(t_mlx *mlx, t_scene *scene, const t_legends *set)
+int	print_legends_set(t_mlx *mlx, t_scene *scene, const t_legends *set)
 {
 	t_legend_colors	colors;
 	int				printing_height;
@@ -111,7 +111,8 @@ int	struct_print_legends(t_mlx *mlx, t_scene *scene, const t_legends *set)
 			continue ;
 		}
 		colors = set->colors_ignored;
-		if (i == scene->focused_op_legend)
+		if ((set == &g_operations_set && i == scene->focused_op_legend)
+			|| (set == &g_right_set && i == scene->focused_right_legend))
 			colors = set->colors_focused;
 		occupied_height = printing_height;
 		printing_height += print_background(mlx, set->legends[i],
@@ -132,7 +133,7 @@ int	print_operations_legend(t_minirt *rt)
 
 	if (!rt->scene.selected_object)
 		return (0);
-	ret = struct_print_legends(&rt->mlx, &rt->scene, &g_operations_set);
+	ret = print_legends_set(&rt->mlx, &rt->scene, &g_operations_set);
 	return (ret);
 }
 
@@ -140,6 +141,6 @@ int	print_camera_legend(t_minirt *rt)
 {
 	int	ret;
 
-	ret = struct_print_legends(&rt->mlx, &rt->scene, &g_right_set);
+	ret = print_legends_set(&rt->mlx, &rt->scene, &g_right_set);
 	return (ret);
 }
