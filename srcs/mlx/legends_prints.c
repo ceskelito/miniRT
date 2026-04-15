@@ -6,7 +6,7 @@
 /*   By: rceschel <rceschel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/10 14:15:14 by rceschel          #+#    #+#             */
-/*   Updated: 2026/04/15 16:50:33 by rceschel         ###   ########.fr       */
+/*   Updated: 2026/04/15 17:05:04 by rceschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,14 @@
 #include "minirt.h"
 
 // Left Legends: Operations to perform.
-static const char	*g_legend_resize[] = {
+static const char		*g_legend_resize[] = {
 	"1 - Resize",
 	"UP: increase size",
 	"DN: decrease size",
 	NULL
 };
 
-static const char	*g_legend_translate[] = {
+static const char		*g_legend_translate[] = {
 	"2 - Translate",
 	"UP/DN: Move on Y axe",
 	"LF/RT: Move on X axe",
@@ -29,7 +29,7 @@ static const char	*g_legend_translate[] = {
 	NULL
 };
 
-static const char	*g_legend_rotate[] = {
+static const char		*g_legend_rotate[] = {
 	"3 - Rotate",
 	"UP/DN: Rotate on X axe",
 	"LF/RT: Rotate on Y axe",
@@ -37,33 +37,30 @@ static const char	*g_legend_rotate[] = {
 	NULL
 };
 
-static const t_legends g_operations_set = {
+static const t_legends	g_operations_set = {
 	.start_x = X,
-	.start_y = Y,
-
+	.start_y = Y,	
 	.colors_focused.background = WHITE,
 	.colors_focused.foreground = BLACK,
-
 	.colors_ignored.background = BLACK,
 	.colors_ignored.foreground = WHITE,
-
 	.legends = {
-		g_legend_resize,
-		g_legend_translate,
-		g_legend_rotate,
-		NULL
-	}
+	g_legend_resize,
+	g_legend_translate,
+	g_legend_rotate,
+	NULL
+}
 };
 
 // Right Legends: Camera and Lights selection; Other operations.
 
-static const char *g_legend_camera[] = {
+static const char		*g_legend_camera[] = {
 	"Camera Control",
 	"C: Control Camera",
 	NULL,
 };
 
-static const char *g_legend_lights[] = {
+static const char		*g_legend_lights[] = {
 	"Lights Control",
 	"L: Control Lights",
 	"P: Previous Light",
@@ -71,7 +68,7 @@ static const char *g_legend_lights[] = {
 	NULL
 };
 
-static const char *g_legend_other[] = {
+static const char		*g_legend_other[] = {
 	"Other commands",
 	"R: Render again",
 	"X: Remove focus",
@@ -81,48 +78,49 @@ static const char *g_legend_other[] = {
 	NULL
 };
 
-static const t_legends g_right_set = {
+static const t_legends	g_right_set = {
 	.start_x = WIN_WIDTH - (X + 25 + 200),
 	.start_y = Y,
-
 	.colors_focused.background = WHITE,
 	.colors_focused.foreground = BLACK,
-
 	.colors_ignored.background = GREEN,
 	.colors_ignored.foreground = WHITE,
-
 	.legends = {
-		g_legend_camera,
-		g_legend_lights,
-		g_legend_other,
-		NULL
-	}
+	g_legend_camera,
+	g_legend_lights,
+	g_legend_other,
+	NULL
+}
 };
 
-int struct_print_legends(t_mlx *mlx, t_scene *scene, const t_legends *set)
+int	struct_print_legends(t_mlx *mlx, t_scene *scene, const t_legends *set)
 {
-	t_legend_colors colors;
+	t_legend_colors	colors;
 	int				printing_height;
 	int				occupied_height;
 	int				i;
 
 	printing_height = set->start_y;
 	i = 0;
-	while(set->legends[i])
+	while (set->legends[i])
 	{
 		// Selected Lights or Camera: they cannot be resized
 		if (i == ROTATE && scene->focused_right_legend != NO_LEGEND)
 		{
 			i++;
-			continue;
+			continue ;
 		}
 		colors = set->colors_ignored;
 		if (i == scene->focused_op_legend)
 			colors = set->colors_focused;
 		occupied_height = printing_height;
-		printing_height += print_background(mlx, set->legends[i], colors.background, colors.foreground, set->start_x, printing_height);
+		printing_height += print_background(mlx, set->legends[i],
+				colors.background, colors.foreground,
+				set->start_x, printing_height);
 		printing_height += 10;
-		print_text(mlx, set->legends[i], colors.foreground, set->start_x + CHAR_WIDTH * 2, occupied_height + CHAR_HEIGHT * 2);
+		print_text(mlx, set->legends[i],
+			colors.foreground, set->start_x + CHAR_WIDTH * 2,
+			occupied_height + CHAR_HEIGHT * 2);
 		i++;
 	}
 	return (occupied_height);
@@ -130,16 +128,17 @@ int struct_print_legends(t_mlx *mlx, t_scene *scene, const t_legends *set)
 
 int	print_operations_legend(t_minirt *rt)
 {
-	int ret;
+	int	ret;
+
 	if (!rt->scene.selected_object)
 		return (0);
 	ret = struct_print_legends(&rt->mlx, &rt->scene, &g_operations_set);
 	return (ret);
 }
 
-int print_camera_legend(t_minirt *rt)
+int	print_camera_legend(t_minirt *rt)
 {
-	int ret;
+	int	ret;
 
 	ret = struct_print_legends(&rt->mlx, &rt->scene, &g_right_set);
 	return (ret);
