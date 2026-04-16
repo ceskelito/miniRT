@@ -188,7 +188,10 @@ t_color					color_add(t_color a, t_color b);
 
 /* srcs/mlx/render.c */
 void					render(t_minirt *rt);
-t_ray					camera_ray(t_camera cam, int px, int py, int w, int h);
+t_ray					camera_ray(t_camera cam, int pixel[2], int size[2]);
+
+/* srcs/mlx/events_hooks.c */
+void					dispatch_focus(t_minirt *rt, int keycode);
 
 /* srcs/mlx/init.c */
 int						mlx_loop_init(t_minirt *rt);

@@ -25,7 +25,7 @@ void	free_scene(t_scene *scene)
 	t_object	*curr;
 	t_object	*tofree;
 
-	if ( !scene )
+	if (!scene)
 		return ;
 	curr = scene->objects;
 	while (curr)

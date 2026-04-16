@@ -66,7 +66,7 @@ int	object_rotate(t_object *selected, char axis, int rotate_value)
 	return (1);
 }
 
-int object_translate(double *axe, int translate_value)
+int	object_translate(double *axe, int translate_value)
 {
 	*axe += translate_value;
 	return (0);
@@ -92,7 +92,6 @@ int	object_resize(t_object *selected, int resize_value)
 	{
 		selected->data.co.diameter += ((float)resize_value / 2);
 		selected->data.co.height += resize_value;
-
 	}
 	else
 		return (0);

@@ -14,38 +14,9 @@
 #include "objects.h"
 #include "parser.h"
 
-/*
- * The functions in this file will return the error message to throwas
- * as a string.
- * In case no errors are encountered, the return value will be NULL.
- * */
-
-// return ("Memory allocation failed for object");
-static char	*add_object_to_scene(t_object **objects, t_object *new_obj)
-{
-	t_object	*curr;
-
-	if (!new_obj)
-		return (strerror(errno));
-	if (!*objects)
-	{
-		*objects = new_obj;
-	}
-	else
-	{
-		curr = *objects;
-		while (curr->next)
-			curr = curr->next;
-		curr->next = new_obj;
-	}
-	return (NULL);
-}
-
-//return ("Malloc failed");
 char	*parse_sphere(char **tokens, t_object **objects)
 {
 	t_object	*obj;
-	char		*err;
 
 	if (!tokens[1] || !tokens[2] || !tokens[3] || tokens[4])
 		return ("Invalid Sphere format");
@@ -59,11 +30,9 @@ char	*parse_sphere(char **tokens, t_object **objects)
 	obj->data.sp.diameter = ft_atof(tokens[2]);
 	if (!parse_color(tokens[3], &obj->data.sp.color))
 		return (free(obj), "Invalid Sphere color");
-	err = add_object_to_scene(objects, obj);
-	return (err);
+	return (add_object_to_scene(objects, obj));
 }
 
-//return ("Malloc failed");
 char	*parse_plane(char **tokens, t_object **objects)
 {
 	t_object	*obj;
@@ -84,7 +53,6 @@ char	*parse_plane(char **tokens, t_object **objects)
 	return (add_object_to_scene(objects, obj));
 }
 
-//return ("Malloc failed");
 char	*parse_cylinder(char **tokens, t_object **objects)
 {
 	t_object	*obj;
@@ -108,7 +76,6 @@ char	*parse_cylinder(char **tokens, t_object **objects)
 	return (add_object_to_scene(objects, obj));
 }
 
-/* cone: co <center> <axis> <diameter> <height> <r,g,b> */
 char	*parse_cone(char **tokens, t_object **objects)
 {
 	t_object	*obj;
@@ -132,7 +99,6 @@ char	*parse_cone(char **tokens, t_object **objects)
 	return (add_object_to_scene(objects, obj));
 }
 
-/* torus: to <center> <orient> <big_r> <sml_r> <r,g,b> */
 char	*parse_torus(char **tokens, t_object **objects)
 {
 	t_object	*obj;

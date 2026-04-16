@@ -27,37 +27,39 @@ int	count_elem(const char *legend[])
 int	print_background(t_mlx *mlx, const t_legends *set, int index, int y)
 {
 	t_img			background;
+	t_legend_colors	colors;
 	int				width;
 	int				height;
-	t_legend_colors colors;
 
 	if (*set->focused_legend == index)
 		colors = set->colors_focused;
 	else
 		colors = set->colors_ignored;
-
 	width = CHAR_WIDTH * 22;
 	height = CHAR_HEIGHT * (count_elem(set->legends[index]) + 2);
 	img_create(mlx->ptr, &background, width, height);
 	img_set_background(&background, colors.background);
 	img_add_frame(&background, colors.foreground);
-	mlx_put_image_to_window(mlx->ptr, mlx->win, background.img, set->start_x, y);
+	mlx_put_image_to_window(mlx->ptr, mlx->win, background.img, set->start_x,
+		y);
 	mlx_destroy_image(mlx->ptr, background.img);
 	return (height);
 }
 
-void	print_text(t_mlx *mlx, const t_legends *set, int index, int x, int y)
+void	print_text(t_mlx *mlx, const t_legends *set, int index, int pos[2])
 {
+	t_legend_colors	colors;
 	int				i;
-	int 			n;
-	t_legend_colors colors;
+	int				n;
+	int				x;
+	int				y;
 
 	if (*set->focused_legend == index)
 		colors = set->colors_focused;
 	else
 		colors = set->colors_ignored;
-
-
+	x = pos[0];
+	y = pos[1];
 	i = 0;
 	n = count_elem(set->legends[index]);
 	while (i < n)
@@ -70,4 +72,3 @@ void	print_text(t_mlx *mlx, const t_legends *set, int index, int x, int y)
 		i++;
 	}
 }
-

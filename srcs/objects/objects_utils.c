@@ -12,7 +12,6 @@
 
 #include "minirt.h"
 
-/* Dispatches to the correct intersection routine by object type */
 bool	intersect(t_ray ray, t_object *obj, t_hit *hit)
 {
 	if (obj->type == SPHERE)
@@ -30,36 +29,41 @@ bool	intersect(t_ray ray, t_object *obj, t_hit *hit)
 	return (false);
 }
 
-/*
- * Returns a pointer to the object selected from mouse click.
- * Returns NULL in case of no object (or plane) selected.
- * */
-t_object *get_selected_object(t_minirt *rt, int x, int y)
+static t_hit	do_ray_hit(t_minirt *rt, t_object *obj, int x, int y)
 {
-    t_hit		closest_hit;
-    t_hit		current_hit;
-    t_object	*curr;
+	t_hit	hit;
+	int		cs[4];
+
+	cs[0] = x;
+	cs[1] = y;
+	cs[2] = rt->width;
+	cs[3] = rt->height;
+	hit.t = INFINITY;
+	intersect(camera_ray(rt->scene.camera, cs, cs + 2), obj, &hit);
+	return (hit);
+}
+
+t_object	*get_selected_object(t_minirt *rt, int x, int y)
+{
+	t_hit		closest_hit;
+	t_hit		cur;
+	t_object	*curr;
 	t_object	*closest;
-	t_ray		ray;
 
-    closest_hit.t = INFINITY; // Start from infinity
-    curr = rt->scene.objects;
-
-    while (curr)
-    {
-		ray = camera_ray(rt->scene.camera, x, y, rt->width, rt->height);
-        if (intersect(ray, curr, &current_hit)) // Intersection dispatcher by currect type
-        {
-            if (current_hit.t < closest_hit.t)
-			{
-                closest_hit = current_hit;
-				closest = curr;
-			}
-        }
-        curr = curr->next;
-    }
-    if (closest_hit.t == INFINITY)
+	closest_hit.t = INFINITY;
+	closest = NULL;
+	curr = rt->scene.objects;
+	while (curr)
+	{
+		cur = do_ray_hit(rt, curr, x, y);
+		if (cur.t < closest_hit.t)
+		{
+			closest_hit = cur;
+			closest = curr;
+		}
+		curr = curr->next;
+	}
+	if (closest_hit.t == INFINITY)
 		return (NULL);
 	return (closest);
 }
-

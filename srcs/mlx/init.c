@@ -14,7 +14,11 @@
 #include "parser.h"
 #include "mlx.h"
 
-static int	mlx_init_instance(void **mlx_ptr, void **win_ptr, int w_l, int w_h, char *w_name)
+int	handle_keypress(int keycode, t_minirt *rt);
+int	handle_mouse_events(int button, int x, int y, t_minirt *rt);
+
+static int	mlx_init_instance(void **mlx_ptr, void **win_ptr,
+	int size[2], char *name)
 {
 	void	*mlx;
 	void	*win;
@@ -22,7 +26,7 @@ static int	mlx_init_instance(void **mlx_ptr, void **win_ptr, int w_l, int w_h, c
 	mlx = mlx_init();
 	if (!mlx)
 		return (1);
-	win = mlx_new_window(mlx, w_l, w_h, w_name);
+	win = mlx_new_window(mlx, size[0], size[1], name);
 	if (!win)
 	{
 		free(mlx);
@@ -30,8 +34,6 @@ static int	mlx_init_instance(void **mlx_ptr, void **win_ptr, int w_l, int w_h, c
 	}
 	*mlx_ptr = mlx;
 	*win_ptr = win;
-	mlx = NULL;
-	win = NULL;
 	return (0);
 }
 
@@ -39,41 +41,35 @@ int	mlx_close_window(t_mlx *mlx)
 {
 	if (mlx->win)
 		mlx_destroy_window(mlx->ptr, mlx->win);
-	if (mlx->ptr) {
+	if (mlx->ptr)
+	{
 		mlx_destroy_display(mlx->ptr);
 		free(mlx->ptr);
 	}
 	return (0);
 }
 
-int rt_close_program(t_minirt *rt)
+int	rt_close_program(t_minirt *rt)
 {
 	mlx_close_window(&rt->mlx);
 	free_scene(&rt->scene);
 	exit(EXIT_SUCCESS);
 }
 
-int	handle_keypress(int keycode, t_minirt *rt);
-int handle_mouse_events(int button, int x, int y, t_minirt *rt);
-
-int mlx_loop_init(t_minirt *rt)
+int	mlx_loop_init(t_minirt *rt)
 {
-	bool	mlx_failure;
+	int	size[2];
 
-	mlx_failure = mlx_init_instance(&(rt->mlx.ptr), &(rt->mlx.win),
-							WIN_WIDTH, WIN_HEIGHT, WIN_NAME);
-	if (mlx_failure)
+	size[0] = WIN_WIDTH;
+	size[1] = WIN_HEIGHT;
+	if (mlx_init_instance(&(rt->mlx.ptr), &(rt->mlx.win), size, WIN_NAME))
 		exit(1);
-	/* Store final dimensions so render() can use them */
 	rt->width = WIN_WIDTH;
 	rt->height = WIN_HEIGHT;
-	/* Render the scene once into the window before entering the event loop */
 	render(rt);
-	/* Event 17 = window close (X button), event 2 = key press */
 	mlx_hook(rt->mlx.win, 17, 0, rt_close_program, rt);
 	mlx_hook(rt->mlx.win, 2, 1L << 0, handle_keypress, rt);
 	mlx_mouse_hook(rt->mlx.win, handle_mouse_events, rt);
 	mlx_loop(rt->mlx.ptr);
 	return (0);
 }
-

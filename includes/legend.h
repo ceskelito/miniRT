@@ -13,10 +13,8 @@
 #ifndef LEGEND_H
 # define LEGEND_H
 
-# define CHAR_HEIGHT 16 // pixels
-# define CHAR_WIDTH 8   // pixels
-
-// # define MENU_ITEMS 3
+# define CHAR_HEIGHT 16
+# define CHAR_WIDTH 8
 
 # define WHITE 0xFFFFFF
 # define BLACK 0x000000
@@ -25,14 +23,12 @@
 typedef struct s_minirt	t_minirt;
 typedef struct s_mlx	t_mlx;
 
-// Staring point for legends
 enum
 {
 	X = 10,
 	Y = 20
 };
 
-// Operations Legends
 enum
 {
 	RESIZE = 0,
@@ -40,7 +36,6 @@ enum
 	ROTATE = 2
 };
 
-// Right Legends
 enum
 {
 	CAMERA = 0,
@@ -48,7 +43,6 @@ enum
 	OTHER = 2
 };
 
-// General
 enum
 {
 	NO_LEGEND = -1
@@ -64,21 +58,18 @@ typedef struct s_legends
 {
 	int					start_x;
 	int					start_y;
-
 	int					*focused_legend;
-
 	t_legend_colors		colors_focused;
 	t_legend_colors		colors_ignored;
-
 	const char			***legends;
-
 }						t_legends;
 
 int						print_operations_legend(t_minirt *rt);
 int						print_camera_legend(t_minirt *rt);
 int						count_elem(const char *legend[]);
-int						print_background(t_mlx *mlx, const t_legends *set, int x, int y);
-void					print_text(t_mlx *mlx, const t_legends *set, int index,
-							int x, int y);
+int						print_background(t_mlx *mlx, const t_legends *set,
+							int index, int y);
+void					print_text(t_mlx *mlx, const t_legends *set,
+							int index, int pos[2]);
 
 #endif

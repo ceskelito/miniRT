@@ -28,6 +28,7 @@ double	ft_atof(char *str);
 int		parse_vec3(char *str, t_vec3 *vec);
 int		parse_color(char *str, t_color *color);
 int		is_whitespace(char c);
+char	*add_object_to_scene(t_object **objects, t_object *new_obj);
 
 /*
 ** parse_elements.c

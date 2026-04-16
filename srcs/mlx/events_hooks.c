@@ -14,81 +14,86 @@
 #include "legend.h"
 #include <X11/keysym.h>
 
-static const double g_resize_abs_value = (double) WIN_WIDTH / (double) 384;
-static const double g_rotate_abs_value = (double) WIN_WIDTH / (double) 384;
-static const double g_transl_abs_value = (double) WIN_WIDTH / (double) 384;
+static const double	g_resize_abs_value = (double)WIN_WIDTH / (double)384;
+static const double	g_rotate_abs_value = (double)WIN_WIDTH / (double)384;
+static const double	g_transl_abs_value = (double)WIN_WIDTH / (double)384;
 
-int handle_mouse_events(int button, int x, int y, t_minirt *rt)
+static void	do_translate(t_vec3 *c, int keycode, t_minirt *rt)
 {
-
-	if (button == MOUSE_LEFT)
-	{
-		rt->scene.selected_object = get_selected_object(rt, x, y);
-		if (rt->scene.selected_object)
-		{
-			if (rt->scene.focused_op_legend == NO_LEGEND)
-				rt->scene.focused_op_legend = RESIZE;
-		}
-		else
-			rt->scene.focused_op_legend = NO_LEGEND;
-		render(rt);
-	}
-	return (0);
-}
-
-/***** END OF MOUSE OBJECT SELECTION *****/
-
-static void	toggle_right_legend(t_minirt *rt, int which)
-{
-	if (rt->scene.focused_right_legend == which)
-	{
-		rt->scene.focused_right_legend = NO_LEGEND;
-		rt->scene.focused_op_legend = NO_LEGEND;
-	}
+	if (keycode == XK_Up)
+		object_translate(&c->y, g_transl_abs_value);
+	else if (keycode == XK_Down)
+		object_translate(&c->y, -g_transl_abs_value);
+	else if (keycode == XK_Right)
+		object_translate(&c->x, g_transl_abs_value);
+	else if (keycode == XK_Left)
+		object_translate(&c->x, -g_transl_abs_value);
+	else if (keycode == XK_x)
+		object_translate(&c->z, g_transl_abs_value);
+	else if (keycode == XK_z)
+		object_translate(&c->z, -g_transl_abs_value);
 	else
-	{
-		rt->scene.focused_right_legend = which;
-		rt->scene.selected_object = NULL;
-		rt->scene.focused_op_legend = TRANSFORM;
-	}
+		return ;
+	render(rt);
 }
 
-int	handle_keypress(int keycode, t_minirt *rt)
+static void	handle_object_transform(t_minirt *rt, int keycode)
 {
-	if (keycode == XK_Escape)
-		rt_close_program(rt);
+	t_vec3		*c;
+	t_object	*o;
 
-	if (keycode == XK_l)
-	{
-		toggle_right_legend(rt, LIGHTS);
-		render(rt);
-		return (0);
-	}
-	if (keycode == XK_c)
-	{
-		toggle_right_legend(rt, CAMERA);
-		render(rt);
-		return (0);
-	}
-	if (keycode == XK_r)
-	{
-		render(rt);
-		return (0);
-	}
+	o = rt->scene.selected_object;
+	c = NULL;
+	if (o->type == SPHERE)
+		c = &o->data.sp.center;
+	else if (o->type == CYLINDER)
+		c = &o->data.cy.center;
+	else if (o->type == TORUS)
+		c = &o->data.to.coords;
+	else if (o->type == CONE)
+		c = &o->data.co.center;
+	else if (o->type == PLANE)
+		c = &o->data.pl.point;
+	if (!c)
+		return ;
+	do_translate(c, keycode, rt);
+}
 
-	if ((keycode == XK_1 || keycode == XK_2 || keycode == XK_3) && rt->scene.selected_object != NULL)
-	{
-		if (keycode == XK_1)
-			rt->scene.focused_op_legend = RESIZE;
-		else if (keycode == XK_2)
-			rt->scene.focused_op_legend = TRANSFORM;
-		else if (keycode == XK_3)
-			rt->scene.focused_op_legend = ROTATE;
-		else
-			return (0);
-		print_operations_legend(rt);
-		return (0);
-	}
+static void	handle_scene_transform(t_minirt *rt, int keycode)
+{
+	t_vec3	*point;
+
+	if (rt->scene.focused_right_legend == CAMERA)
+		point = &rt->scene.camera.view_point;
+	else
+		point = &rt->scene.light.light_point;
+	do_translate(point, keycode, rt);
+}
+
+static void	handle_rotate(t_minirt *rt, int keycode)
+{
+	t_object	*obj;
+
+	obj = rt->scene.selected_object;
+	if (keycode == XK_Up)
+		object_rotate(obj, 'x', g_rotate_abs_value);
+	else if (keycode == XK_Down)
+		object_rotate(obj, 'x', -g_rotate_abs_value);
+	else if (keycode == XK_Right)
+		object_rotate(obj, 'y', g_rotate_abs_value);
+	else if (keycode == XK_Left)
+		object_rotate(obj, 'y', -g_rotate_abs_value);
+	else if (keycode == XK_d)
+		object_rotate(obj, 'z', g_rotate_abs_value);
+	else if (keycode == XK_a)
+		object_rotate(obj, 'z', -g_rotate_abs_value);
+	else
+		return ;
+	render(rt);
+}
+
+void	dispatch_focus(t_minirt *rt, int keycode)
+{
 	if (rt->scene.focused_op_legend == RESIZE && rt->scene.selected_object)
 	{
 		if (keycode == XK_Up)
@@ -96,85 +101,15 @@ int	handle_keypress(int keycode, t_minirt *rt)
 		else if (keycode == XK_Down)
 			object_resize(rt->scene.selected_object, -g_resize_abs_value);
 		else
-			return (0);
-		render(rt);
-	}
-	else if (rt->scene.focused_op_legend == TRANSFORM && rt->scene.selected_object)
-	{
-		t_vec3	*center;
-		if (rt->scene.selected_object->type == SPHERE)
-			center = &rt->scene.selected_object->data.sp.center;
-		else if (rt->scene.selected_object->type == CYLINDER)
-			center = &rt->scene.selected_object->data.cy.center;
-		else if (rt->scene.selected_object->type == TORUS)
-			center = &rt->scene.selected_object->data.to.coords;
-		else if (rt->scene.selected_object->type == CONE)
-			center = &rt->scene.selected_object->data.co.center;
-		else if (rt->scene.selected_object->type == PLANE)
-			center = &rt->scene.selected_object->data.pl.point;
-		else
-			return (-1);
-
-		if (keycode == XK_Up)
-			object_translate(&center->y, g_transl_abs_value);
-		else if (keycode == XK_Down)	
-			object_translate(&center->y, -g_transl_abs_value);
-		else if (keycode == XK_Right)	
-			object_translate(&center->x, g_transl_abs_value);
-		else if (keycode == XK_Left)	
-			object_translate(&center->x, -g_transl_abs_value);
-		else if (keycode == XK_x)
-			object_translate(&center->z, g_transl_abs_value);
-		else if (keycode == XK_z)
-			object_translate(&center->z, -g_transl_abs_value);
-		else
-			return (0);
+			return ;
 		render(rt);
 	}
 	else if (rt->scene.focused_op_legend == ROTATE && rt->scene.selected_object)
-	{
-		if (keycode == XK_Up)
-			object_rotate(rt->scene.selected_object, 'x', g_rotate_abs_value);
-		else if (keycode == XK_Down)
-			object_rotate(rt->scene.selected_object, 'x', -g_rotate_abs_value);
-		else if (keycode == XK_Right)
-			object_rotate(rt->scene.selected_object, 'y', g_rotate_abs_value);
-		else if (keycode == XK_Left)
-			object_rotate(rt->scene.selected_object, 'y', -g_rotate_abs_value);
-		else if (keycode == XK_d)
-			object_rotate(rt->scene.selected_object, 'z', g_rotate_abs_value);
-		else if (keycode == XK_a)
-			object_rotate(rt->scene.selected_object, 'z', -g_rotate_abs_value);
-		else
-			return (0);
-		render(rt);
-	}
+		handle_rotate(rt, keycode);
+	else if (rt->scene.focused_op_legend == TRANSFORM
+		&& rt->scene.selected_object)
+		handle_object_transform(rt, keycode);
 	else if (rt->scene.focused_op_legend == TRANSFORM
 		&& rt->scene.focused_right_legend != NO_LEGEND)
-	{
-		t_vec3	*point;
-
-		if (rt->scene.focused_right_legend == CAMERA)
-			point = &rt->scene.camera.view_point;
-		else
-			point = &rt->scene.light.light_point;
-		if (keycode == XK_Up)
-			object_translate(&point->y, g_transl_abs_value);
-		else if (keycode == XK_Down)
-			object_translate(&point->y, -g_transl_abs_value);
-		else if (keycode == XK_Right)
-			object_translate(&point->x, g_transl_abs_value);
-		else if (keycode == XK_Left)
-			object_translate(&point->x, -g_transl_abs_value);
-		else if (keycode == XK_x)
-			object_translate(&point->z, g_transl_abs_value);
-		else if (keycode == XK_z)
-			object_translate(&point->z, -g_transl_abs_value);
-		else
-			return (0);
-		render(rt);
-	}
-	else
-		return (0);
-	return (0);
+		handle_scene_transform(rt, keycode);
 }

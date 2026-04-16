@@ -13,15 +13,14 @@
 #include "legend.h"
 #include "minirt.h"
 
-// Left Legends: Operations to perform.
-static const char		*g_legend_resize[] = {
+static const char	*g_legend_resize[] = {
 	"1 - Resize",
 	"UP: increase size",
 	"DN: decrease size",
 	NULL
 };
 
-static const char		*g_legend_translate[] = {
+static const char	*g_legend_translate[] = {
 	"2 - Translate",
 	"UP/DN: Move on Y axe",
 	"LF/RT: Move on X axe",
@@ -29,7 +28,7 @@ static const char		*g_legend_translate[] = {
 	NULL
 };
 
-static const char		*g_legend_rotate[] = {
+static const char	*g_legend_rotate[] = {
 	"3 - Rotate",
 	"UP/DN: Rotate on X axe",
 	"LF/RT: Rotate on Y axe",
@@ -37,38 +36,20 @@ static const char		*g_legend_rotate[] = {
 	NULL
 };
 
-static const char	**g_op_set[]  = {
+static const char	**g_op_set[] = {
 	g_legend_resize,
 	g_legend_translate,
 	g_legend_rotate,
 	NULL
 };
 
-
-// static const t_legends	g_operations_set = {
-// 	.start_x = X,
-// 	.start_y = Y,	
-// 	.colors_focused.background = WHITE,
-// 	.colors_focused.foreground = BLACK,
-// 	.colors_ignored.background = BLACK,
-// 	.colors_ignored.foreground = WHITE,
-// 	.legends = {
-// 	g_legend_resize,
-// 	g_legend_translate,
-// 	g_legend_rotate,
-// 	NULL
-// }
-// };
-
-// Right Legends: Camera and Lights selection; Other operations.
-
-static const char		*g_legend_camera[] = {
+static const char	*g_legend_camera[] = {
 	"Camera Control",
 	"C: Toggle Camera Control",
 	NULL,
 };
 
-static const char		*g_legend_lights[] = {
+static const char	*g_legend_lights[] = {
 	"Lights Control",
 	"L: Toggle Lights Control",
 	"P: Previous Light",
@@ -76,7 +57,7 @@ static const char		*g_legend_lights[] = {
 	NULL
 };
 
-static const char		*g_legend_other[] = {
+static const char	*g_legend_other[] = {
 	"Other commands",
 	"Click on an object",
 	"to focus on it",
@@ -93,33 +74,28 @@ static const char	**g_right_set[] = {
 	NULL
 };
 
-// static const t_legends	g_right_set = {
-// 	.start_x = WIN_WIDTH - (X + 25 + 200),
-// 	.start_y = Y,
-// 	.colors_focused.background = WHITE,
-// 	.colors_focused.foreground = BLACK,
-// 	.colors_ignored.background = GREEN,
-// 	.colors_ignored.foreground = WHITE,
-// 	.legends = {
-// 	g_legend_camera,
-// 	g_legend_lights,
-// 	g_legend_other,
-// 	NULL
-// }
-// };
+static int	should_skip(t_scene *scene, const t_legends *set, int i)
+{
+	if ((i == ROTATE || i == RESIZE)
+		&& scene->focused_right_legend != NO_LEGEND
+		&& set->legends == g_op_set)
+		return (1);
+	return (0);
+}
 
 int	print_legends_set(t_mlx *mlx, t_scene *scene, const t_legends *set)
 {
-	int				printing_height;
-	int				occupied_height;
-	int				i;
+	int	printing_height;
+	int	occupied_height;
+	int	pos[2];
+	int	i;
 
 	printing_height = set->start_y;
+	occupied_height = printing_height;
 	i = 0;
 	while (set->legends[i])
 	{
-		// Selected Lights or Camera: they cannot be resized
-		if ( (i == ROTATE || i == RESIZE ) && scene->focused_right_legend != NO_LEGEND && set->legends == g_op_set)
+		if (should_skip(scene, set, i))
 		{
 			i++;
 			continue ;
@@ -127,8 +103,9 @@ int	print_legends_set(t_mlx *mlx, t_scene *scene, const t_legends *set)
 		occupied_height = printing_height;
 		printing_height += print_background(mlx, set, i, printing_height);
 		printing_height += 10;
-		print_text(mlx, set, i, set->start_x + CHAR_WIDTH * 2,
-			occupied_height + CHAR_HEIGHT * 2);
+		pos[0] = set->start_x + CHAR_WIDTH * 2;
+		pos[1] = occupied_height + CHAR_HEIGHT * 2;
+		print_text(mlx, set, i, pos);
 		i++;
 	}
 	return (occupied_height);
@@ -137,7 +114,6 @@ int	print_legends_set(t_mlx *mlx, t_scene *scene, const t_legends *set)
 int	print_operations_legend(t_minirt *rt)
 {
 	static t_legends	set;
-	int	ret;
 
 	set.start_x = X;
 	set.start_y = Y;
@@ -150,14 +126,12 @@ int	print_operations_legend(t_minirt *rt)
 	if (!rt->scene.selected_object
 		&& rt->scene.focused_right_legend == NO_LEGEND)
 		return (0);
-	ret = print_legends_set(&rt->mlx, &rt->scene, &set);
-	return (ret);
+	return (print_legends_set(&rt->mlx, &rt->scene, &set));
 }
 
 int	print_camera_legend(t_minirt *rt)
 {
 	static t_legends	set;
-	int	ret;
 
 	set.start_x = WIN_WIDTH - (X + 25 + 200);
 	set.start_y = Y;
@@ -167,6 +141,5 @@ int	print_camera_legend(t_minirt *rt)
 	set.colors_ignored.background = GREEN;
 	set.colors_ignored.foreground = WHITE;
 	set.legends = g_right_set;
-	ret = print_legends_set(&rt->mlx, &rt->scene, &set);
-	return (ret);
+	return (print_legends_set(&rt->mlx, &rt->scene, &set));
 }

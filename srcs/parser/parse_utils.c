@@ -93,3 +93,21 @@ int	parse_color(char *str, t_color *color)
 	color->b = b;
 	return (1);
 }
+
+char	*add_object_to_scene(t_object **objects, t_object *new_obj)
+{
+	t_object	*curr;
+
+	if (!new_obj)
+		return (strerror(errno));
+	if (!*objects)
+	{
+		*objects = new_obj;
+		return (NULL);
+	}
+	curr = *objects;
+	while (curr->next)
+		curr = curr->next;
+	curr->next = new_obj;
+	return (NULL);
+}

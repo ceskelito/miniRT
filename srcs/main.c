@@ -29,8 +29,6 @@ int	main(int argc, char **argv)
 	rt.mlx.ptr = NULL;
 	rt.mlx.win = NULL;
 	parse_scene(argv[1], &rt);
-	/* Open window, render the scene, then enter the MLX event loop.
-	** rt_close_program (ESC / X button) handles cleanup and exit. */
 	mlx_loop_init(&rt);
 	return (0);
 }

@@ -24,6 +24,33 @@ static void	print_color(char *name, t_color c)
 	printf("  %s: %d, %d, %d\n", name, c.r, c.g, c.b);
 }
 
+static void	print_object(t_object *obj)
+{
+	if (obj->type == SPHERE)
+	{
+		printf("SPHERE\n");
+		print_vec3("    Center", obj->data.sp.center);
+		printf("    Diameter: %.2f\n", obj->data.sp.diameter);
+		print_color("    Color", obj->data.sp.color);
+	}
+	else if (obj->type == PLANE)
+	{
+		printf("PLANE\n");
+		print_vec3("    Point", obj->data.pl.point);
+		print_vec3("    Normal", obj->data.pl.normal);
+		print_color("    Color", obj->data.pl.color);
+	}
+	else if (obj->type == CYLINDER)
+	{
+		printf("CYLINDER\n");
+		print_vec3("    Center", obj->data.cy.center);
+		print_vec3("    Axis", obj->data.cy.axis);
+		printf("    Diameter: %.2f\n", obj->data.cy.diameter);
+		printf("    Height: %.2f\n", obj->data.cy.height);
+		print_color("    Color", obj->data.cy.color);
+	}
+}
+
 void	print_scene(t_minirt *rt)
 {
 	t_object	*obj;
@@ -47,29 +74,7 @@ void	print_scene(t_minirt *rt)
 	while (obj)
 	{
 		printf("  Object %d: ", i++);
-		if (obj->type == SPHERE)
-		{
-			printf("SPHERE\n");
-			print_vec3("    Center", obj->data.sp.center);
-			printf("    Diameter: %.2f\n", obj->data.sp.diameter);
-			print_color("    Color", obj->data.sp.color);
-		}
-		else if (obj->type == PLANE)
-		{
-			printf("PLANE\n");
-			print_vec3("    Point", obj->data.pl.point);
-			print_vec3("    Normal", obj->data.pl.normal);
-			print_color("    Color", obj->data.pl.color);
-		}
-		else if (obj->type == CYLINDER)
-		{
-			printf("CYLINDER\n");
-			print_vec3("    Center", obj->data.cy.center);
-			print_vec3("    Axis", obj->data.cy.axis);
-			printf("    Diameter: %.2f\n", obj->data.cy.diameter);
-			printf("    Height: %.2f\n", obj->data.cy.height);
-			print_color("    Color", obj->data.cy.color);
-		}
+		print_object(obj);
 		obj = obj->next;
 	}
 	printf("==================\n");

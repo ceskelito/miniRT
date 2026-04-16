@@ -29,34 +29,32 @@ void	free_tokens(char **tokens)
 	free(tokens);
 }
 
+static char	*dispatch_shapes(char **tokens, t_scene *scene)
+{
+	if (ft_strncmp(tokens[0], "sp", 3) == 0)
+		return (parse_sphere(tokens, &scene->objects));
+	if (ft_strncmp(tokens[0], "pl", 3) == 0)
+		return (parse_plane(tokens, &scene->objects));
+	if (ft_strncmp(tokens[0], "cy", 3) == 0)
+		return (parse_cylinder(tokens, &scene->objects));
+	if (ft_strncmp(tokens[0], "co", 3) == 0)
+		return (parse_cone(tokens, &scene->objects));
+	if (ft_strncmp(tokens[0], "to", 3) == 0)
+		return (parse_torus(tokens, &scene->objects));
+	return ("Unknown identifier");
+}
+
 static char	*dispatch_line(char **tokens, t_scene *scene)
 {
-	char	*err;
-
-	err = NULL;
-	if (!tokens || !tokens[0])
+	if (!tokens || !tokens[0] || tokens[0][0] == '#')
 		return (NULL);
 	if (ft_strncmp(tokens[0], "A", 2) == 0)
-		err = parse_ambient(tokens, &scene->ambient);
-	else if (ft_strncmp(tokens[0], "C", 2) == 0)
-		err = parse_camera(tokens, &scene->camera);
-	else if (ft_strncmp(tokens[0], "L", 2) == 0)
-		err = parse_light(tokens, &scene->light);
-	else if (ft_strncmp(tokens[0], "sp", 3) == 0)
-		err = parse_sphere(tokens, &scene->objects);
-	else if (ft_strncmp(tokens[0], "pl", 3) == 0)
-		err = parse_plane(tokens, &scene->objects);
-	else if (ft_strncmp(tokens[0], "cy", 3) == 0)
-		err = parse_cylinder(tokens, &scene->objects);
-	else if (ft_strncmp(tokens[0], "co", 3) == 0)
-		err = parse_cone(tokens, &scene->objects);
-	else if (ft_strncmp(tokens[0], "to", 3) == 0)
-		err = parse_torus(tokens, &scene->objects);
-	else if (tokens[0][0] == '#')
-		return (NULL);
-	else
-		err = "Unknown identifier";
-	return (err);
+		return (parse_ambient(tokens, &scene->ambient));
+	if (ft_strncmp(tokens[0], "C", 2) == 0)
+		return (parse_camera(tokens, &scene->camera));
+	if (ft_strncmp(tokens[0], "L", 2) == 0)
+		return (parse_light(tokens, &scene->light));
+	return (dispatch_shapes(tokens, scene));
 }
 
 static void	process_line(char *line, t_minirt *rt)
@@ -88,7 +86,6 @@ static void	process_line(char *line, t_minirt *rt)
 	}
 }
 
-// exit_error("Cannot open file", rt);
 void	parse_scene(char *filename, t_minirt *rt)
 {
 	int		fd;
