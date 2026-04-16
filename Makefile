@@ -60,6 +60,7 @@ UTILS 	=	debug		\
 MLX_S 	=	init			\
 			render			\
 			events_hooks	\
+			mouse_events	\
 			legends_prints	\
 			legends_utils	\
 			mlx_imglib
