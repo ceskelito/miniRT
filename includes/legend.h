@@ -6,7 +6,7 @@
 /*   By: rceschel <rceschel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/10 16:19:24 by rceschel          #+#    #+#             */
-/*   Updated: 2026/04/16 13:14:02 by rceschel         ###   ########.fr       */
+/*   Updated: 2026/04/16 13:25:49 by rceschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ typedef struct s_legends
 	t_legend_colors		colors_focused;
 	t_legend_colors		colors_ignored;
 
-	char				**legends;
+	const char			***legends;
 
 }						t_legends;
 

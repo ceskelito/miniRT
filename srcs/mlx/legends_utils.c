@@ -6,7 +6,7 @@
 /*   By: rceschel <rceschel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/15 10:27:47 by rceschel          #+#    #+#             */
-/*   Updated: 2026/04/16 13:16:41 by rceschel         ###   ########.fr       */
+/*   Updated: 2026/04/16 13:28:50 by rceschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ int	print_background(t_mlx *mlx, const t_legends *set, int index, int y)
 		colors = set->colors_ignored;
 
 	width = CHAR_WIDTH * 22;
-	height = CHAR_HEIGHT * (count_elem((const char **)&set->legends[index]) + 2);
+	height = CHAR_HEIGHT * (count_elem(set->legends[index]) + 2);
 	img_create(mlx->ptr, &background, width, height);
 	img_set_background(&background, colors.background);
 	img_add_frame(&background, colors.foreground);
@@ -59,10 +59,11 @@ void	print_text(t_mlx *mlx, const t_legends *set, int index, int x, int y)
 
 
 	i = 0;
-	n = count_elem((const char **)&set->legends[index]);
+	n = count_elem(set->legends[index]);
 	while (i < n)
 	{
-		mlx_string_put(mlx->ptr, mlx->win, x, y, colors.foreground, (char *)set->legends[i]);
+		mlx_string_put(mlx->ptr, mlx->win, x, y, colors.foreground,
+			(char *)set->legends[index][i]);
 		if (i == 0)
 			x += 10;
 		y += CHAR_HEIGHT;

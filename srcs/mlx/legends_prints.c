@@ -6,7 +6,7 @@
 /*   By: rceschel <rceschel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/10 14:15:14 by rceschel          #+#    #+#             */
-/*   Updated: 2026/04/16 13:17:38 by rceschel         ###   ########.fr       */
+/*   Updated: 2026/04/16 13:27:47 by rceschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,7 +146,7 @@ int	print_operations_legend(t_minirt *rt)
 	set.colors_focused.foreground = BLACK;
 	set.colors_ignored.background = BLACK;
 	set.colors_ignored.foreground = WHITE;
-	set.legends = (char **)g_op_set;
+	set.legends = g_op_set;
 	if (!rt->scene.selected_object)
 		return (0);
 	ret = print_legends_set(&rt->mlx, &rt->scene, &set);
@@ -165,7 +165,7 @@ int	print_camera_legend(t_minirt *rt)
 	set.colors_focused.foreground = BLACK;
 	set.colors_ignored.background = GREEN;
 	set.colors_ignored.foreground = WHITE;
-	set.legends = (char **)g_right_set;
+	set.legends = g_right_set;
 	ret = print_legends_set(&rt->mlx, &rt->scene, &set);
 	return (ret);
 }
