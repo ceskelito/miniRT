@@ -6,7 +6,7 @@
 /*   By: rceschel <rceschel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/10 14:15:14 by rceschel          #+#    #+#             */
-/*   Updated: 2026/04/16 13:43:33 by rceschel         ###   ########.fr       */
+/*   Updated: 2026/04/16 15:38:29 by rceschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,7 +119,7 @@ int	print_legends_set(t_mlx *mlx, t_scene *scene, const t_legends *set)
 	while (set->legends[i])
 	{
 		// Selected Lights or Camera: they cannot be resized
-		if (i == ROTATE && scene->focused_right_legend != NO_LEGEND)
+		if ( (i == ROTATE || i == RESIZE ) && scene->focused_right_legend != NO_LEGEND)
 		{
 			i++;
 			continue ;
