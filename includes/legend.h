@@ -6,7 +6,7 @@
 /*   By: rceschel <rceschel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/10 16:19:24 by rceschel          #+#    #+#             */
-/*   Updated: 2026/04/16 11:54:42 by rceschel         ###   ########.fr       */
+/*   Updated: 2026/04/16 13:14:02 by rceschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,8 @@ enum
 enum
 {
 	CAMERA = 0,
-	LIGHTS = 1
+	LIGHTS = 1,
+	OTHER = 2
 };
 
 // General
@@ -64,19 +65,20 @@ typedef struct s_legends
 	int					start_x;
 	int					start_y;
 
+	int					*focused_legend;
+
 	t_legend_colors		colors_focused;
 	t_legend_colors		colors_ignored;
 
-	const char			**legends[];
+	char				**legends;
 
 }						t_legends;
 
 int						print_operations_legend(t_minirt *rt);
 int						print_camera_legend(t_minirt *rt);
 int						count_elem(const char *legend[]);
-int						print_background(t_mlx *mlx, const char *legend[],
-							int b_color, int f_color, int x, int y);
-void					print_text(t_mlx *mlx, const char *legend[], int color,
+int						print_background(t_mlx *mlx, const t_legends *set, int x, int y);
+void					print_text(t_mlx *mlx, const t_legends *set, int index,
 							int x, int y);
 
 #endif
