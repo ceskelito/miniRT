@@ -51,6 +51,9 @@ enum
 /**  Math Constants  **/
 # define EPSILON 0.00001
 
+/**  Light visualization  **/
+# define LIGHT_MARKER_DIAMETER 3.0
+
 /*
  * ---------------------------------------------------------------------------
  ** Basic Structures

@@ -13,6 +13,20 @@
 #include "minirt.h"
 
 /*
+** Builds a small emissive sphere used only as a visual marker for the light.
+** Participates only in primary rays, not in shadow/lighting computations.
+*/
+static t_sphere	light_marker(t_light light)
+{
+	t_sphere	s;
+
+	s.center = light.light_point;
+	s.diameter = LIGHT_MARKER_DIAMETER;
+	s.color = light.color;
+	return (s);
+}
+
+/*
 ** Casts a ray into the scene and returns the color of the closest hit.
 ** Returns black if no object is intersected.
 */
@@ -20,6 +34,7 @@ t_color	trace_ray(t_scene *scene, t_ray ray)
 {
 	t_hit		closest_hit;
 	t_hit		current_hit;
+	t_hit		light_hit;
 	t_object	*obj;
 	t_color		black;
 
@@ -35,6 +50,9 @@ t_color	trace_ray(t_scene *scene, t_ray ray)
 			closest_hit = current_hit;
 		obj = obj->next;
 	}
+	if (hit_sphere(ray, light_marker(scene->light), &light_hit)
+		&& light_hit.t < closest_hit.t)
+		return (scene->light.color);
 	if (closest_hit.t == INFINITY)
 		return (black);
 	return (calculate_lighting(scene, &closest_hit));

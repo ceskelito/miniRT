@@ -147,7 +147,8 @@ int	print_operations_legend(t_minirt *rt)
 	set.colors_ignored.background = BLACK;
 	set.colors_ignored.foreground = WHITE;
 	set.legends = g_op_set;
-	if (!rt->scene.selected_object)
+	if (!rt->scene.selected_object
+		&& rt->scene.focused_right_legend == NO_LEGEND)
 		return (0);
 	ret = print_legends_set(&rt->mlx, &rt->scene, &set);
 	return (ret);
