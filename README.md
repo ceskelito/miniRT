@@ -1,55 +1,93 @@
-# miniRT
+*This project has been created as part of the 42 curriculum by rceschel, rponticiello.*
 
-_This project has been created as part
-of the 42 curriculum by rceschel, rponticiello_
+# miniRT
 
 ## Description
 
-**MiniRT** stands for 'Mini Ray Tracer' - and this is what we'll do in this project.
+`miniRT` is a minimal ray tracer written in C.
+Its goal is to render a 3D scene described in a `.rt` file by simulating light rays and computing intersections with geometric objects.
 
-The **Ray Tracing** is a mathematical model to emulate the light refraction in the most realistic way possible.
-In order to implement a Ray Tracer we will first of all write a 3D renderer to render the scene and objects.
-The graphic library used in this project is MinilibX, wrote from 42ecole for study pourposes.
+The project focuses on:
+- Building a robust scene parser with strict validation.
+- Implementing core ray tracing math (vectors, rays, intersections, normals).
+- Rendering the result with MinilibX.
+
+Supported scene content includes:
+- Ambient light, camera, and point light.
+- Sphere, plane, and cylinder objects.
 
 ## Instructions
 
-To compile the project simply type `make` in the root of the repository. The makefile will recursively compile every external library.
-**Make sure that you have pulled the libft and MinilibX subrepos**.
-To propagate the *clean*, *fclean* and *re* command simply prefix *deep* to the rule name. In example, to recompile the whole project: `make deepre`.
+### Prerequisites
 
-## Resources
+- Linux environment with `gcc` and `make`.
+- Git submodules initialized (libft and MinilibX):
 
-
-//////////////////////////////////////////////////////////////////////////////
-
-A minimal Ray Tracer implemented in C as part of the 42 Common Core curriculum.
-
-## Features
-
-- **Parsing**: Strict validation of `.rt` scene files.
-- **Data Structures**: Efficient storage using tagged unions for objects (Sphere, Plane, Cylinder).
-- **Elements**: Supports Ambient Light, Camera, and Point Lights.
-- **Validation**: Enforces numeric ranges (FOV, Colors, Ratios) and element counts.
-
-## Usage
+```bash
+git submodule update --init --recursive
+```
 
 ### Build
+
 ```bash
 make
 ```
 
+Useful build targets:
+
+```bash
+make debug
+make clean
+make fclean
+make re
+make deepre
+```
+
 ### Run
+
 ```bash
 ./minirt scenes/example.rt
 ```
 
-### Verification
-Run the automated test script to check parser validity:
+Run with Valgrind helper target:
+
 ```bash
-./test_parser.py
+make run
 ```
 
-## Documentation
+Run with a custom scene:
 
-- [Technical Overview](docs/technical_overview.md): Details on architecture, data structures, and implementation.
-- [Changelog](CHANGELOG.md): History of changes.
+```bash
+make run RT_FILE=scenes/showcase.rt
+```
+
+## Resources
+
+Classic references for ray tracing and related topics:
+
+- *Ray Tracing in One Weekend* (Peter Shirley): https://raytracing.github.io/
+- Scratchapixel lessons (ray tracing and computer graphics fundamentals): https://www.scratchapixel.com/
+- Physically Based Rendering (book and online edition): https://pbr-book.org/
+- MinilibX reference and source: [minilibx/README.md](minilibx/README.md)
+
+### AI Usage
+
+AI was used as a support tool for:
+- README structure and wording review.
+- Minor text polishing and consistency checks.
+
+AI was not used as a replacement for understanding project requirements.
+Core implementation decisions and project code ownership remain with the project authors.
+
+## Scene Format (Quick Overview)
+
+Each line in a `.rt` file starts with an identifier:
+
+- `A` for ambient light
+- `C` for camera
+- `L` for point light
+- `sp` for sphere
+- `pl` for plane
+- `cy` for cylinder
+
+Example scenes are available in the `scenes/` directory.
