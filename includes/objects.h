@@ -17,10 +17,10 @@
 
 typedef struct s_color
 {
-	int					r;
-	int					g;
-	int					b;
-} t_color;
+	int				r;
+	int				g;
+	int				b;
+}					t_color;
 
 /*
 ** --------------------------------------------------------------------------

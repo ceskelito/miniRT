@@ -6,28 +6,25 @@
 /*   By: rceschel <rceschel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/26 11:42:00 by antigravit        #+#    #+#             */
-/*   Updated: 2026/04/15 16:17:49 by rceschel         ###   ########.fr       */
+/*   Updated: 2026/04/16 12:09:20 by rceschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINIRT_H
 # define MINIRT_H
 
+# include "objects.h"
+# include "vec3.h"
+# include <errno.h>
 # include <fcntl.h>
+# include <math.h>
 # include <stdbool.h>
 # include <stdio.h>
 # include <stdlib.h>
-# include <unistd.h>
-# include <math.h>
-# include <errno.h>
 # include <string.h> // strerror
+# include <unistd.h>
 
-# include "vec3.h"
-# include "objects.h" // defines t_color
-
-typedef struct s_color t_color; // defined in includes/objets.h
-
-// Mandatory to avoid recursive inclusion
+typedef struct s_color	t_color;
 typedef struct s_object	t_object;
 
 /*
@@ -37,12 +34,13 @@ typedef struct s_object	t_object;
 */
 
 // Mouse Buttons
-enum {
-	MOUSE_LEFT 		= 1,
-	MOUSE_CENTER 	= 2,
-	MOUSE_RIGHT 	= 3,
-	SCROLL_UP 		= 4,
-	SCROLL_DOWN 	= 5
+enum
+{
+	MOUSE_LEFT = 1,
+	MOUSE_CENTER = 2,
+	MOUSE_RIGHT = 3,
+	SCROLL_UP = 4,
+	SCROLL_DOWN = 5
 };
 
 /**  MLX Window  **/
@@ -53,20 +51,12 @@ enum {
 /**  Math Constants  **/
 # define EPSILON 0.00001
 
-/**  Objects Tranformations  **/
-# define RESIZE_ABS_VALUE WIN_WIDTH / 384
-# define ROTATE_ABS_VALUE WIN_WIDTH / 384
-# define TRANSL_ABS_VALUE WIN_WIDTH / 384
-
 /*
-* --------------------------------------------------------------------------
-** Basic Structures
-** --------------------------------------------------------------------------
-*/
+ * ---------------------------------------------------------------------------
+ ** Basic Structures
+ ** --------------------------------------------------------------------------
+ */
 
-// Ric -> Rob ??
-// Come mai abbiamo la struct colors,
-// se poi ogni elemento mantiene il suo colore nella propria?
 typedef struct s_colors
 {
 	t_color				ambient;
@@ -142,16 +132,16 @@ typedef struct s_scene
 
 typedef struct s_mlx
 {
-	void	*ptr;
-	void	*win;
-}				t_mlx;
+	void				*ptr;
+	void				*win;
+}						t_mlx;
 
 typedef struct s_minirt
 {
-	t_mlx		mlx;
-	int			width;
-	int			height;
-	t_scene		scene;
+	t_mlx				mlx;
+	int					width;
+	int					height;
+	t_scene				scene;
 }						t_minirt;
 
 /*
@@ -161,42 +151,44 @@ typedef struct s_minirt
 */
 
 /* srcs/vector/hit.c */
-t_color	trace_ray(t_scene *scene, t_ray ray);
+t_color					trace_ray(t_scene *scene, t_ray ray);
 
 /* srcs/objects/objects.c */
-bool	hit_sphere(t_ray ray, t_sphere sp, t_hit *hit);
-bool	hit_plane(t_ray ray, t_plane pl, t_hit *hit);
-bool	hit_cylinder(t_ray ray, t_cylinder cy, t_hit *hit);
-bool	hit_triangle(t_ray ray, t_triangle tr, t_hit *hit);
+bool					hit_sphere(t_ray ray, t_sphere sp, t_hit *hit);
+bool					hit_plane(t_ray ray, t_plane pl, t_hit *hit);
+bool					hit_cylinder(t_ray ray, t_cylinder cy, t_hit *hit);
+bool					hit_triangle(t_ray ray, t_triangle tr, t_hit *hit);
 
 /* srcs/objects/objects_utils.c */
-bool		intersect(t_ray ray, t_object *obj, t_hit *hit);
-t_object	*get_selected_object(t_minirt *rt, int x, int y);
+bool					intersect(t_ray ray, t_object *obj, t_hit *hit);
+t_object				*get_selected_object(t_minirt *rt, int x, int y);
 
 /* srcs/objects/objects_operations */
-int			object_resize(t_object *selected, int resize_value);
-int			object_rotate(t_object *selected, char axis, int rotate_value);
-int			object_translate(double *axe, int translate_value);
-
+int						object_resize(t_object *selected, int resize_value);
+int						object_rotate(t_object *selected, char axis,
+							int rotate_value);
+int						object_translate(double *axe, int translate_value);
 
 /* srcs/objects/objects_cone.c */
-bool	hit_cone(t_ray ray, t_cone co, t_hit *hit);
+bool					hit_cone(t_ray ray, t_cone co, t_hit *hit);
 
 /* srcs/objects/objects_torus.c */
-bool	hit_torus(t_ray ray, t_torus tor, t_hit *hit);
+bool					hit_torus(t_ray ray, t_torus tor, t_hit *hit);
 
 /* srcs/color/color.c */
-t_color	calculate_lighting(t_scene *scene, t_hit *hit);
-bool	is_in_shadow(t_scene *scene, t_vec3 point, t_vec3 light_dir);
-t_color	color_mult_ratio(t_color obj_c, t_color light_c, double ratio);
-t_color	color_add(t_color a, t_color b);
+t_color					calculate_lighting(t_scene *scene, t_hit *hit);
+bool					is_in_shadow(t_scene *scene, t_vec3 point,
+							t_vec3 light_dir);
+t_color					color_mult_ratio(t_color obj_c, t_color light_c,
+							double ratio);
+t_color					color_add(t_color a, t_color b);
 
 /* srcs/mlx/render.c */
-void	render(t_minirt *rt);
-t_ray	camera_ray(t_camera cam, int px, int py, int w, int h);
+void					render(t_minirt *rt);
+t_ray					camera_ray(t_camera cam, int px, int py, int w, int h);
 
 /* srcs/mlx/init.c */
-int		mlx_loop_init(t_minirt *rt);
-int		rt_close_program(t_minirt *rt);
+int						mlx_loop_init(t_minirt *rt);
+int						rt_close_program(t_minirt *rt);
 
 #endif
