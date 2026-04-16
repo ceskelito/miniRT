@@ -24,16 +24,14 @@ int handle_mouse_events(int button, int x, int y, t_minirt *rt)
 	if (button == MOUSE_LEFT)
 	{
 		rt->scene.selected_object = get_selected_object(rt, x, y);
-		if (rt->scene.focused_op_legend == NO_LEGEND)
-			rt->scene.focused_op_legend = RESIZE;
 		if (rt->scene.selected_object)
-			print_operations_legend(rt);
-		else
 		{
-			rt->scene.focused_op_legend = NO_LEGEND;
-			render(rt); // I need to render all the scene in order to remove the legend from the screen
-						// Maybe we can work on an ad-hoc function to render only a section
+			if (rt->scene.focused_op_legend == NO_LEGEND)
+				rt->scene.focused_op_legend = RESIZE;
 		}
+		else
+			rt->scene.focused_op_legend = NO_LEGEND;
+		render(rt);
 	}
 	return (0);
 }

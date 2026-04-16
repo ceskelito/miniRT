@@ -37,18 +37,23 @@ t_color	trace_ray(t_scene *scene, t_ray ray)
 	t_hit		current_hit;
 	t_hit		light_hit;
 	t_object	*obj;
+	t_object	*closest;
 	t_color		black;
 
 	black.r = 0;
 	black.g = 0;
 	black.b = 0;
 	closest_hit.t = INFINITY;
+	closest = NULL;
 	obj = scene->objects;
 	while (obj)
 	{
 		if (intersect(ray, obj, &current_hit)
 			&& current_hit.t < closest_hit.t)
+		{
 			closest_hit = current_hit;
+			closest = obj;
+		}
 		obj = obj->next;
 	}
 	if (scene->focused_right_legend == LIGHTS
@@ -57,5 +62,7 @@ t_color	trace_ray(t_scene *scene, t_ray ray)
 		return (scene->light.color);
 	if (closest_hit.t == INFINITY)
 		return (black);
+	if (closest == scene->selected_object)
+		return (closest_hit.color);
 	return (calculate_lighting(scene, &closest_hit));
 }
