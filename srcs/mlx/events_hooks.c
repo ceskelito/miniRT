@@ -19,16 +19,22 @@ int handle_mouse_events(int button, int x, int y, t_minirt *rt)
 
 	if (button == MOUSE_LEFT)
 	{
-		rt->scene.selected_object = get_selected_object(rt, x, y);
-		if (rt->scene.expanded_legend == NO_LEGEND)
+		get_selection(rt, x, y, &rt->scene.selected_object,
+			&rt->scene.selected_light);
+		if (rt->scene.selected_light)
+			rt->scene.expanded_legend = TRANSFORM;
+		else if (rt->scene.selected_object
+			&& rt->scene.expanded_legend == NO_LEGEND)
 			rt->scene.expanded_legend = RESIZE;
-		if (rt->scene.selected_object)
+		if (rt->scene.selected_object || rt->scene.selected_light)
+		{
+			render(rt);
 			print_legend(rt);
+		}
 		else
 		{
 			rt->scene.expanded_legend = NO_LEGEND;
-			render(rt); // I need to render all the scene in order to remove the legend from the screen
-						// Maybe we can work on an ad-hoc function to render only a section
+			render(rt);
 		}
 	}
 	return (0);
@@ -40,6 +46,25 @@ int	handle_keypress(int keycode, t_minirt *rt)
 {
 	if (keycode == XK_Escape)
 		rt_close_program(rt);
+
+	if (keycode == XK_l)
+	{
+		if (rt->scene.selected_light == NULL)
+		{
+			rt->scene.selected_light = &rt->scene.light;
+			rt->scene.selected_object = NULL;
+			rt->scene.expanded_legend = TRANSFORM;
+			render(rt);
+			print_legend(rt);
+		}
+		else
+		{
+			rt->scene.selected_light = NULL;
+			rt->scene.expanded_legend = NO_LEGEND;
+			render(rt);
+		}
+		return (0);
+	}
 
 	if ((keycode == XK_1 || keycode == XK_2 || keycode == XK_3) && rt->scene.selected_object != NULL)
 	{
@@ -113,6 +138,28 @@ int	handle_keypress(int keycode, t_minirt *rt)
 		else
 			return (0);
 		render(rt);
+	}
+	else if (rt->scene.expanded_legend == TRANSFORM && rt->scene.selected_light)
+	{
+		t_vec3	*point;
+
+		point = &rt->scene.selected_light->light_point;
+		if (keycode == XK_Up)
+			object_translate(&point->y, TRANSL_ABS_VALUE);
+		else if (keycode == XK_Down)
+			object_translate(&point->y, -TRANSL_ABS_VALUE);
+		else if (keycode == XK_Right)
+			object_translate(&point->x, TRANSL_ABS_VALUE);
+		else if (keycode == XK_Left)
+			object_translate(&point->x, -TRANSL_ABS_VALUE);
+		else if (keycode == XK_x)
+			object_translate(&point->z, TRANSL_ABS_VALUE);
+		else if (keycode == XK_z)
+			object_translate(&point->z, -TRANSL_ABS_VALUE);
+		else
+			return (0);
+		render(rt);
+		print_legend(rt);
 	}
 	else
 		return (0);

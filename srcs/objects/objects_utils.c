@@ -63,3 +63,46 @@ t_object *get_selected_object(t_minirt *rt, int x, int y)
 	return (closest);
 }
 
+/*
+ * Resolves a click into either an object or the scene's light marker,
+ * whichever is closest to the camera. Writes NULL into the unselected out-param.
+ */
+void	get_selection(t_minirt *rt, int x, int y,
+	t_object **out_obj, t_light **out_light)
+{
+	t_hit		closest_hit;
+	t_hit		current_hit;
+	t_hit		light_hit;
+	t_object	*curr;
+	t_object	*closest;
+	t_ray		ray;
+	t_sphere	marker;
+
+	*out_obj = NULL;
+	*out_light = NULL;
+	closest = NULL;
+	closest_hit.t = INFINITY;
+	ray = camera_ray(rt->scene.camera, x, y, rt->width, rt->height);
+	curr = rt->scene.objects;
+	while (curr)
+	{
+		if (intersect(ray, curr, &current_hit)
+			&& current_hit.t < closest_hit.t)
+		{
+			closest_hit = current_hit;
+			closest = curr;
+		}
+		curr = curr->next;
+	}
+	marker.center = rt->scene.light.light_point;
+	marker.diameter = LIGHT_MARKER_DIAMETER;
+	marker.color = rt->scene.light.color;
+	if (hit_sphere(ray, marker, &light_hit) && light_hit.t < closest_hit.t)
+	{
+		*out_light = &rt->scene.light;
+		return ;
+	}
+	if (closest)
+		*out_obj = closest;
+}
+

@@ -98,9 +98,24 @@ int	print_legend(t_minirt *rt)
 	int old_y;
 	int y;
 
-	if (!rt->scene.selected_object)
+	if (!rt->scene.selected_object && !rt->scene.selected_light)
 		return (0);
 	y = Y;
+	if (rt->scene.selected_light)
+	{
+		const char	*g_legend_light[] = {
+			"Light selected",
+			"UP/DN: Move on Y axe",
+			"LF/RT: Move on X axe",
+			"Z/X  : Move on Z axe",
+			"L    : Deselect light",
+			NULL
+		};
+
+		print_background(&rt->mlx, g_legend_light, WHITE, BLACK, X, y);
+		print_text(&rt->mlx, g_legend_light, BLACK, X + CHAR_WIDTH * 2, y + CHAR_HEIGHT * 2);
+		return (0);
+	}
 	for (int i = 0; i < MENU_ITEMS; i++)
 	{
 		b_color = BLACK;

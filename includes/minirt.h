@@ -58,6 +58,9 @@ enum {
 # define ROTATE_ABS_VALUE WIN_WIDTH / 384
 # define TRANSL_ABS_VALUE WIN_WIDTH / 384
 
+/**  Light visualization  **/
+# define LIGHT_MARKER_DIAMETER 3.0
+
 /*
 * --------------------------------------------------------------------------
 ** Basic Structures
@@ -136,6 +139,7 @@ typedef struct s_scene
 	t_light				light;
 	t_object			*objects;
 	t_object			*selected_object;
+	t_light				*selected_light;
 	int					expanded_legend;
 }						t_scene;
 
@@ -171,6 +175,8 @@ bool	hit_triangle(t_ray ray, t_triangle tr, t_hit *hit);
 /* srcs/objects/objects_utils.c */
 bool		intersect(t_ray ray, t_object *obj, t_hit *hit);
 t_object	*get_selected_object(t_minirt *rt, int x, int y);
+void		get_selection(t_minirt *rt, int x, int y,
+				t_object **out_obj, t_light **out_light);
 
 /* srcs/objects/objects_operations */
 int			object_resize(t_object *selected, int resize_value);
