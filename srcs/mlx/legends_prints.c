@@ -6,7 +6,7 @@
 /*   By: rceschel <rceschel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/10 14:15:14 by rceschel          #+#    #+#             */
-/*   Updated: 2026/04/16 15:38:29 by rceschel         ###   ########.fr       */
+/*   Updated: 2026/04/16 15:46:53 by rceschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,13 +64,13 @@ static const char	**g_op_set[]  = {
 
 static const char		*g_legend_camera[] = {
 	"Camera Control",
-	"C: Control Camera",
+	"C: Toggle Camera Control",
 	NULL,
 };
 
 static const char		*g_legend_lights[] = {
 	"Lights Control",
-	"L: Control Lights",
+	"L: Toggle Lights Control",
 	"P: Previous Light",
 	"N: Next Light",
 	NULL
@@ -78,11 +78,11 @@ static const char		*g_legend_lights[] = {
 
 static const char		*g_legend_other[] = {
 	"Other commands",
-	"R: Render again",
-	"X: Remove focus",
-	"",
 	"Click on an object",
-	"to select it",
+	"to focus on it",
+	"",
+	"Click on the background",
+	"to remove objects focus",
 	NULL
 };
 
@@ -119,7 +119,7 @@ int	print_legends_set(t_mlx *mlx, t_scene *scene, const t_legends *set)
 	while (set->legends[i])
 	{
 		// Selected Lights or Camera: they cannot be resized
-		if ( (i == ROTATE || i == RESIZE ) && scene->focused_right_legend != NO_LEGEND)
+		if ( (i == ROTATE || i == RESIZE ) && scene->focused_right_legend != NO_LEGEND && set->legends == g_op_set)
 		{
 			i++;
 			continue ;
